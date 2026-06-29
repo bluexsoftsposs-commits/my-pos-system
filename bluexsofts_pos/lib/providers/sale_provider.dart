@@ -57,12 +57,12 @@ class SaleProvider with ChangeNotifier {
         notifyListeners();
         return sale;
       }
-    } catch (e) {
-      final box = Hive.box(AppConstants.offlineQueueBox);
-      final queue = box.get('sales', defaultValue: <String>[]).cast<String>();
-      queue.add(jsonEncode(payload));
-      await box.put('sales', queue);
-    }
+    } catch (_) {}
+
+    final box = Hive.box(AppConstants.offlineQueueBox);
+    final queue = box.get('sales', defaultValue: <String>[]).cast<String>();
+    queue.add(jsonEncode(payload));
+    await box.put('sales', queue);
     return null;
   }
 

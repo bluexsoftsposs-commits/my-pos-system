@@ -5,6 +5,7 @@ class AppUser {
   final String role;
   final String shopId;
   final bool isActive;
+  final bool emailVerified;
   final DateTime? createdAt;
 
   AppUser({
@@ -14,6 +15,7 @@ class AppUser {
     required this.role,
     required this.shopId,
     this.isActive = true,
+    this.emailVerified = false,
     this.createdAt,
   });
 
@@ -28,6 +30,7 @@ class AppUser {
       role: json['role'] as String,
       shopId: json['shopId'] as String? ?? '',
       isActive: json['isActive'] as bool? ?? true,
+      emailVerified: json['emailVerified'] as bool? ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : null,
@@ -41,6 +44,7 @@ class AppUser {
     'role': role,
     'shopId': shopId,
     'isActive': isActive,
+    'emailVerified': emailVerified,
   };
 }
 

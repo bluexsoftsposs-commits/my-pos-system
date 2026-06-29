@@ -96,7 +96,7 @@ class AuthProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _error = 'Connection error. Check server is running.';
+      _error = '$e';
       _isLoading = false;
       notifyListeners();
       return false;
@@ -134,7 +134,7 @@ class AuthProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _error = 'Connection error. Check server is running.';
+      _error = '$e';
       _isLoading = false;
       notifyListeners();
       return false;
@@ -177,6 +177,72 @@ class AuthProvider with ChangeNotifier {
       }
     } catch (_) {}
   }
+
+  Future<String?> forgotPassword({
+    required String shopName,
+    required String email,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final message = await _authService.forgotPassword(shopName: shopName, email: email);
+      _isLoading = false;
+      notifyListeners();
+      return message;
+    } catch (e) {
+      _error = '$e';
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<String?> resetPassword({
+    required String token,
+    required String password,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final message = await _authService.resetPassword(token: token, password: password);
+      _isLoading = false;
+      notifyListeners();
+      return message;
+    } catch (e) {
+      _error = '$e';
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<String?> resendVerification() async {
+    if (_user == null || _shop == null) return null;
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final message = await _authService.resendVerification(
+        email: _user!.email,
+        shopId: _shop!.id,
+      );
+      _isLoading = false;
+      notifyListeners();
+      return message;
+    } catch (e) {
+      _error = '$e';
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    }
+  }
+
+  bool get isEmailVerified => _user?.emailVerified ?? true;
 
   void clearError() {
     _error = null;

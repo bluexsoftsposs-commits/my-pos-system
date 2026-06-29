@@ -4,10 +4,12 @@ import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/sale_provider.dart';
 import '../core/theme.dart';
+import '../core/currency_formatter.dart';
 import '../views/shared/summary_card.dart';
 import '../views/shared/action_card.dart';
 import '../views/shared/sales_chart.dart';
 import 'pos_screen.dart';
+import 'cart_screen.dart';
 import 'products_screen.dart';
 import 'sales_screen.dart';
 import 'settings_screen.dart';
@@ -63,6 +65,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     }
 
+    final isWide = MediaQuery.of(context).size.width >= 600;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('BluexSofts POS'),
@@ -76,7 +80,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               IconButton(
                 icon: const Icon(Icons.shopping_cart_outlined),
-                onPressed: () => setState(() => _selectedIndex = 1),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const CartScreen()),
+                ),
               ),
               if (cart.itemCount > 0)
                 Positioned(
@@ -97,18 +103,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.dashboard), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.point_of_sale), label: 'POS'),
-          NavigationDestination(icon: Icon(Icons.inventory_2), label: 'Products'),
-          NavigationDestination(icon: Icon(Icons.receipt_long), label: 'Sales'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
-      ),
+      body: isWide
+          ? Row(
+              children: [
+                NavigationRail(
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+                  labelType: NavigationRailLabelType.all,
+                  destinations: const [
+                    NavigationRailDestination(icon: Icon(Icons.dashboard), label: Text('Home')),
+                    NavigationRailDestination(icon: Icon(Icons.point_of_sale), label: Text('POS')),
+                    NavigationRailDestination(icon: Icon(Icons.inventory_2), label: Text('Products')),
+                    NavigationRailDestination(icon: Icon(Icons.receipt_long), label: Text('Sales')),
+                    NavigationRailDestination(icon: Icon(Icons.settings), label: Text('Settings')),
+                  ],
+                ),
+                const VerticalDivider(width: 1),
+                Expanded(child: _pages[_selectedIndex]),
+              ],
+            )
+          : _pages[_selectedIndex],
+      bottomNavigationBar: isWide
+          ? null
+          : NavigationBar(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+              destinations: const [
+                NavigationDestination(icon: Icon(Icons.dashboard), label: 'Home'),
+                NavigationDestination(icon: Icon(Icons.point_of_sale), label: 'POS'),
+                NavigationDestination(icon: Icon(Icons.inventory_2), label: 'Products'),
+                NavigationDestination(icon: Icon(Icons.receipt_long), label: 'Sales'),
+                NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+              ],
+            ),
     );
   }
 }
@@ -200,24 +227,45 @@ class _DashboardHomeState extends State<_DashboardHome> {
   Widget _buildSummaryCards(Map<String, dynamic>? summary) {
     final today = summary?['today'] ?? {};
     final allTime = summary?['allTime'] ?? {};
-    return Row(
-      children: [
-        Expanded(
-          child: SummaryCard(
-            title: 'Today Sales',
-            value: '\$${(today['total'] ?? 0).toStringAsFixed(2)}',
-            subtitle: '${today['count'] ?? 0} transactions',
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: SummaryCard(
-            title: 'All Time',
-            value: '\$${(allTime['total'] ?? 0).toStringAsFixed(2)}',
-            subtitle: '${allTime['count'] ?? 0} transactions',
-          ),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 600) {
+          return Row(
+            children: [
+              Expanded(
+                child: SummaryCard(
+                  title: 'Today Sales',
+                  value: CurrencyFormatter.format(today['total'] ?? 0),
+                  subtitle: '${today['count'] ?? 0} transactions',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: SummaryCard(
+                  title: 'All Time',
+                  value: CurrencyFormatter.format(allTime['total'] ?? 0),
+                  subtitle: '${allTime['count'] ?? 0} transactions',
+                ),
+              ),
+            ],
+          );
+        }
+        return Column(
+          children: [
+            SummaryCard(
+              title: 'Today Sales',
+              value: CurrencyFormatter.format(today['total'] ?? 0),
+              subtitle: '${today['count'] ?? 0} transactions',
+            ),
+            const SizedBox(height: 12),
+            SummaryCard(
+              title: 'All Time',
+              value: CurrencyFormatter.format(allTime['total'] ?? 0),
+              subtitle: '${allTime['count'] ?? 0} transactions',
+            ),
+          ],
+        );
+      },
     );
   }
 }

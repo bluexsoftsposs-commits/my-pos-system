@@ -4,6 +4,7 @@ import '../providers/product_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/product.dart';
 import '../core/theme.dart';
+import '../core/currency_formatter.dart';
 import '../views/shared/product_form.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -130,7 +131,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text('\$${product.price.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(CurrencyFormatter.format(product.price), style: const TextStyle(fontWeight: FontWeight.bold)),
             Text('Stock: ${product.stock}', style: TextStyle(fontSize: 12, color: product.stock <= 5 ? AppTheme.warning : Colors.grey)),
           ],
         ),

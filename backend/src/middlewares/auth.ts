@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import prisma from '../config/db';
 
 export interface AuthPayload {
   userId: string;
@@ -17,7 +18,7 @@ declare global {
   }
 }
 
-export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -31,6 +32,24 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     const secret = process.env.JWT_SECRET || 'fallback-secret';
     const decoded = jwt.verify(token, secret) as AuthPayload;
 
+    // Enforce single session if currentSessionToken is set
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { currentSessionToken: true },
+    });
+
+    if (!user) {
+      res.status(401).json({ error: 'User not found' });
+      return;
+    }
+
+    // If currentSessionToken is set, it must match the request token
+    if (user.currentSessionToken !== null && user.currentSessionToken !== token) {
+      res.status(401).json({ error: 'Session expired — logged in from another device' });
+      return;
+    }
+
+    // Legacy sessions (null) or matching token are allowed
     req.user = decoded;
     req.shopId = decoded.shopId;
     next();

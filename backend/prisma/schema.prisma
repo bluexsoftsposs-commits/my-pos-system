@@ -38,19 +38,33 @@ model Payment {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  shopId       String
-  email        String
-  passwordHash String
-  role         String   @default("CASHIER")
-  name         String
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  sales        Sale[]
-  shop         Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  id                String              @id @default(uuid())
+  shopId            String
+  email             String              @unique
+  passwordHash      String
+  role              String              @default("CASHIER")
+  name              String
+  isActive          Boolean             @default(true)
+  emailVerified     Boolean             @default(false)
+  verificationToken String?
+  currentSessionToken String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  sales             Sale[]
+  shop              Shop                @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  passwordResetTokens PasswordResetToken[]
 
   @@unique([shopId, email])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {

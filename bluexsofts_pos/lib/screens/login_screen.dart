@@ -4,6 +4,8 @@ import '../providers/auth_provider.dart';
 import 'dashboard_screen.dart';
 import 'plans_screen.dart';
 import 'super_admin_screen.dart';
+import 'forgot_password_screen.dart';
+import 'reset_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -129,6 +131,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () => setState(() => _isLogin = !_isLogin),
                     child: Text(_isLogin ? 'Create new shop account' : 'Already have an account? Login'),
                   ),
+                  if (_isLogin) ...[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+                      ),
+                      child: const Text('Forgot Password?'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const ResetPasswordScreen()),
+                      ),
+                      child: const Text('Have a reset token?'),
+                    ),
+                  ],
                 ],
               ),
             ),

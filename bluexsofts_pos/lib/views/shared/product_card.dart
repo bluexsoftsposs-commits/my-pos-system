@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/product.dart';
 import '../../providers/cart_provider.dart';
 import '../../core/theme.dart';
+import '../../core/currency_formatter.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -13,28 +14,28 @@ class ProductCard extends StatelessWidget {
     final outOfStock = product.stock <= 0;
     return Card(
       color: outOfStock ? AppTheme.darkCard.withOpacity(0.4) : null,
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: outOfStock ? null : () => cart.addProduct(product),
-        borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: Center(
-                  child: Icon(
-                    Icons.inventory_2,
-                    size: 32,
-                    color: outOfStock ? Colors.grey : AppTheme.primary,
-                  ),
+              Center(
+                child: Icon(
+                  Icons.inventory_2,
+                  size: 22,
+                  color: outOfStock ? Colors.grey : AppTheme.primary,
                 ),
               ),
+              const SizedBox(height: 4),
               Text(
                 product.name,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 13,
+                  fontSize: 11,
                   color: outOfStock ? Colors.grey : null,
                 ),
                 maxLines: 2,
@@ -42,19 +43,23 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                '\$${product.price.toStringAsFixed(2)}',
+                CurrencyFormatter.format(product.price),
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   color: outOfStock ? Colors.grey : AppTheme.success,
                   fontWeight: FontWeight.w600,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               if (outOfStock)
-                const Text('Out of stock', style: TextStyle(fontSize: 10, color: AppTheme.error))
+                const Text('Out of stock', style: TextStyle(fontSize: 9, color: AppTheme.error), maxLines: 1, overflow: TextOverflow.ellipsis)
               else
                 Text(
                   'Stock: ${product.stock}',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  style: const TextStyle(fontSize: 9, color: Colors.grey),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
             ],
           ),

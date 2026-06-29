@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/cart_provider.dart';
-import '../providers/sale_provider.dart';
 import '../providers/auth_provider.dart';
 import '../core/theme.dart';
 import '../views/pos/product_panel.dart';
-import '../views/pos/cart_panel.dart';
-import '../views/pos/checkout_panel.dart';
 import 'plans_screen.dart';
 
 class POSScreen extends StatefulWidget {
@@ -18,8 +15,6 @@ class POSScreen extends StatefulWidget {
 }
 
 class _POSScreenState extends State<POSScreen> {
-  bool _showCheckout = false;
-
   @override
   void initState() {
     super.initState();
@@ -51,32 +46,7 @@ class _POSScreenState extends State<POSScreen> {
 
     final productProv = context.watch<ProductProvider>();
     final cart = context.watch<CartProvider>();
-    final saleProv = context.watch<SaleProvider>();
 
-    return Column(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(flex: 3, child: ProductPanel(productProv: productProv, cart: cart)),
-              const VerticalDivider(width: 1),
-              Expanded(
-                flex: 2,
-                child: _showCheckout
-                    ? CheckoutPanel(
-                        cart: cart,
-                        saleProv: saleProv,
-                        onBack: () => setState(() => _showCheckout = false),
-                      )
-                    : CartPanel(
-                        cart: cart,
-                        onCheckout: () => setState(() => _showCheckout = true),
-                      ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+    return ProductPanel(productProv: productProv, cart: cart);
   }
 }

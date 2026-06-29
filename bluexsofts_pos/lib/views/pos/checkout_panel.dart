@@ -5,6 +5,7 @@ import '../../providers/sale_provider.dart';
 import '../../providers/product_provider.dart';
 import '../shared/summary_row.dart';
 import '../../core/theme.dart';
+import '../../core/currency_formatter.dart';
 
 class CheckoutPanel extends StatefulWidget {
   final CartProvider cart;
@@ -48,7 +49,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
       widget.onBack();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Sale completed! Total: \$${sale.total.toStringAsFixed(2)}'),
+          content: Text('Sale completed! Total: ${CurrencyFormatter.format(sale.total)}'),
           backgroundColor: AppTheme.success,
         ),
       );
@@ -67,12 +68,11 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
     final cart = widget.cart;
     final saleProv = widget.saleProv;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: Row(
             children: [
               Text('Checkout', style: Theme.of(context).textTheme.titleMedium),
               const Spacer(),
@@ -82,91 +82,93 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
               ),
             ],
           ),
-          const Divider(),
-          Expanded(
-            child: ListView(
-              children: [
-                SummaryRow(label: 'Items', value: '${cart.itemCount}'),
-                SummaryRow(label: 'Subtotal', value: '\$${cart.subtotal.toStringAsFixed(2)}'),
-                const SizedBox(height: 12),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Discount (\$)',
-                    prefixIcon: Icon(Icons.discount),
-                  ),
-                  keyboardType: TextInputType.number,
-                  controller: _discountCtrl,
-                  onChanged: (v) => cart.setDiscount(double.tryParse(v) ?? 0),
+        ),
+        const Divider(),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            children: [
+              SummaryRow(label: 'Items', value: '${cart.itemCount}'),
+              SummaryRow(label: 'Subtotal', value: CurrencyFormatter.format(cart.subtotal)),
+              const SizedBox(height: 12),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Discount (PKR)',
+                  prefixIcon: Icon(Icons.discount),
                 ),
-                const SizedBox(height: 12),
-                Text('Tax Rate', style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 8,
-                  children: ['0%', '5%', '10%', '15%'].map((rate) {
-                    final val = double.parse(rate.replaceAll('%', '')) / 100;
-                    final selected = cart.taxRate == val;
-                    return ChoiceChip(
-                      label: Text(rate),
-                      selected: selected,
-                      onSelected: (_) => cart.setTaxRate(val),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 12),
-                Text('Payment Method', style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 8,
-                  children: ['CASH', 'CARD', 'MOBILE'].map((method) {
-                    final selected = cart.paymentMethod == method;
-                    return ChoiceChip(
-                      label: Text(method),
-                      selected: selected,
-                      onSelected: (_) => cart.setPaymentMethod(method),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Notes (optional)',
-                    prefixIcon: Icon(Icons.notes),
-                  ),
-                  controller: _notesCtrl,
-                  maxLines: 2,
-                  onChanged: cart.setNotes,
-                ),
-                const SizedBox(height: 16),
-                if (cart.taxAmount > 0)
-                  SummaryRow(label: 'Tax', value: '\$${cart.taxAmount.toStringAsFixed(2)}'),
-                if (cart.discount > 0)
-                  SummaryRow(label: 'Discount', value: '-\$${cart.discount.toStringAsFixed(2)}', valueColor: AppTheme.warning),
-                const Divider(),
-                SummaryRow(
-                  label: 'Total',
-                  value: '\$${cart.total.toStringAsFixed(2)}',
-                  valueStyle: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: saleProv.isLoading ? null : _completeSale,
-              icon: saleProv.isLoading
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Icon(Icons.check_circle),
-              label: Text(saleProv.isLoading ? 'Processing...' : 'Complete Sale - \$${cart.total.toStringAsFixed(2)}'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.success,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                keyboardType: TextInputType.number,
+                controller: _discountCtrl,
+                onChanged: (v) => cart.setDiscount(double.tryParse(v) ?? 0),
               ),
-            ),
+              const SizedBox(height: 12),
+              Text('Tax Rate', style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                children: ['0%', '5%', '10%', '15%'].map((rate) {
+                  final val = double.parse(rate.replaceAll('%', '')) / 100;
+                  final selected = cart.taxRate == val;
+                  return ChoiceChip(
+                    label: Text(rate),
+                    selected: selected,
+                    onSelected: (_) => cart.setTaxRate(val),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 12),
+              Text('Payment Method', style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                children: ['CASH', 'CARD', 'MOBILE'].map((method) {
+                  final selected = cart.paymentMethod == method;
+                  return ChoiceChip(
+                    label: Text(method),
+                    selected: selected,
+                    onSelected: (_) => cart.setPaymentMethod(method),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Notes (optional)',
+                  prefixIcon: Icon(Icons.notes),
+                ),
+                controller: _notesCtrl,
+                maxLines: 2,
+                onChanged: cart.setNotes,
+              ),
+              const SizedBox(height: 16),
+              if (cart.taxAmount > 0)
+                SummaryRow(label: 'Tax', value: CurrencyFormatter.format(cart.taxAmount)),
+              if (cart.discount > 0)
+                SummaryRow(label: 'Discount', value: '-${CurrencyFormatter.format(cart.discount)}', valueColor: AppTheme.warning),
+              const Divider(),
+              SummaryRow(
+                label: 'Total',
+                value: CurrencyFormatter.format(cart.total),
+                valueStyle: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: saleProv.isLoading ? null : _completeSale,
+                  icon: saleProv.isLoading
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.check_circle),
+                  label: Text(saleProv.isLoading ? 'Processing...' : 'Complete Sale - ${CurrencyFormatter.format(cart.total)}'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.success,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

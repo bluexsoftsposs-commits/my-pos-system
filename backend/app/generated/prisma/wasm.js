@@ -153,8 +153,20 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   name: 'name',
   isActive: 'isActive',
+  emailVerified: 'emailVerified',
+  verificationToken: 'verificationToken',
+  currentSessionToken: 'currentSessionToken',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
@@ -216,6 +228,7 @@ exports.Prisma.ModelName = {
   Shop: 'Shop',
   Payment: 'Payment',
   User: 'User',
+  PasswordResetToken: 'PasswordResetToken',
   Product: 'Product',
   Sale: 'Sale',
   SaleItem: 'SaleItem'

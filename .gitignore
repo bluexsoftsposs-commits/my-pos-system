@@ -3,7 +3,7 @@ backend/node_modules/
 backend/.env
 backend/dist/
 backend/build/
-backend/app/
+
 
 # Flutter/Dart
 bluexsofts_pos/.dart_tool/
@@ -60,6 +60,10 @@ web_modules/
 .env
 .env.*
 !.env.example
+
+# Generated files
+backend/app/generated/prisma/*.tmp*
+backend/app/generated/prisma/*.dll.node*
 
 # Build output
 dist

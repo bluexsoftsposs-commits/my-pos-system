@@ -3,6 +3,7 @@ import '../../providers/cart_provider.dart';
 import '../../models/product.dart';
 import '../shared/summary_row.dart';
 import '../../core/theme.dart';
+import '../../core/currency_formatter.dart';
 
 class CartPanel extends StatelessWidget {
   final CartProvider cart;
@@ -13,21 +14,6 @@ class CartPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Text('Cart (${cart.itemCount})', style: Theme.of(context).textTheme.titleMedium),
-              const Spacer(),
-              if (cart.items.isNotEmpty)
-                TextButton(
-                  onPressed: cart.clearCart,
-                  child: const Text('Clear', style: TextStyle(color: AppTheme.error)),
-                ),
-            ],
-          ),
-        ),
-        const Divider(height: 1),
         Expanded(
           child: cart.isEmpty
               ? const Center(
@@ -37,53 +23,79 @@ class CartPanel extends StatelessWidget {
                       Icon(Icons.shopping_cart_outlined, size: 48, color: Colors.grey),
                       SizedBox(height: 8),
                       Text('Cart is empty', style: TextStyle(color: Colors.grey)),
+                      SizedBox(height: 4),
                       Text('Tap products to add', style: TextStyle(fontSize: 12, color: Colors.grey)),
                     ],
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: cart.items.length,
-                  itemBuilder: (context, index) {
-                    final item = cart.items[index];
-                    return _CartItemCard(item: item, cart: cart);
-                  },
+              : ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      child: Row(
+                        children: [
+                          Text('Cart (${cart.itemCount})', style: Theme.of(context).textTheme.titleMedium),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: cart.clearCart,
+                            child: const Text('Clear', style: TextStyle(color: AppTheme.error)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    const SizedBox(height: 8),
+                    ...cart.items.map((item) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: _CartItemCard(item: item, cart: cart),
+                    )),
+                    const SizedBox(height: 8),
+                    const Divider(height: 1),
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SummaryRow(label: 'Subtotal', value: CurrencyFormatter.format(cart.subtotal)),
+                    ),
+                    if (cart.taxAmount > 0)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SummaryRow(label: 'Tax (${(cart.taxRate * 100).toStringAsFixed(0)}%)', value: CurrencyFormatter.format(cart.taxAmount)),
+                      ),
+                    if (cart.discount > 0)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SummaryRow(label: 'Discount', value: '-${CurrencyFormatter.format(cart.discount)}', valueColor: AppTheme.warning),
+                      ),
+                    const Divider(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SummaryRow(
+                        label: 'Total',
+                        value: CurrencyFormatter.format(cart.total),
+                        valueStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: onCheckout,
+                          icon: const Icon(Icons.shopping_cart_checkout),
+                          label: const Text('Proceed to Checkout'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.success,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
                 ),
         ),
-        if (cart.items.isNotEmpty) ...[
-          const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                SummaryRow(label: 'Subtotal', value: '\$${cart.subtotal.toStringAsFixed(2)}'),
-                if (cart.taxAmount > 0)
-                  SummaryRow(label: 'Tax (${(cart.taxRate * 100).toStringAsFixed(0)}%)', value: '\$${cart.taxAmount.toStringAsFixed(2)}'),
-                if (cart.discount > 0)
-                  SummaryRow(label: 'Discount', value: '-\$${cart.discount.toStringAsFixed(2)}', valueColor: AppTheme.warning),
-                const Divider(height: 8),
-                SummaryRow(
-                  label: 'Total',
-                  value: '\$${cart.total.toStringAsFixed(2)}',
-                  valueStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: onCheckout,
-                    icon: const Icon(Icons.shopping_cart_checkout),
-                    label: const Text('Proceed to Checkout'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.success,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -107,34 +119,47 @@ class _CartItemCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
                   Text(
-                    '\$${product.price.toStringAsFixed(2)} ea',
+                    '${CurrencyFormatter.format(product.price)} ea',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.remove_circle_outline, size: 20),
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  padding: EdgeInsets.zero,
                   onPressed: () => cart.removeProduct(product.id),
                 ),
                 Text('${item.quantity}', style: const TextStyle(fontWeight: FontWeight.w600)),
                 IconButton(
                   icon: const Icon(Icons.add_circle_outline, size: 20),
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  padding: EdgeInsets.zero,
                   onPressed: item.quantity < product.stock ? () => cart.addProduct(product) : null,
                 ),
               ],
             ),
-            Text(
-              '\$${(item.subtotal as double).toStringAsFixed(2)}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Flexible(
+              child: Text(
+                CurrencyFormatter.format(item.subtotal as double),
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline, size: 18, color: AppTheme.error),
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              padding: EdgeInsets.zero,
               onPressed: () => cart.removeItem(product.id),
             ),
           ],

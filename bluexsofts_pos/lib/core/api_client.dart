@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'env_config.dart';
 
 class ApiClient {
-  static const String baseUrl = 'http://localhost:3000/api';
+  static String get baseUrl => EnvConfig.apiBaseUrl;
   static const String _tokenKey = 'auth_token';
 
   static Future<String?> getToken() async {

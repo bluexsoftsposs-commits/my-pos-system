@@ -1,9 +1,11 @@
+import 'env_config.dart';
+
 class AppConstants {
   static const String appName = 'BluexSofts POS';
   static const String version = '1.0.0';
 
   // API
-  static const String apiBaseUrl = 'http://localhost:3000/api';
+  static String get apiBaseUrl => EnvConfig.apiBaseUrl;
 
   // Hive boxes
   static const String productsBox = 'products_cache';
