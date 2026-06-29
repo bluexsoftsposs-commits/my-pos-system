@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
 
+// Helper function to ensure single string
+const toString = (value: any): string => {
+  return Array.isArray(value) ? value[0] : (value as string);
+};
+
 // GET /api/products
 export const getProducts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -8,14 +13,14 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
 
     const products = await prisma.product.findMany({
       where: {
-        shopId: req.shopId,
+        shopId: req.shopId as string,
         isActive: true,
-        ...(category ? { category: category as string } : {}),
+        ...(category ? { category: toString(category) } : {}),
         ...(search
           ? {
             OR: [
-              { name: { contains: search as string } },
-              { sku: { contains: search as string } },
+              { name: { contains: toString(search) } },
+              { sku: { contains: toString(search) } },
             ],
           }
           : {}),
@@ -33,10 +38,12 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
 // GET /api/products/:id
 export const getProduct = async (req: Request, res: Response): Promise<void> => {
   try {
+    const productId = toString(req.params.id);
+
     const product = await prisma.product.findFirst({
       where: {
-        id: Array.isArray(req.params.id) ? req.params.id[0] : req.params.id,
-        shopId: req.shopId
+        id: productId,
+        shopId: req.shopId as string
       },
     });
 
@@ -63,7 +70,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
 
     const product = await prisma.product.create({
       data: {
-        shopId: req.shopId!,
+        shopId: req.shopId as string,
         name,
         description: description || '',
         price: parseFloat(price),
@@ -84,8 +91,11 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
 // PUT /api/products/:id
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
   try {
+    const productId = toString(req.params.id);
+    const shopId = req.shopId as string;
+
     const existing = await prisma.product.findFirst({
-      where: { id: req.params.id, shopId: req.shopId },
+      where: { id: productId, shopId: shopId },
     });
 
     if (!existing) {
@@ -96,7 +106,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     const { name, description, price, stock, sku, category, imageUrl, isActive } = req.body;
 
     const product = await prisma.product.update({
-      where: { id: req.params.id },
+      where: { id: productId },
       data: {
         ...(name !== undefined && { name }),
         ...(description !== undefined && { description }),
@@ -118,8 +128,11 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
 // DELETE /api/products/:id
 export const deleteProduct = async (req: Request, res: Response): Promise<void> => {
   try {
+    const productId = toString(req.params.id);
+    const shopId = req.shopId as string;
+
     const existing = await prisma.product.findFirst({
-      where: { id: req.params.id, shopId: req.shopId },
+      where: { id: productId, shopId: shopId },
     });
 
     if (!existing) {
@@ -127,9 +140,8 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    // Soft delete
     await prisma.product.update({
-      where: { id: req.params.id },
+      where: { id: productId },
       data: { isActive: false },
     });
 
@@ -143,7 +155,7 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
 export const getCategories = async (req: Request, res: Response): Promise<void> => {
   try {
     const products = await prisma.product.findMany({
-      where: { shopId: req.shopId, isActive: true },
+      where: { shopId: req.shopId as string, isActive: true },
       select: { category: true },
       distinct: ['category'],
     });
