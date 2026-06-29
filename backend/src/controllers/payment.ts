@@ -3,6 +3,8 @@ import prisma from '../config/db';
 import { initiateJazzCashPayment, handleJazzCashCallback } from '../services/jazzcash';
 import { initiateEasyPaisaPayment, handleEasyPaisaCallback } from '../services/easypaisa';
 
+const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
+
 const PLAN_PRICES: Record<string, number> = {
   BASIC: 5000,
   PLATINUM: 10000,
@@ -157,7 +159,7 @@ export const easyPaisaCallback = async (req: Request, res: Response): Promise<vo
 
 export const checkPaymentStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    const paymentId = req.params.paymentId as string;
+    const paymentId = toString(req.params.paymentId);
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
 
     if (!payment) {
@@ -179,7 +181,7 @@ export const checkPaymentStatus = async (req: Request, res: Response): Promise<v
 
 export const verifyPayment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const paymentId = req.params.paymentId as string;
+    const paymentId = toString(req.params.paymentId);
     const shopId = req.shopId!;
 
     const payment = await prisma.payment.findFirst({

@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import prisma from '../config/db';
 
+const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
+
 export const getDashboardStats = async (_req: Request, res: Response): Promise<void> => {
   try {
     const [totalShops, activeShops, totalUsers, totalAdmins, totalCashiers, totalSales, totalRevenue] = await Promise.all([
@@ -45,10 +47,10 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
 
 export const listShops = async (req: Request, res: Response): Promise<void> => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const search = (req.query.search as string) || '';
-    const plan = req.query.plan as string;
+    const page = parseInt(toString(req.query.page)) || 1;
+    const limit = parseInt(toString(req.query.limit)) || 20;
+    const search = toString(req.query.search) || '';
+    const plan = toString(req.query.plan);
 
     const conditions: Record<string, unknown> = {};
     if (search) conditions.shopName = { contains: search } as any;
@@ -77,9 +79,9 @@ export const listShops = async (req: Request, res: Response): Promise<void> => {
 
 export const listUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const search = (req.query.search as string) || '';
+    const page = parseInt(toString(req.query.page)) || 1;
+    const limit = parseInt(toString(req.query.limit)) || 20;
+    const search = toString(req.query.search) || '';
 
     const conditions: Record<string, unknown> = {};
     if (search) {
@@ -117,7 +119,7 @@ export const listUsers = async (req: Request, res: Response): Promise<void> => {
 
 export const toggleShopStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id as string;
+    const id = toString(req.params.id);
     const shop = await prisma.shop.findUnique({ where: { id } });
 
     if (!shop || shop.shopName === '__super_admin__') {
@@ -138,7 +140,7 @@ export const toggleShopStatus = async (req: Request, res: Response): Promise<voi
 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id as string;
+    const id = toString(req.params.id);
     const user = await prisma.user.findUnique({
       where: { id },
       include: { shop: { select: { shopName: true } } },
@@ -199,7 +201,7 @@ export const createShopUser = async (req: Request, res: Response): Promise<void>
 
 export const extendSubscription = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id as string;
+    const id = toString(req.params.id);
     const { days, plan } = req.body;
 
     const shop = await prisma.shop.findUnique({ where: { id } });
