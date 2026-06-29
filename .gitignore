@@ -1,0 +1,28 @@
+# Node.js backend
+backend/node_modules/
+backend/.env
+backend/dist/
+backend/build/
+backend/app/
+
+# Flutter/Dart
+bluexsofts_pos/.dart_tool/
+bluexsofts_pos/.pub/
+bluexsofts_pos/build/
+bluexsofts_pos/.flutter-plugins
+bluexsofts_pos/.flutter-plugins-dependencies
+bluexsofts_pos/.packages
+bluexsofts_pos/.pub-cache/
+bluexsofts_pos/coverage/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
