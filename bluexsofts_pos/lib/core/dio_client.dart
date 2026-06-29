@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'env_config.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
+
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   late final Dio dio;
   static const String _tokenKey = 'auth_token';
@@ -32,6 +35,7 @@ class DioClient {
       onError: (error, handler) {
         if (error.response?.statusCode == 401) {
           clearToken();
+          navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (route) => false);
         }
         handler.next(error);
       },

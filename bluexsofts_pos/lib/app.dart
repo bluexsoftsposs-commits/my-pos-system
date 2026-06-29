@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/dio_client.dart';
 import 'core/theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/product_provider.dart';
@@ -22,6 +23,7 @@ class BluexSoftsPOSApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
       ],
       child: MaterialApp(
+        navigatorKey: DioClient.navigatorKey,
         title: 'BluexSofts POS',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
