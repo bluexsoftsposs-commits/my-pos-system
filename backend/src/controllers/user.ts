@@ -6,7 +6,8 @@ import prisma from '../config/db';
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await prisma.user.findMany({
-      where: { shopId: req.shopId },
+      // Cast req.shopId to string safely
+      where: { shopId: req.shopId as string },
       select: { id: true, name: true, email: true, role: true, isActive: true, createdAt: true },
       orderBy: { name: 'asc' },
     });
@@ -27,7 +28,12 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     const existing = await prisma.user.findUnique({
-      where: { shopId_email: { shopId: req.shopId!, email } },
+      where: {
+        shopId_email: {
+          shopId: req.shopId as string,
+          email: email
+        }
+      },
     });
 
     if (existing) {
@@ -39,7 +45,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
     const user = await prisma.user.create({
       data: {
-        shopId: req.shopId!,
+        shopId: req.shopId as string,
         name,
         email,
         passwordHash,
@@ -57,8 +63,10 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 // PUT /api/users/:id
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
+    const userId = req.params.id as string;
+
     const existing = await prisma.user.findFirst({
-      where: { id: req.params.id, shopId: req.shopId },
+      where: { id: userId, shopId: req.shopId as string },
     });
 
     if (!existing) {
@@ -69,7 +77,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     const { name, role, isActive, password } = req.body;
 
     const user = await prisma.user.update({
-      where: { id: req.params.id },
+      where: { id: userId },
       data: {
         ...(name !== undefined && { name }),
         ...(role !== undefined && { role }),
@@ -88,13 +96,17 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 // DELETE /api/users/:id
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (req.params.id === req.user!.userId) {
+    const userId = req.params.id as string;
+    // Accessing req.user with proper type safety
+    const currentUserId = (req as any).user?.userId;
+
+    if (userId === currentUserId) {
       res.status(400).json({ error: 'Cannot delete your own account' });
       return;
     }
 
     const existing = await prisma.user.findFirst({
-      where: { id: req.params.id, shopId: req.shopId },
+      where: { id: userId, shopId: req.shopId as string },
     });
 
     if (!existing) {
@@ -103,7 +115,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     await prisma.user.update({
-      where: { id: req.params.id },
+      where: { id: userId },
       data: { isActive: false },
     });
 
