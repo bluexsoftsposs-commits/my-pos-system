@@ -13,11 +13,11 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         ...(category ? { category: category as string } : {}),
         ...(search
           ? {
-              OR: [
-                { name: { contains: search as string } },
-                { sku: { contains: search as string } },
-              ],
-            }
+            OR: [
+              { name: { contains: search as string } },
+              { sku: { contains: search as string } },
+            ],
+          }
           : {}),
       },
       orderBy: { name: 'asc' },
@@ -34,7 +34,10 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
 export const getProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const product = await prisma.product.findFirst({
-      where: { id: req.params.id, shopId: req.shopId },
+      where: {
+        id: Array.isArray(req.params.id) ? req.params.id[0] : req.params.id,
+        shopId: req.shopId
+      },
     });
 
     if (!product) {

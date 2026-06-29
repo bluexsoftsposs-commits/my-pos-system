@@ -1,5 +1,6 @@
+/// <reference types="node" />
 import { PrismaClient } from '../app/generated/prisma';
-import bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
