@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import prisma from '../config/db';
 
+const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
+
 // GET /api/users
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -63,7 +65,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 // PUT /api/users/:id
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.params.id as string;
+    const userId = toString(req.params.id);
 
     const existing = await prisma.user.findFirst({
       where: { id: userId, shopId: req.shopId as string },
@@ -96,7 +98,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 // DELETE /api/users/:id
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.params.id as string;
+    const userId = toString(req.params.id);
     // Accessing req.user with proper type safety
     const currentUserId = (req as any).user?.userId;
 
