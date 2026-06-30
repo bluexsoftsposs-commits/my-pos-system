@@ -1,4 +1,4 @@
-/// <reference types="node" />
+
 import { PrismaClient } from '../app/generated/prisma';
 import * as bcrypt from 'bcryptjs';
 
@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Create Demo Shop
+ 
   const shop = await prisma.shop.upsert({
     where: { shopName: 'BluexSofts Demo Shop' },
     update: {},
@@ -20,7 +20,7 @@ async function main() {
 
   console.log('✅ Shop created:', shop.shopName);
 
-  // Create Admin
+ 
   const adminHash = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.upsert({
     where: { shopId_email: { shopId: shop.id, email: 'admin@demo.com' } },
@@ -34,9 +34,9 @@ async function main() {
     },
   });
 
-  console.log('✅ Admin created:', admin.email);
+  console.log(' Admin created:', admin.email);
 
-  // Create Cashier
+ 
   const cashierHash = await bcrypt.hash('cashier123', 12);
   const cashier = await prisma.user.upsert({
     where: { shopId_email: { shopId: shop.id, email: 'cashier@demo.com' } },
@@ -50,9 +50,9 @@ async function main() {
     },
   });
 
-  console.log('✅ Cashier created:', cashier.email);
+  console.log(' Cashier created:', cashier.email);
 
-  // Create Super Admin Shop (hidden system shop)
+ 
   const superShop = await prisma.shop.upsert({
     where: { shopName: '__super_admin__' },
     update: {},
@@ -76,9 +76,9 @@ async function main() {
     },
   });
 
-  console.log('✅ Super Admin created: super@admin.com / super123');
+  console.log(' Super Admin created: super@admin.com / super123');
 
-  // Create Demo Products
+  
   const products = [
     {
       name: 'Premium Basmati Rice 5kg',
@@ -136,9 +136,9 @@ async function main() {
     });
   }
 
-  console.log(`✅ ${products.length} PKR demo products seeded`);
-  console.log('\n🎉 Database seeded successfully!');
-  console.log('\n📋 Demo Credentials:');
+  console.log(` ${products.length} PKR demo products seeded`);
+  console.log('\n Database seeded successfully!');
+  console.log('\n Demo Credentials:');
   console.log('   Shop Name: BluexSofts Demo Shop (NONE plan - buy a plan first!)');
   console.log('   Admin: admin@demo.com / admin123');
   console.log('   Cashier: cashier@demo.com / cashier123');
