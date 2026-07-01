@@ -7,6 +7,7 @@ import '../views/shared/info_row.dart';
 import 'login_screen.dart';
 import 'plans_screen.dart';
 import '../core/theme.dart';
+import '../core/env_config.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -144,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text('App Info', style: Theme.of(context).textTheme.titleMedium),
                 const Divider(),
                 InfoRow(label: 'Version', value: '1.0.0'),
-                InfoRow(label: 'API URL', value: 'https://my-pos-system-2.onrender.com/api'),
+                InfoRow(label: 'API URL', value: EnvConfig.apiBaseUrl),
               ],
             ),
           ),
