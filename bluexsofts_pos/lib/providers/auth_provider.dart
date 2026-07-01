@@ -52,7 +52,7 @@ class AuthProvider with ChangeNotifier {
         final data = await _authService.getMe();
         if (data != null) {
           _user = AppUser.fromJson(data['user']);
-          _shop = Shop.fromJson(data['shop']);
+          _shop = data['shop'] != null ? Shop.fromJson(data['shop']) : null;
           _status = AuthStatus.authenticated;
           await _persistSession();
         } else {
@@ -81,9 +81,9 @@ class AuthProvider with ChangeNotifier {
         await _authService.saveToken(data['token']);
         _user = AppUser.fromJson({
           ...data['user'],
-          'shopId': data['shop']['id'],
+          'shopId': data['shop']?['id'] ?? data['user']['shopId'],
         });
-        _shop = Shop.fromJson(data['shop']);
+        _shop = data['shop'] != null ? Shop.fromJson(data['shop']) : null;
         _status = AuthStatus.authenticated;
         await _persistSession();
         _isLoading = false;
@@ -119,9 +119,9 @@ class AuthProvider with ChangeNotifier {
         await _authService.saveToken(data['token']);
         _user = AppUser.fromJson({
           ...data['user'],
-          'shopId': data['shop']['id'],
+          'shopId': data['shop']?['id'] ?? data['user']['shopId'],
         });
-        _shop = Shop.fromJson(data['shop']);
+        _shop = data['shop'] != null ? Shop.fromJson(data['shop']) : null;
         _status = AuthStatus.authenticated;
         await _persistSession();
         _isLoading = false;

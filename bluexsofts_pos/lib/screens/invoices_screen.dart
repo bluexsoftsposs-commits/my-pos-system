@@ -271,7 +271,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
-                          'By: ${inv.user!['name'] ?? 'Unknown'}',
+                          'By: ${inv.user?['name'] ?? 'Unknown'}',
                           style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                         ),
                       ),
@@ -388,7 +388,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                       _detailRow('Date', dateStr),
                       if (inv.user != null) ...[
                         const SizedBox(height: 8),
-                        _detailRow('Cashier', '${inv.user!['name'] ?? 'Unknown'}'),
+                        _detailRow('Cashier', '${inv.user?['name'] ?? 'Unknown'}'),
                       ],
                       const SizedBox(height: 8),
                       _detailRow('Payment', inv.paymentMethod),

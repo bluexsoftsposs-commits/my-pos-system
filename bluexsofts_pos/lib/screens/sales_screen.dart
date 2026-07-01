@@ -183,7 +183,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     ),
                     if (sale.user != null)
                       Text(
-                        'By: ${sale.user!['name'] ?? 'Unknown'}',
+                        'By: ${sale.user?['name'] ?? 'Unknown'}',
                         style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                       ),
                   ],
