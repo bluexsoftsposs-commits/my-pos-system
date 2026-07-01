@@ -93,13 +93,12 @@ export const getSale = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Generate invoice number INV-YYYY-XXXX
+// Generate invoice number INV-YYYY-TIMESTAMP-RANDOM
 async function generateInvoiceNumber(tx: any, shopId: string): Promise<string> {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
   const year = new Date().getFullYear();
-  const count = await tx.invoice.count({
-    where: { shopId, createdAt: { gte: new Date(`${year}-01-01`), lt: new Date(`${year + 1}-01-01`) } },
-  });
-  return `INV-${year}-${(count + 1).toString().padStart(4, '0')}`;
+  return `INV-${year}-${timestamp}-${random}`;
 }
 
 // POST /api/sales
@@ -114,7 +113,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const sale = await prisma.$transaction(async (tx: any) => {
+    const newSale = await prisma.$transaction(async (tx: any) => {
       let subtotal = 0;
       const saleItemData = [];
 
@@ -141,7 +140,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
       const discountAmount = parseFloat(discount) || 0;
       const total = subtotal + taxAmount - discountAmount;
 
-      const newSale = await tx.sale.create({
+      const sale = await tx.sale.create({
         data: {
           shopId,
           userId,
@@ -159,7 +158,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
         await tx.saleItem.create({
           data: {
             ...itemData,
-            saleId: newSale.id,
+            saleId: sale.id,
           },
         });
         await tx.product.update({
@@ -170,10 +169,10 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
 
       // Generate invoice
       const invoiceNumber = await generateInvoiceNumber(tx, shopId);
-      const invoice = await tx.invoice.create({
+      await tx.invoice.create({
         data: {
           invoiceNumber,
-          saleId: newSale.id,
+          saleId: sale.id,
           shopId,
           userId,
           subtotal,
@@ -184,14 +183,16 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
         },
       });
 
-      return await tx.sale.findUnique({
-        where: { id: newSale.id },
-        include: {
-          saleItems: { include: { product: { select: { name: true, sku: true } } } },
-          user: { select: { name: true, email: true } },
-          invoice: true,
-        },
-      });
+      return sale.id;
+    }, { timeout: 30000 });
+
+    const sale = await prisma.sale.findUnique({
+      where: { id: newSale },
+      include: {
+        saleItems: { include: { product: { select: { name: true, sku: true } } } },
+        user: { select: { name: true, email: true } },
+        invoice: true,
+      },
     });
 
     res.status(201).json(sale);
@@ -268,7 +269,7 @@ export const bulkSyncSales = async (req: Request, res: Response): Promise<void> 
             },
           });
           return newSale.id;
-        });
+        }, { timeout: 30000 });
         results.push({ synced: true, id: result });
       } catch (e: any) {
         results.push({ synced: false, error: e.message });

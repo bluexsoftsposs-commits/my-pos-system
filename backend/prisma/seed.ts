@@ -1,4 +1,4 @@
-
+/// <reference types="node" />
 import { PrismaClient } from '../app/generated/prisma';
 import * as bcrypt from 'bcryptjs';
 
