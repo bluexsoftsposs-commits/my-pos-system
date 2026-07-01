@@ -40,6 +40,9 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       select: { currentSessionToken: true },
     });
 
+    console.log('DB USER FOUND:', !!user);
+    if (user) console.log('DB USER currentSessionToken set:', user.currentSessionToken !== null);
+
     if (!user) {
       res.status(401).json({ error: 'User not found' });
       return;
@@ -70,6 +73,7 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction): v
 };
 
 export const requireSuperAdmin = (req: Request, res: Response, next: NextFunction): void => {
+  console.log('REQUIRE SUPERADMIN CHECK: req.user?.role =', req.user?.role);
   if (!req.user || req.user.role !== 'SUPER_ADMIN') {
     res.status(403).json({ error: 'Super admin access required' });
     return;
