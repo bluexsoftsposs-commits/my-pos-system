@@ -153,9 +153,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         where: { id: superUser.id },
         data: { currentSessionToken: token },
       });
-      res.json({
+      res.status(200).json({
         token,
-        user: { id: superUser.id, name: superUser.name, email: superUser.email, role: superUser.role },
+        user: {
+          id: superUser.id,
+          name: superUser.name,
+          email: superUser.email,
+          role: superUser.role,
+          shopId: superShop.id,
+        },
         shop: {
           id: superShop.id,
           shopName: superShop.shopName,
@@ -204,13 +210,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       data: { currentSessionToken: token },
     });
 
-    res.json({
+    res.status(200).json({
       token,
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+        shopId: user.shopId,
       },
       shop: {
         id: shop.id,
