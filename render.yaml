@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: my-pos-system-2
+    env: static
+    buildCommand: cd bluexsofts_pos && flutter build web --release
+    staticPublishPath: bluexsofts_pos/build/web
