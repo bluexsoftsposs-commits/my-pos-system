@@ -124,7 +124,7 @@ class AppTheme {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       contentTextStyle: const TextStyle(fontFamily: _fontFamily, color: Colors.white),
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: darkSurface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),

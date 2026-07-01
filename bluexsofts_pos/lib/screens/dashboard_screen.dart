@@ -144,7 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   top: 6,
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: AppTheme.accentGradient,
                       shape: BoxShape.circle,
                     ),
@@ -309,7 +309,7 @@ class _DashboardHomeState extends State<_DashboardHome> {
           const SizedBox(height: 20),
           _buildSummaryCards(summary),
           const SizedBox(height: 16),
-          const _DashboardChart(),
+          _DashboardChart(),
           const SizedBox(height: 24),
           Row(
             children: [
