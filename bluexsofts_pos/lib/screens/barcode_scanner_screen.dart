@@ -19,6 +19,15 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     _controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
       returnImage: false,
+      formats: [
+        BarcodeFormat.qrCode,
+        BarcodeFormat.ean13,
+        BarcodeFormat.ean8,
+        BarcodeFormat.upcA,
+        BarcodeFormat.upcE,
+        BarcodeFormat.code128,
+        BarcodeFormat.code39,
+      ],
     );
   }
 
