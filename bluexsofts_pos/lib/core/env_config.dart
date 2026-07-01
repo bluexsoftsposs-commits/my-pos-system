@@ -1,12 +1,5 @@
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 
-class EnvConfig {
-  static String get apiBaseUrl {
-    if (kIsWeb) return 'https://my-pos-system-yxm9.onrender.com/api';
-    try {
-      if (Platform.isAndroid) return 'http://10.0.2.2:3000/api';
-    } catch (_) {}
-    return 'http://localhost:3000/api';
-  }
-}
+const String baseUrl = kIsWeb 
+  ? 'https://my-pos-system-2.onrender.com/api'
+  : 'http://localhost:3000/api';
