@@ -29,6 +29,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   const token = authHeader.split(' ')[1];
 
   try {
+    console.log('AUTH MIDDLEWARE JWT_SECRET length:', process.env.JWT_SECRET?.length || 'UNDEFINED');
     const secret = process.env.JWT_SECRET || 'fallback-secret';
     const decoded = jwt.verify(token, secret) as AuthPayload;
 
