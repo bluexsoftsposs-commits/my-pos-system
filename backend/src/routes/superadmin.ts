@@ -7,6 +7,8 @@ import {
   toggleShopStatus,
   deleteUser,
   createShopUser,
+  createAdmin,
+  toggleAdminStatus,
   extendSubscription,
 } from '../controllers/superadmin';
 
@@ -22,5 +24,7 @@ router.put('/shops/:id/toggle', toggleShopStatus);
 router.put('/shops/:id/extend', extendSubscription);
 router.delete('/users/:id', deleteUser);
 router.post('/users', createShopUser);
+router.post('/create-admin', createAdmin);
+router.put('/users/:id/toggle', toggleAdminStatus);
 
 export default router;

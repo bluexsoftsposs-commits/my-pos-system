@@ -199,6 +199,116 @@ export const createShopUser = async (req: Request, res: Response): Promise<void>
   }
 };
 
+export const createAdmin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { shopName, name, email, password } = req.body;
+
+    if (!shopName || !name || !email || !password) {
+      res.status(400).json({ error: 'shopName, name, email, and password are required' });
+      return;
+    }
+
+    const existingEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingEmail) {
+      res.status(409).json({ error: 'Email already registered' });
+      return;
+    }
+
+    const existingShop = await prisma.shop.findUnique({ where: { shopName } });
+    if (existingShop) {
+      res.status(409).json({ error: 'Shop name already taken' });
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    const result = await prisma.$transaction(async (tx) => {
+      const shop = await tx.shop.create({
+        data: { shopName, subscriptionPlan: 'NONE', subscriptionStatus: 'NONE' },
+      });
+
+      const user = await tx.user.create({
+        data: {
+          shopId: shop.id,
+          email,
+          passwordHash,
+          name,
+          role: 'ADMIN',
+        },
+      });
+
+      // Seed 5 demo products for the new shop
+      const demoProducts = [
+        { name: 'Premium Basmati Rice 5kg', description: 'Aged extra-long grain basmati rice, perfect for biryani and pulao.', price: 1850, stock: 50, category: 'Groceries', sku: `DEMO-${shop.id.slice(0,4)}-001` },
+        { name: 'Fresh Chicken Breast 1kg', description: 'Hormone-free, farm-fresh chicken breast cuts.', price: 920, stock: 30, category: 'Meat & Poultry', sku: `DEMO-${shop.id.slice(0,4)}-002` },
+        { name: 'Shan Biryani Masala 60g', description: 'Authentic blend of spices for delicious homemade biryani.', price: 145, stock: 120, category: 'Spices & Condiments', sku: `DEMO-${shop.id.slice(0,4)}-003` },
+        { name: 'Nestle Fruita Vitals Chaunsa Mango Juice 1L', description: '100% pure chaunsa mango juice with no added preservatives.', price: 310, stock: 80, category: 'Beverages', sku: `DEMO-${shop.id.slice(0,4)}-004` },
+        { name: 'Dawn Bread Large White', description: 'Soft and fluffy large white bread loaf, baked fresh daily.', price: 180, stock: 40, category: 'Bakery', sku: `DEMO-${shop.id.slice(0,4)}-005` },
+      ];
+
+      for (const product of demoProducts) {
+        await tx.product.create({ data: { shopId: shop.id, ...product } });
+      }
+
+      return { shop, user };
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Admin account created successfully',
+      admin: {
+        id: result.user.id,
+        name: result.user.name,
+        email: result.user.email,
+        role: result.user.role,
+        shop: {
+          id: result.shop.id,
+          shopName: result.shop.shopName,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('CREATE ADMIN ERROR:', error);
+    res.status(500).json({
+      message: 'Admin not created',
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+export const toggleAdminStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = toString(req.params.id);
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: { shop: { select: { shopName: true } } },
+    });
+
+    if (!user || !user.shop || user.shop.shopName === '__super_admin__') {
+      res.status(404).json({ error: 'Admin not found' });
+      return;
+    }
+
+    const updated = await prisma.user.update({
+      where: { id },
+      data: { isActive: !user.isActive },
+      select: { id: true, isActive: true, name: true, email: true, role: true },
+    });
+
+    // Also toggle the shop status
+    if (user.role === 'ADMIN') {
+      await prisma.shop.update({
+        where: { id: user.shopId },
+        data: { isActive: !user.isActive },
+      });
+    }
+
+    res.json({ success: true, user: updated });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const extendSubscription = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = toString(req.params.id);

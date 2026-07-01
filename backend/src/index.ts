@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/product';
 import saleRoutes from './routes/sale';
+import invoiceRoutes from './routes/invoice';
 import userRoutes from './routes/user';
 import paymentRoutes from './routes/payment';
 import superAdminRoutes from './routes/superadmin';
@@ -35,9 +36,10 @@ app.get('/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/sales', saleRoutes);
+app.use('/api/invoices', invoiceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/admin', superAdminRoutes);
+app.use('/api/superadmin', superAdminRoutes);
 
 // 404 handler
 app.use((_req, res) => {

@@ -21,6 +21,7 @@ model Shop {
   products           Product[]
   sales              Sale[]
   saleItems          SaleItem[]
+  invoices           Invoice[]
   users              User[]
 }
 
@@ -51,6 +52,7 @@ model User {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   sales               Sale[]
+  invoices            Invoice[]
   shop                Shop                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
   passwordResetTokens PasswordResetToken[]
 
@@ -99,6 +101,24 @@ model Sale {
   user          User       @relation(fields: [userId], references: [id])
   shop          Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
   saleItems     SaleItem[]
+  invoice       Invoice?
+}
+
+model Invoice {
+  id            String   @id @default(uuid())
+  invoiceNumber String   @unique
+  saleId        String   @unique
+  shopId        String
+  userId        String
+  total         Float
+  subtotal      Float
+  tax           Float    @default(0)
+  discount      Float    @default(0)
+  paymentMethod String   @default("CASH")
+  createdAt     DateTime @default(now())
+  sale          Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  shop          Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id])
 }
 
 model SaleItem {

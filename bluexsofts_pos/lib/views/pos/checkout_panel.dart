@@ -47,9 +47,12 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
       }
       cart.clearCart();
       widget.onBack();
+      final invoiceNum = sale.invoice?['invoiceNumber'] ?? '';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Sale completed! Total: ${CurrencyFormatter.format(sale.total)}'),
+          content: Text(invoiceNum.isNotEmpty
+              ? 'Sale completed! Invoice: $invoiceNum - Total: ${CurrencyFormatter.format(sale.total)}'
+              : 'Sale completed! Total: ${CurrencyFormatter.format(sale.total)}'),
           backgroundColor: AppTheme.success,
         ),
       );

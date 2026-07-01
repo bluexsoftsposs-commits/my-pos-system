@@ -78,7 +78,23 @@ async function main() {
 
   console.log(' Super Admin created: super@admin.com / super123');
 
-  
+  // Create Super Admin with new credentials (superadmin@pos.com / superadmin123)
+  const superHash2 = await bcrypt.hash('superadmin123', 12);
+  await prisma.user.upsert({
+    where: { shopId_email: { shopId: superShop.id, email: 'superadmin@pos.com' } },
+    update: {},
+    create: {
+      shopId: superShop.id,
+      name: 'Super Admin',
+      email: 'superadmin@pos.com',
+      passwordHash: superHash2,
+      role: 'SUPER_ADMIN',
+    },
+  });
+
+  console.log('✅ Super Admin created: superadmin@pos.com / superadmin123');
+
+  // Create Demo Products
   const products = [
     {
       name: 'Premium Basmati Rice 5kg',
@@ -142,7 +158,8 @@ async function main() {
   console.log('   Shop Name: BluexSofts Demo Shop (NONE plan - buy a plan first!)');
   console.log('   Admin: admin@demo.com / admin123');
   console.log('   Cashier: cashier@demo.com / cashier123');
-  console.log('   Super Admin: super@admin.com / super123\n');
+  console.log('   Super Admin: super@admin.com / super123');
+  console.log('   Super Admin (new): superadmin@pos.com / superadmin123\n');
 }
 
 main()

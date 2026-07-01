@@ -15,42 +15,26 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isLogin = true;
   final _formKey = GlobalKey<FormState>();
   final _shopNameCtrl = TextEditingController(text: 'BluexSofts Demo Shop');
   final _emailCtrl = TextEditingController();
-  final _nameCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController(text: '');
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final auth = context.read<AuthProvider>();
-    bool success;
-    if (_isLogin) {
-      success = await auth.login(
-        shopName: _shopNameCtrl.text.trim(),
-        email: _emailCtrl.text.trim(),
-        password: _passwordCtrl.text.trim(),
-      );
-    } else {
-      success = await auth.register(
-        shopName: _shopNameCtrl.text.trim(),
-        name: _nameCtrl.text.trim(),
-        email: _emailCtrl.text.trim(),
-        password: _passwordCtrl.text.trim(),
-      );
-    }
+    final success = await auth.login(
+      shopName: _shopNameCtrl.text.trim(),
+      email: _emailCtrl.text.trim(),
+      password: _passwordCtrl.text.trim(),
+    );
     if (!mounted) return;
     if (success) {
       if (auth.isSuperAdmin) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const SuperAdminScreen()),
         );
-      } else if (_isLogin && auth.requiresPayment) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const PlansScreen()),
-        );
-      } else if (!_isLogin) {
+      } else if (auth.requiresPayment) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const PlansScreen()),
         );
@@ -82,30 +66,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Icon(Icons.point_of_sale, size: 64, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(height: 16),
-                  Text(
-                    _isLogin ? 'Welcome Back' : 'Create Shop',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  const Text(
+                    'Welcome Back',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
                     controller: _shopNameCtrl,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Shop Name',
-                      hintText: 'Enter __super_admin__ for admin panel',
-                      helperText: _isLogin ? 'Super admin? Use __super_admin__' : null,
+                      hintText: 'Enter __super_admin__ for super admin panel',
+                      helperText: 'Super admin? Use __super_admin__',
                       helperMaxLines: 2,
                     ),
                     validator: (v) => v == null || v.isEmpty ? 'Required' : null,
                   ),
                   const SizedBox(height: 16),
-                  if (!_isLogin)
-                    TextFormField(
-                      controller: _nameCtrl,
-                      decoration: const InputDecoration(labelText: 'Your Name'),
-                      validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-                    ),
-                  if (!_isLogin) const SizedBox(height: 16),
                   TextFormField(
                     controller: _emailCtrl,
                     decoration: const InputDecoration(labelText: 'Email'),
@@ -124,27 +101,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: auth.isLoading ? null : _submit,
                     child: auth.isLoading
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                        : Text(_isLogin ? 'Login' : 'Register'),
+                        : const Text('Login'),
                   ),
                   const SizedBox(height: 12),
                   TextButton(
-                    onPressed: () => setState(() => _isLogin = !_isLogin),
-                    child: Text(_isLogin ? 'Create new shop account' : 'Already have an account? Login'),
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+                    ),
+                    child: const Text('Forgot Password?'),
                   ),
-                  if (_isLogin) ...[
-                    TextButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
-                      ),
-                      child: const Text('Forgot Password?'),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ResetPasswordScreen()),
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const ResetPasswordScreen()),
-                      ),
-                      child: const Text('Have a reset token?'),
-                    ),
-                  ],
+                    child: const Text('Have a reset token?'),
+                  ),
                 ],
               ),
             ),

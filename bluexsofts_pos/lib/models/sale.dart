@@ -29,6 +29,7 @@ class Sale {
   final DateTime createdAt;
   final List<SaleItem> saleItems;
   final Map<String, dynamic>? user;
+  final Map<String, dynamic>? invoice;
 
   Sale({
     required this.id,
@@ -44,6 +45,7 @@ class Sale {
     required this.createdAt,
     this.saleItems = const [],
     this.user,
+    this.invoice,
   });
 
   factory Sale.fromJson(Map<String, dynamic> json) {
@@ -64,6 +66,7 @@ class Sale {
           .toList() ??
           [],
       user: json['user'] as Map<String, dynamic>?,
+      invoice: json['invoice'] as Map<String, dynamic>?,
     );
   }
 

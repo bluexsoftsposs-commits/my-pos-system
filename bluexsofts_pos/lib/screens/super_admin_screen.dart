@@ -78,7 +78,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
           tabs: const [
             Tab(text: 'Dashboard'),
             Tab(text: 'Shops'),
-            Tab(text: 'Users'),
+            Tab(text: 'Admins'),
           ],
         ),
       ),
@@ -89,7 +89,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
               children: [
                 _buildDashboardTab(),
                 _buildShopsTab(),
-                _buildUsersTab(),
+                _buildAdminsTab(),
               ],
             ),
     );
@@ -154,20 +154,149 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildUsersTab() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(12),
-      itemCount: _users.length,
-      itemBuilder: (context, index) {
-        final u = _users[index];
-        return UserListTile(
-          user: u as Map<String, dynamic>,
-          onDeactivate: () async {
-            await _adminService.deactivateUser(u['id']);
-            _loadData();
-          },
-        );
-      },
+  Widget _buildAdminsTab() {
+    final admins = _users.where((u) => u['role'] == 'ADMIN').toList();
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _showCreateAdminDialog,
+              icon: const Icon(Icons.person_add),
+              label: const Text('Create New Admin'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: admins.isEmpty
+              ? const Center(child: Text('No admins found'))
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  itemCount: admins.length,
+                  itemBuilder: (context, index) {
+                    final u = admins[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: u['isActive'] == true
+                              ? AppTheme.success.withOpacity(0.2)
+                              : AppTheme.error.withOpacity(0.2),
+                          child: Icon(
+                            Icons.admin_panel_settings,
+                            color: u['isActive'] == true ? AppTheme.success : AppTheme.error,
+                          ),
+                        ),
+                        title: Text('${u['name']}'),
+                        subtitle: Text('${u['email']}\nShop: ${u['shop']?['shopName'] ?? 'N/A'}'),
+                        isThreeLine: true,
+                        trailing: Switch(
+                          value: u['isActive'] == true,
+                          onChanged: (_) async {
+                            await _adminService.toggleAdminStatus(u['id']);
+                            _loadData();
+                          },
+                          activeColor: AppTheme.success,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  void _showCreateAdminDialog() {
+    final nameCtrl = TextEditingController();
+    final emailCtrl = TextEditingController();
+    final shopNameCtrl = TextEditingController();
+    final passwordCtrl = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Create New Admin'),
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: shopNameCtrl,
+                  decoration: const InputDecoration(labelText: 'Shop Name'),
+                  validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: nameCtrl,
+                  decoration: const InputDecoration(labelText: 'Admin Name'),
+                  validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: emailCtrl,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: passwordCtrl,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                  validator: (v) => v == null || v.length < 6 ? 'Min 6 characters' : null,
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              if (!formKey.currentState!.validate()) return;
+              try {
+                final success = await _adminService.createAdmin(
+                  shopName: shopNameCtrl.text.trim(),
+                  name: nameCtrl.text.trim(),
+                  email: emailCtrl.text.trim(),
+                  password: passwordCtrl.text.trim(),
+                );
+                if (!ctx.mounted) return;
+                Navigator.of(ctx).pop();
+                if (success) {
+                  _loadData();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Admin created successfully'), backgroundColor: AppTheme.success),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to create admin'), backgroundColor: AppTheme.error),
+                  );
+                }
+              } catch (e) {
+                print('UNHANDLED ERROR in create admin dialog: $e');
+                if (ctx.mounted) {
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: $e'), backgroundColor: AppTheme.error),
+                  );
+                }
+              }
+            },
+            child: const Text('Create Admin'),
+          ),
+        ],
+      ),
     );
   }
 }

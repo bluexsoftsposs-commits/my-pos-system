@@ -12,6 +12,8 @@ import 'pos_screen.dart';
 import 'cart_screen.dart';
 import 'products_screen.dart';
 import 'sales_screen.dart';
+import 'invoices_screen.dart';
+import 'users_screen.dart';
 import 'settings_screen.dart';
 import 'plans_screen.dart';
 import 'login_screen.dart';
@@ -26,13 +28,20 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const _DashboardHome(),
-    const POSScreen(),
-    const ProductsScreen(),
-    const SalesScreen(),
-    const SettingsScreen(),
-  ];
+  List<Widget> _pages(bool isAdmin) {
+    final base = <Widget>[
+      const _DashboardHome(),
+      const POSScreen(),
+      const ProductsScreen(),
+      const SalesScreen(),
+      const InvoicesScreen(),
+    ];
+    if (isAdmin) {
+      base.add(const UsersScreen());
+    }
+    base.add(const SettingsScreen());
+    return base;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +75,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     final isWide = MediaQuery.of(context).size.width >= 600;
+    final isAdmin = auth.isAdmin;
+    final pages = _pages(isAdmin);
+    final _navDestinations = _buildNavDestinations(isAdmin);
 
     return Scaffold(
       appBar: AppBar(
@@ -110,34 +122,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: (i) => setState(() => _selectedIndex = i),
                   labelType: NavigationRailLabelType.all,
-                  destinations: const [
-                    NavigationRailDestination(icon: Icon(Icons.dashboard), label: Text('Home')),
-                    NavigationRailDestination(icon: Icon(Icons.point_of_sale), label: Text('POS')),
-                    NavigationRailDestination(icon: Icon(Icons.inventory_2), label: Text('Products')),
-                    NavigationRailDestination(icon: Icon(Icons.receipt_long), label: Text('Sales')),
-                    NavigationRailDestination(icon: Icon(Icons.settings), label: Text('Settings')),
-                  ],
+                  destinations: _navDestinations.map((d) => NavigationRailDestination(icon: Icon(d.icon), label: Text(d.label))).toList(),
                 ),
                 const VerticalDivider(width: 1),
-                Expanded(child: _pages[_selectedIndex]),
+                Expanded(child: pages[_selectedIndex]),
               ],
             )
-          : _pages[_selectedIndex],
+          : pages[_selectedIndex],
       bottomNavigationBar: isWide
           ? null
           : NavigationBar(
               selectedIndex: _selectedIndex,
               onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-              destinations: const [
-                NavigationDestination(icon: Icon(Icons.dashboard), label: 'Home'),
-                NavigationDestination(icon: Icon(Icons.point_of_sale), label: 'POS'),
-                NavigationDestination(icon: Icon(Icons.inventory_2), label: 'Products'),
-                NavigationDestination(icon: Icon(Icons.receipt_long), label: 'Sales'),
-                NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-              ],
+              destinations: _navDestinations.map((d) => NavigationDestination(icon: Icon(d.icon), label: d.label)).toList(),
             ),
     );
   }
+
+  List<_NavItem> _buildNavDestinations(bool isAdmin) {
+    final items = <_NavItem>[
+      _NavItem(Icons.dashboard, 'Home'),
+      _NavItem(Icons.point_of_sale, 'POS'),
+      _NavItem(Icons.inventory_2, 'Products'),
+      _NavItem(Icons.receipt_long, 'Sales'),
+      _NavItem(Icons.receipt, 'Invoices'),
+    ];
+    if (isAdmin) {
+      items.add(_NavItem(Icons.people, 'Staff'));
+    }
+    items.add(_NavItem(Icons.settings, 'Settings'));
+    return items;
+  }
+}
+
+class _NavItem {
+  final IconData icon;
+  final String label;
+  const _NavItem(this.icon, this.label);
 }
 
 class _DashboardHome extends StatefulWidget {
@@ -201,6 +222,15 @@ class _DashboardHomeState extends State<_DashboardHome> {
                 onTap: () {
                   final parent = context.findAncestorStateOfType<_DashboardScreenState>()!;
                   parent.setState(() => parent._selectedIndex = 3);
+                },
+              ),
+              ActionCard(
+                icon: Icons.receipt,
+                label: 'Invoices',
+                color: Colors.cyan,
+                onTap: () {
+                  final parent = context.findAncestorStateOfType<_DashboardScreenState>()!;
+                  parent.setState(() => parent._selectedIndex = 4);
                 },
               ),
               ActionCard(

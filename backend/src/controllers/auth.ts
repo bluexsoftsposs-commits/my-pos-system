@@ -122,6 +122,50 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Handle hardcoded super admin login
+    if (email === 'superadmin@pos.com' && password === 'superadmin123') {
+      const superShop = await prisma.shop.findUnique({ where: { shopName: '__super_admin__' } });
+      if (!superShop) {
+        res.status(401).json({ error: 'Invalid credentials' });
+        return;
+      }
+      let superUser = await prisma.user.findUnique({
+        where: { shopId_email: { shopId: superShop.id, email: 'superadmin@pos.com' } },
+      });
+      if (!superUser) {
+        const superHash = await bcrypt.hash('superadmin123', 12);
+        superUser = await prisma.user.create({
+          data: {
+            shopId: superShop.id,
+            name: 'Super Admin',
+            email: 'superadmin@pos.com',
+            passwordHash: superHash,
+            role: 'SUPER_ADMIN',
+          },
+        });
+      }
+      const token = jwt.sign(
+        { userId: superUser.id, shopId: superShop.id, role: superUser.role, email: superUser.email },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
+      );
+      await prisma.user.update({
+        where: { id: superUser.id },
+        data: { currentSessionToken: token },
+      });
+      res.json({
+        token,
+        user: { id: superUser.id, name: superUser.name, email: superUser.email, role: superUser.role },
+        shop: {
+          id: superShop.id,
+          shopName: superShop.shopName,
+          subscriptionPlan: superShop.subscriptionPlan,
+          subscriptionStatus: superShop.subscriptionStatus,
+        },
+      });
+      return;
+    }
+
     const shop = await prisma.shop.findUnique({ where: { shopName } });
     if (!shop || !shop.isActive) {
       res.status(401).json({ error: 'Invalid credentials' });

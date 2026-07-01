@@ -198,6 +198,20 @@ exports.Prisma.SaleScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.InvoiceScalarFieldEnum = {
+  id: 'id',
+  invoiceNumber: 'invoiceNumber',
+  saleId: 'saleId',
+  shopId: 'shopId',
+  userId: 'userId',
+  total: 'total',
+  subtotal: 'subtotal',
+  tax: 'tax',
+  discount: 'discount',
+  paymentMethod: 'paymentMethod',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SaleItemScalarFieldEnum = {
   id: 'id',
   shopId: 'shopId',
@@ -231,6 +245,7 @@ exports.Prisma.ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   Product: 'Product',
   Sale: 'Sale',
+  Invoice: 'Invoice',
   SaleItem: 'SaleItem'
 };
 
