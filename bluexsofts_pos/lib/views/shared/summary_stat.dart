@@ -1,21 +1,47 @@
 import 'package:flutter/material.dart';
+import '../../core/theme.dart';
 
 class SummaryStat extends StatelessWidget {
   final String label;
   final String value;
-  const SummaryStat({super.key, required this.label, required this.value});
+  final LinearGradient? gradient;
+  const SummaryStat({super.key, required this.label, required this.value, this.gradient});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: gradient,
+        color: gradient == null ? AppTheme.darkCard : null,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 3)),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: gradient != null ? Colors.white.withOpacity(0.8) : Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: gradient != null ? Colors.white : null,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),

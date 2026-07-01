@@ -23,4 +23,10 @@ class ProductService {
     final response = await ApiClient.delete('/products/$id');
     return ApiClient.parseResponse(response)['success'] == true;
   }
+
+  Future<Map<String, dynamic>?> findProductByBarcode(String barcode) async {
+    final response = await ApiClient.get('/products/barcode/$barcode');
+    final result = ApiClient.parseResponse(response);
+    return result['success'] ? result['data'] as Map<String, dynamic> : null;
+  }
 }

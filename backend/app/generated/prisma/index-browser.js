@@ -179,6 +179,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   sku: 'sku',
   category: 'category',
   imageUrl: 'imageUrl',
+  barcode: 'barcode',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

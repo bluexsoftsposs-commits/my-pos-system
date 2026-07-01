@@ -78,6 +78,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
         sku: sku || '',
         category: category || 'General',
         imageUrl: imageUrl || '',
+        barcode: req.body.barcode || null,
       },
     });
 
@@ -103,7 +104,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const { name, description, price, stock, sku, category, imageUrl, isActive } = req.body;
+    const { name, description, price, stock, sku, category, imageUrl, isActive, barcode } = req.body;
 
     const product = await prisma.product.update({
       where: { id: productId },
@@ -116,6 +117,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
         ...(category !== undefined && { category }),
         ...(imageUrl !== undefined && { imageUrl }),
         ...(isActive !== undefined && { isActive }),
+        ...(barcode !== undefined && { barcode: barcode || null }),
       },
     });
 
@@ -162,6 +164,36 @@ export const getCategories = async (req: Request, res: Response): Promise<void> 
 
     res.json(products.map((p) => p.category));
   } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// GET /api/products/barcode/:barcode
+export const getProductByBarcode = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const barcode = toString(req.params.barcode);
+
+    if (!barcode) {
+      res.status(400).json({ error: 'Barcode is required' });
+      return;
+    }
+
+    const product = await prisma.product.findFirst({
+      where: {
+        barcode: barcode,
+        shopId: req.shopId as string,
+        isActive: true,
+      },
+    });
+
+    if (!product) {
+      res.status(404).json({ error: 'Product not found' });
+      return;
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error('Get product by barcode error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -220,11 +220,11 @@ export const bulkSyncSales = async (req: Request, res: Response): Promise<void> 
           const saleItemData = [];
           for (const item of items) {
             const product = await tx.product.findUnique({ where: { id: item.productId } });
-            if (!product) throw new Error(`Product ${item.productId} not found`);
+            if (!product || product.shopId !== req.shopId) throw new Error(`Product ${item.productId} not found`);
             const itemSubtotal = product.price * item.quantity;
             subtotal += itemSubtotal;
             saleItemData.push({
-              shopId: req.shopId,
+              shopId: req.shopId as string,
               productId: item.productId,
               quantity: item.quantity,
               price: product.price,

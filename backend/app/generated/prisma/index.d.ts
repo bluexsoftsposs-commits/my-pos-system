@@ -5818,6 +5818,7 @@ export namespace Prisma {
     sku: string | null
     category: string | null
     imageUrl: string | null
+    barcode: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5833,6 +5834,7 @@ export namespace Prisma {
     sku: string | null
     category: string | null
     imageUrl: string | null
+    barcode: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5848,6 +5850,7 @@ export namespace Prisma {
     sku: number
     category: number
     imageUrl: number
+    barcode: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -5875,6 +5878,7 @@ export namespace Prisma {
     sku?: true
     category?: true
     imageUrl?: true
+    barcode?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -5890,6 +5894,7 @@ export namespace Prisma {
     sku?: true
     category?: true
     imageUrl?: true
+    barcode?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -5905,6 +5910,7 @@ export namespace Prisma {
     sku?: true
     category?: true
     imageUrl?: true
+    barcode?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -6007,6 +6013,7 @@ export namespace Prisma {
     sku: string
     category: string
     imageUrl: string
+    barcode: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -6041,6 +6048,7 @@ export namespace Prisma {
     sku?: boolean
     category?: boolean
     imageUrl?: boolean
+    barcode?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6059,6 +6067,7 @@ export namespace Prisma {
     sku?: boolean
     category?: boolean
     imageUrl?: boolean
+    barcode?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6075,6 +6084,7 @@ export namespace Prisma {
     sku?: boolean
     category?: boolean
     imageUrl?: boolean
+    barcode?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6105,6 +6115,7 @@ export namespace Prisma {
       sku: string
       category: string
       imageUrl: string
+      barcode: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -6512,6 +6523,7 @@ export namespace Prisma {
     readonly sku: FieldRef<"Product", 'String'>
     readonly category: FieldRef<"Product", 'String'>
     readonly imageUrl: FieldRef<"Product", 'String'>
+    readonly barcode: FieldRef<"Product", 'String'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
@@ -10126,6 +10138,7 @@ export namespace Prisma {
     sku: 'sku',
     category: 'category',
     imageUrl: 'imageUrl',
+    barcode: 'barcode',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -10611,6 +10624,7 @@ export namespace Prisma {
     sku?: StringFilter<"Product"> | string
     category?: StringFilter<"Product"> | string
     imageUrl?: StringFilter<"Product"> | string
+    barcode?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -10628,6 +10642,7 @@ export namespace Prisma {
     sku?: SortOrder
     category?: SortOrder
     imageUrl?: SortOrder
+    barcode?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10637,6 +10652,7 @@ export namespace Prisma {
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    barcode?: string
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
@@ -10653,7 +10669,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
     saleItems?: SaleItemListRelationFilter
-  }, "id">
+  }, "id" | "barcode">
 
   export type ProductOrderByWithAggregationInput = {
     id?: SortOrder
@@ -10665,6 +10681,7 @@ export namespace Prisma {
     sku?: SortOrder
     category?: SortOrder
     imageUrl?: SortOrder
+    barcode?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10688,6 +10705,7 @@ export namespace Prisma {
     sku?: StringWithAggregatesFilter<"Product"> | string
     category?: StringWithAggregatesFilter<"Product"> | string
     imageUrl?: StringWithAggregatesFilter<"Product"> | string
+    barcode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -11326,6 +11344,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11343,6 +11362,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11358,6 +11378,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11375,6 +11396,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11391,6 +11413,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11405,6 +11428,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11420,6 +11444,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12107,6 +12132,7 @@ export namespace Prisma {
     sku?: SortOrder
     category?: SortOrder
     imageUrl?: SortOrder
+    barcode?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12127,6 +12153,7 @@ export namespace Prisma {
     sku?: SortOrder
     category?: SortOrder
     imageUrl?: SortOrder
+    barcode?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12142,6 +12169,7 @@ export namespace Prisma {
     sku?: SortOrder
     category?: SortOrder
     imageUrl?: SortOrder
+    barcode?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13266,6 +13294,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13281,6 +13310,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13505,6 +13535,7 @@ export namespace Prisma {
     sku?: StringFilter<"Product"> | string
     category?: StringFilter<"Product"> | string
     imageUrl?: StringFilter<"Product"> | string
+    barcode?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -14694,6 +14725,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14710,6 +14742,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14812,6 +14845,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14828,6 +14862,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14937,6 +14972,7 @@ export namespace Prisma {
     sku?: string
     category?: string
     imageUrl?: string
+    barcode?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15033,6 +15069,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15048,6 +15085,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15063,6 +15101,7 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

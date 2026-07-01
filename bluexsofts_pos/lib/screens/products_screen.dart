@@ -35,7 +35,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       isScrollControlled: true,
       backgroundColor: AppTheme.darkSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) => ProductForm(product: product),
     );
@@ -54,7 +54,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: TextField(
               controller: _searchCtrl,
               decoration: InputDecoration(
-                hintText: 'Search products...',
+                hintText: 'Search products by name or SKU...',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchCtrl.text.isNotEmpty
                     ? IconButton(
@@ -77,11 +77,30 @@ class _ProductsScreenState extends State<ProductsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: productProv.categories.map((cat) {
                 final selected = productProv.selectedCategory == cat;
+                final categoryColors = {
+                  'General': Colors.blue,
+                  'Groceries': Colors.green,
+                  'Beverages': Colors.cyan,
+                  'Meat & Poultry': Colors.red,
+                  'Spices & Condiments': Colors.orange,
+                  'Bakery': Colors.amber,
+                };
+                final catColor = categoryColors[cat] ?? AppTheme.primary;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
-                    label: Text(cat),
+                    label: Text(cat, style: TextStyle(
+                      fontSize: 13,
+                      color: selected ? Colors.white : catColor,
+                    )),
                     selected: selected,
+                    selectedColor: catColor,
+                    backgroundColor: catColor.withOpacity(0.1),
+                    checkmarkColor: Colors.white,
+                    showCheckmark: false,
+                    side: BorderSide(
+                      color: selected ? catColor : catColor.withOpacity(0.3),
+                    ),
                     onSelected: (_) => productProv.setCategory(cat),
                   ),
                 );
@@ -93,49 +112,266 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: productProv.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : productProv.products.isEmpty
-                    ? const Center(child: Text('No products found'))
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        itemCount: productProv.products.length,
-                        itemBuilder: (context, index) {
-                          final product = productProv.products[index];
-                          return _buildProductListTile(product, auth.isAdmin);
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey[600]),
+                            const SizedBox(height: 12),
+                            const Text('No products found', style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
+                      )
+                    : LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth >= 768) {
+                            return _buildDesktopTable(productProv);
+                          }
+                          return _buildMobileList(productProv, auth);
                         },
                       ),
           ),
         ],
       ),
       floatingActionButton: auth.isAdmin
-          ? FloatingActionButton(
+          ? FloatingActionButton.extended(
               onPressed: () => _showProductForm(),
-              child: const Icon(Icons.add),
+              icon: const Icon(Icons.add),
+              label: const Text('Add Product'),
+              backgroundColor: AppTheme.primary,
+              elevation: 4,
             )
           : null,
     );
   }
 
-  Widget _buildProductListTile(Product product, bool isAdmin) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppTheme.primary.withOpacity(0.2),
-          child: Icon(Icons.inventory_2, color: AppTheme.primary),
+  Widget _buildDesktopTable(ProductProvider productProv) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: DataTable(
+        headingRowColor: WidgetStateProperty.all(AppTheme.darkSurface),
+        dataRowColor: WidgetStateProperty.all(AppTheme.darkCard),
+        border: TableBorder(
+          borderRadius: BorderRadius.circular(12),
+          horizontalInside: BorderSide(color: AppTheme.darkBorder.withOpacity(0.3)),
         ),
-        title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle: Text(
-          '${product.category} | SKU: ${product.sku}',
-          style: const TextStyle(fontSize: 12),
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(CurrencyFormatter.format(product.price), style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text('Stock: ${product.stock}', style: TextStyle(fontSize: 12, color: product.stock <= 5 ? AppTheme.warning : Colors.grey)),
-          ],
-        ),
+        columns: const [
+          DataColumn(label: Text('Product', style: TextStyle(fontWeight: FontWeight.w600))),
+          DataColumn(label: Text('SKU', style: TextStyle(fontWeight: FontWeight.w600))),
+          DataColumn(label: Text('Category', style: TextStyle(fontWeight: FontWeight.w600))),
+          DataColumn(label: Text('Price', style: TextStyle(fontWeight: FontWeight.w600)), numeric: true),
+          DataColumn(label: Text('Stock', style: TextStyle(fontWeight: FontWeight.w600)), numeric: true),
+          DataColumn(label: Text('Actions', style: TextStyle(fontWeight: FontWeight.w600))),
+        ],
+        rows: productProv.products.map((product) {
+          final auth = context.read<AuthProvider>();
+          return DataRow(
+            cells: [
+              DataCell(Text(product.name, style: const TextStyle(fontWeight: FontWeight.w500))),
+              DataCell(Text(product.sku.isEmpty ? '-' : product.sku, style: const TextStyle(fontSize: 13))),
+              DataCell(_buildCategoryBadge(product.category)),
+              DataCell(Text(CurrencyFormatter.format(product.price), style: const TextStyle(fontWeight: FontWeight.w600))),
+              DataCell(_buildStockBadge(product.stock)),
+              DataCell(
+                auth.isAdmin
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit_outlined, size: 18),
+                            onPressed: () => _showProductForm(product: product),
+                            color: AppTheme.primary,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline, size: 18),
+                            onPressed: () => _confirmDelete(product),
+                            color: AppTheme.error,
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildMobileList(ProductProvider productProv, AuthProvider auth) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      itemCount: productProv.products.length,
+      itemBuilder: (context, index) {
+        final product = productProv.products[index];
+        return _buildProductCard(product, auth.isAdmin);
+      },
+    );
+  }
+
+  Widget _buildProductCard(Product product, bool isAdmin) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppTheme.darkCard,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.darkBorder.withOpacity(0.5)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 3)),
+        ],
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
         onTap: isAdmin ? () => _showProductForm(product: product) : null,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppTheme.primary.withOpacity(0.2), AppTheme.accent.withOpacity(0.1)],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.inventory_2, color: AppTheme.primary, size: 24),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.name,
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        _buildCategoryBadge(product.category),
+                        const SizedBox(width: 8),
+                        Text(
+                          'SKU: ${product.sku.isNotEmpty ? product.sku : '-'}',
+                          style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    CurrencyFormatter.format(product.price),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.success),
+                  ),
+                  const SizedBox(height: 4),
+                  _buildStockBadge(product.stock),
+                ],
+              ),
+              if (isAdmin) ...[
+                const SizedBox(width: 4),
+                PopupMenuButton(
+                  icon: Icon(Icons.more_vert, size: 18, color: Colors.grey[500]),
+                  color: AppTheme.darkSurface,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  onSelected: (value) {
+                    if (value == 'edit') _showProductForm(product: product);
+                    if (value == 'delete') _confirmDelete(product);
+                  },
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(value: 'edit', child: Row(
+                      children: [Icon(Icons.edit, size: 18, color: AppTheme.primary), SizedBox(width: 8), Text('Edit')],
+                    )),
+                    const PopupMenuItem(value: 'delete', child: Row(
+                      children: [Icon(Icons.delete, size: 18, color: AppTheme.error), SizedBox(width: 8), Text('Delete')],
+                    )),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryBadge(String category) {
+    final categoryColors = {
+      'General': Colors.blue,
+      'Groceries': Colors.green,
+      'Beverages': Colors.cyan,
+      'Meat & Poultry': Colors.red,
+      'Spices & Condiments': Colors.orange,
+      'Bakery': Colors.amber,
+    };
+    final color = categoryColors[category] ?? AppTheme.primary;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Text(
+        category,
+        style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  Widget _buildStockBadge(int stock) {
+    final color = stock <= 0
+        ? AppTheme.error
+        : stock <= 5
+            ? AppTheme.warning
+            : AppTheme.success;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        stock <= 0 ? 'Out' : 'Stock: $stock',
+        style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  void _confirmDelete(Product product) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.darkSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Delete Product'),
+        content: Text('Are you sure you want to delete "${product.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              final success = await context.read<ProductProvider>().deleteProduct(product.id);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? 'Product deleted' : 'Failed to delete'),
+                    backgroundColor: success ? AppTheme.success : AppTheme.error,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.error),
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
   }

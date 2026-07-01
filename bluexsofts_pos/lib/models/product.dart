@@ -8,6 +8,7 @@ class Product {
   final String sku;
   final String category;
   final String imageUrl;
+  final String? barcode;
   final bool isActive;
   final DateTime createdAt;
 
@@ -21,6 +22,7 @@ class Product {
     this.sku = '',
     this.category = 'General',
     this.imageUrl = '',
+    this.barcode,
     this.isActive = true,
     required this.createdAt,
   });
@@ -36,6 +38,7 @@ class Product {
       sku: json['sku'] as String? ?? '',
       category: json['category'] as String? ?? 'General',
       imageUrl: json['imageUrl'] as String? ?? '',
+      barcode: json['barcode'] as String?,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
@@ -51,6 +54,7 @@ class Product {
     'sku': sku,
     'category': category,
     'imageUrl': imageUrl,
+    'barcode': barcode,
     'isActive': isActive,
     'createdAt': createdAt.toIso8601String(),
   };
@@ -63,6 +67,7 @@ class Product {
     String? sku,
     String? category,
     String? imageUrl,
+    String? barcode,
     bool? isActive,
   }) {
     return Product(
@@ -75,6 +80,7 @@ class Product {
       sku: sku ?? this.sku,
       category: category ?? this.category,
       imageUrl: imageUrl ?? this.imageUrl,
+      barcode: barcode ?? this.barcode,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt,
     );

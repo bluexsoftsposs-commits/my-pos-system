@@ -160,7 +160,9 @@ export const easyPaisaCallback = async (req: Request, res: Response): Promise<vo
 export const checkPaymentStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     const paymentId = toString(req.params.paymentId);
-    const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
+    const payment = await prisma.payment.findFirst({
+      where: { id: paymentId, shopId: req.shopId },
+    });
 
     if (!payment) {
       res.status(404).json({ error: 'Payment not found' });

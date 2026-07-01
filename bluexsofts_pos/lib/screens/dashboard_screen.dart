@@ -50,25 +50,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (!auth.isSuperAdmin && !auth.hasActiveSubscription) {
       return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.lock_outline, size: 64, color: AppTheme.warning),
-              const SizedBox(height: 16),
-              Text('No Active Plan', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Text('Please purchase a plan to access the POS system.'),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const PlansScreen()),
+        body: Container(
+          decoration: BoxDecoration(gradient: AppTheme.primaryGradient),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: AppTheme.warning.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Icon(Icons.lock_outline, size: 40, color: AppTheme.warning),
                 ),
-                icon: const Icon(Icons.shopping_cart),
-                label: const Text('View Plans'),
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14)),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Text(
+                  'No Active Plan',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Please purchase a plan to access the POS system.',
+                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (_) => const PlansScreen()),
+                  ),
+                  icon: const Icon(Icons.shopping_cart),
+                  label: const Text('View Plans'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accent,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -77,16 +100,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isWide = MediaQuery.of(context).size.width >= 600;
     final isAdmin = auth.isAdmin;
     final pages = _pages(isAdmin);
-    final _navDestinations = _buildNavDestinations(isAdmin);
+    final navDestinations = _buildNavDestinations(isAdmin);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BluexSofts POS'),
+        title: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                gradient: AppTheme.accentGradient,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.point_of_sale, size: 18, color: Colors.white),
+            ),
+            const SizedBox(width: 10),
+            const Text('BluexSofts POS'),
+          ],
+        ),
         actions: [
           if (auth.shop != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: Chip(label: Text(auth.shop!.shopName)),
+            Container(
+              margin: const EdgeInsets.only(right: 4),
+              child: Chip(
+                avatar: const Icon(Icons.store, size: 16, color: AppTheme.primary),
+                label: Text(auth.shop!.shopName, style: const TextStyle(fontSize: 12)),
+                backgroundColor: AppTheme.primary.withOpacity(0.15),
+                side: BorderSide.none,
+              ),
             ),
           Stack(
             children: [
@@ -102,11 +144,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   top: 6,
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(color: AppTheme.error, shape: BoxShape.circle),
-                    constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                    decoration: const BoxDecoration(
+                      gradient: AppTheme.accentGradient,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                     child: Text(
                       '${cart.itemCount}',
-                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -118,12 +167,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: isWide
           ? Row(
               children: [
-                NavigationRail(
-                  selectedIndex: _selectedIndex,
-                  onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-                  labelType: NavigationRailLabelType.all,
-                  destinations: _navDestinations.map((d) => NavigationRailDestination(icon: Icon(d.icon), label: Text(d.label))).toList(),
-                ),
+                _buildSidebar(navDestinations, isWide),
                 const VerticalDivider(width: 1),
                 Expanded(child: pages[_selectedIndex]),
               ],
@@ -134,8 +178,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
           : NavigationBar(
               selectedIndex: _selectedIndex,
               onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-              destinations: _navDestinations.map((d) => NavigationDestination(icon: Icon(d.icon), label: d.label)).toList(),
+              destinations: navDestinations
+                  .map((d) => NavigationDestination(icon: Icon(d.icon, size: 20), label: d.label))
+                  .toList(),
+              animationDuration: const Duration(milliseconds: 300),
             ),
+    );
+  }
+
+  Widget _buildSidebar(List<_NavItem> items, bool isWide) {
+    return Container(
+      width: 80,
+      decoration: BoxDecoration(
+        color: AppTheme.darkSurface,
+        border: Border(
+          right: BorderSide(color: AppTheme.darkBorder.withOpacity(0.5)),
+        ),
+      ),
+      child: NavigationRail(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+        labelType: NavigationRailLabelType.all,
+        groupAlignment: -1.0,
+        minExtendedWidth: 80,
+        destinations: items
+            .map((d) => NavigationRailDestination(
+                  icon: Icon(d.icon, size: 22),
+                  selectedIcon: Icon(d.icon, size: 22, color: AppTheme.accent),
+                  label: Text(
+                    d.label,
+                    style: const TextStyle(fontSize: 11),
+                  ),
+                ))
+            .toList(),
+        indicatorColor: AppTheme.accent.withOpacity(0.15),
+      ),
     );
   }
 
@@ -186,13 +263,73 @@ class _DashboardHomeState extends State<_DashboardHome> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Hello, ${auth.user?.name ?? ''}', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: AppTheme.accentGradient,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Center(
+                  child: Text(
+                    (auth.user?.name ?? 'U').substring(0, 1).toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello, ${auth.user?.name ?? ''}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Welcome back to your dashboard',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           _buildSummaryCards(summary),
           const SizedBox(height: 16),
-          _DashboardChart(),
+          const _DashboardChart(),
           const SizedBox(height: 24),
-          Text('Quick Actions', style: Theme.of(context).textTheme.titleMedium),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: AppTheme.accentGradient,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Quick Actions',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           Wrap(
             spacing: 12,
@@ -227,7 +364,7 @@ class _DashboardHomeState extends State<_DashboardHome> {
               ActionCard(
                 icon: Icons.receipt,
                 label: 'Invoices',
-                color: Colors.cyan,
+                color: AppTheme.info,
                 onTap: () {
                   final parent = context.findAncestorStateOfType<_DashboardScreenState>()!;
                   parent.setState(() => parent._selectedIndex = 4);
@@ -267,14 +404,18 @@ class _DashboardHomeState extends State<_DashboardHome> {
                   title: 'Today Sales',
                   value: CurrencyFormatter.format(today['total'] ?? 0),
                   subtitle: '${today['count'] ?? 0} transactions',
+                  gradient: AppTheme.cardGradientBlue,
+                  icon: Icons.trending_up,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: SummaryCard(
-                  title: 'All Time',
+                  title: 'All Time Sales',
                   value: CurrencyFormatter.format(allTime['total'] ?? 0),
                   subtitle: '${allTime['count'] ?? 0} transactions',
+                  gradient: AppTheme.cardGradientPurple,
+                  icon: Icons.attach_money,
                 ),
               ),
             ],
@@ -286,12 +427,16 @@ class _DashboardHomeState extends State<_DashboardHome> {
               title: 'Today Sales',
               value: CurrencyFormatter.format(today['total'] ?? 0),
               subtitle: '${today['count'] ?? 0} transactions',
+              gradient: AppTheme.cardGradientBlue,
+              icon: Icons.trending_up,
             ),
             const SizedBox(height: 12),
             SummaryCard(
-              title: 'All Time',
+              title: 'All Time Sales',
               value: CurrencyFormatter.format(allTime['total'] ?? 0),
               subtitle: '${allTime['count'] ?? 0} transactions',
+              gradient: AppTheme.cardGradientPurple,
+              icon: Icons.attach_money,
             ),
           ],
         );

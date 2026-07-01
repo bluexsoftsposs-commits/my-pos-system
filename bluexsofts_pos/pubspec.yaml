@@ -24,6 +24,9 @@ dependencies:
   # Auth persistence
   shared_preferences: ^2.3.2
 
+  # Barcode scanning
+  mobile_scanner: ^5.0.0
+
   # Receipt printing
   pdf: ^3.11.1
   printing: ^5.13.2

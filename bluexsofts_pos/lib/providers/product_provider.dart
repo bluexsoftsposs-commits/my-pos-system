@@ -138,6 +138,18 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+  Future<Product?> findProductByBarcode(String barcode) async {
+    try {
+      final result = await _productService.findProductByBarcode(barcode);
+      if (result != null) {
+        return Product.fromJson(result);
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   // Decrement stock locally after sale (optimistic update)
   void decrementStock(String productId, int quantity) {
     final index = _products.indexWhere((p) => p.id == productId);
