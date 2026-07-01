@@ -19,6 +19,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     _controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
       returnImage: false,
+      cameraResolution: const Size(1280, 720),
       formats: [
         BarcodeFormat.qrCode,
         BarcodeFormat.ean13,
@@ -72,8 +73,8 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           ),
           Center(
             child: Container(
-              width: 250,
-              height: 250,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 180,
               decoration: BoxDecoration(
                 border: Border.all(color: AppTheme.accent, width: 2),
                 borderRadius: BorderRadius.circular(16),
@@ -84,7 +85,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                   const Icon(Icons.qr_code_scanner, size: 48, color: Colors.white38),
                   const SizedBox(height: 8),
                   Text(
-                    'Point camera at barcode',
+                    'Align linear barcode horizontally in the frame',
                     style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
                   ),
                 ],
