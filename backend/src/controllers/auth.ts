@@ -116,12 +116,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password, shopName } = req.body;
 
+    console.log('LOGIN ATTEMPT:', JSON.stringify(req.body));
+
     if (!email || !password) {
       res.status(400).json({ message: 'Email and password required' });
       return;
     }
 
     // Super admin hardcoded check
+    console.log('Checking super admin:', shopName, email, password);
     if (shopName === '__super_admin__' && email === 'superadmin@pos.com' && password === 'superadmin123') {
       const token = jwt.sign(
         { userId: 'superadmin', role: 'SUPERADMIN', shopId: '__super_admin__' },
