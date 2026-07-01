@@ -7,17 +7,11 @@ class AuthService {
     required String email,
     required String password,
   }) async {
-    final requestBody = {
+    final response = await ApiClient.post('/auth/login', {
       'shopName': shopName,
       'email': email,
       'password': password,
-    };
-    final url = '${ApiClient.baseUrl}/auth/login';
-    print('LOGIN REQUEST BODY: ${jsonEncode(requestBody)}');
-    print('LOGIN REQUEST URL: $url');
-    final response = await ApiClient.post('/auth/login', requestBody);
-    print('LOGIN RESPONSE BODY: ${response.body}');
-    print('LOGIN RESPONSE STATUS: ${response.statusCode}');
+    });
     final result = ApiClient.parseResponse(response);
     return result['success'] ? result['data'] : null;
   }

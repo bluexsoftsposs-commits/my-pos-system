@@ -81,9 +81,9 @@ class AuthProvider with ChangeNotifier {
         await _authService.saveToken(data['token']);
         _user = AppUser.fromJson({
           ...data['user'],
-          'shopId': data['shop']?['id'] ?? data['user']['shopId'],
+          'shopId': data['user']['shop']?['id'] ?? data['user']['shopId'],
         });
-        _shop = data['shop'] != null ? Shop.fromJson(data['shop']) : null;
+        _shop = data['user']['shop'] != null ? Shop.fromJson(data['user']['shop']) : null;
         _status = AuthStatus.authenticated;
         await _persistSession();
         _isLoading = false;
@@ -157,12 +157,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> refreshSubscription() async {
     try {
-      print('REFRESH SUB: calling /auth/me');
       final data = await _authService.getMe();
-      print('REFRESH SUB: data != null = ${data != null}');
-      print('REFRESH SUB: shop != null = ${data?['shop'] != null}');
-      print('REFRESH SUB: subscriptionStatus = ${data?['shop']?['subscriptionStatus']}');
-      print('REFRESH SUB: _shop != null = ${_shop != null}');
       if (data != null && data['shop'] != null) {
         final shopData = data['shop'];
         if (_shop != null) {
@@ -176,14 +171,11 @@ class AuthProvider with ChangeNotifier {
                 : _shop!.subscriptionEndsAt,
             isActive: _shop!.isActive,
           );
-          print('REFRESH SUB: updated shop, status now = ${_shop?.subscriptionStatus}');
           await _persistSession();
           notifyListeners();
         }
       }
-    } catch (e) {
-      print('REFRESH SUB ERROR: $e');
-    }
+    } catch (_) {}
   }
 
   Future<String?> forgotPassword({
