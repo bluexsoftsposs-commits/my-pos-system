@@ -93,12 +93,13 @@ export const getSale = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Generate invoice number INV-YYYY-TIMESTAMP-RANDOM
-async function generateInvoiceNumber(tx: any, shopId: string): Promise<string> {
+// Generate unique invoice number INV-YYYY-TIMESTAMP-UUID
+async function generateInvoiceNumber(): Promise<string> {
+  const { randomUUID } = await import('crypto');
   const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const shortId = randomUUID().split('-')[0].toUpperCase();
   const year = new Date().getFullYear();
-  return `INV-${year}-${timestamp}-${random}`;
+  return `INV-${year}-${timestamp}-${shortId}`;
 }
 
 // POST /api/sales
@@ -168,7 +169,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
       }
 
       // Generate invoice
-      const invoiceNumber = await generateInvoiceNumber(tx, shopId);
+      const invoiceNumber = await generateInvoiceNumber();
       await tx.invoice.create({
         data: {
           invoiceNumber,
@@ -184,7 +185,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
       });
 
       return sale.id;
-    }, { timeout: 30000 });
+    }, { timeout: 60000, maxWait: 60000 });
 
     const sale = await prisma.sale.findUnique({
       where: { id: newSale },
@@ -254,7 +255,7 @@ export const bulkSyncSales = async (req: Request, res: Response): Promise<void> 
               data: { stock: { decrement: itemData.quantity } },
             });
           }
-          const invoiceNumber = await generateInvoiceNumber(tx, req.shopId as string);
+          const invoiceNumber = await generateInvoiceNumber();
           await tx.invoice.create({
             data: {
               invoiceNumber,
@@ -269,7 +270,7 @@ export const bulkSyncSales = async (req: Request, res: Response): Promise<void> 
             },
           });
           return newSale.id;
-        }, { timeout: 30000 });
+        }, { timeout: 60000, maxWait: 60000 });
         results.push({ synced: true, id: result });
       } catch (e: any) {
         results.push({ synced: false, error: e.message });
