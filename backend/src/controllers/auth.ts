@@ -137,8 +137,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    console.log('JWT_SECRET length:', process.env.JWT_SECRET?.length || 'UNDEFINED');
-    console.log('Signing token for userId:', user.id, 'role:', user.role);
     const token = jwt.sign(
       { userId: user.id, role: user.role, shopId: user.shopId },
       process.env.JWT_SECRET || 'fallback-secret',
