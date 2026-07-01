@@ -157,7 +157,12 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> refreshSubscription() async {
     try {
+      print('REFRESH SUB: calling /auth/me');
       final data = await _authService.getMe();
+      print('REFRESH SUB: data != null = ${data != null}');
+      print('REFRESH SUB: shop != null = ${data?['shop'] != null}');
+      print('REFRESH SUB: subscriptionStatus = ${data?['shop']?['subscriptionStatus']}');
+      print('REFRESH SUB: _shop != null = ${_shop != null}');
       if (data != null && data['shop'] != null) {
         final shopData = data['shop'];
         if (_shop != null) {
@@ -171,11 +176,14 @@ class AuthProvider with ChangeNotifier {
                 : _shop!.subscriptionEndsAt,
             isActive: _shop!.isActive,
           );
+          print('REFRESH SUB: updated shop, status now = ${_shop?.subscriptionStatus}');
           await _persistSession();
           notifyListeners();
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      print('REFRESH SUB ERROR: $e');
+    }
   }
 
   Future<String?> forgotPassword({
