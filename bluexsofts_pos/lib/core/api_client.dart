@@ -68,15 +68,23 @@ class ApiClient {
   }
 
   static Map<String, dynamic> parseResponse(http.Response response) {
-    final body = jsonDecode(response.body);
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return {'success': true, 'data': body};
-    } else {
-      return {
-        'success': false,
-        'error': body['error'] ?? 'Unknown error',
-        'statusCode': response.statusCode,
-      };
+    try {
+      final body = jsonDecode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return {'success': true, 'data': body};
+      } else {
+        return {
+          'success': false,
+          'error': body['error'] ?? 'Unknown error',
+          'statusCode': response.statusCode,
+        };
+      }
+    } catch (e) {
+      print('Raw response (${response.statusCode}): ${response.body}');
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return {'success': false, 'error': 'Empty response from server', 'statusCode': response.statusCode};
+      }
+      return {'success': false, 'error': response.body.isNotEmpty ? response.body : 'Empty response from server', 'statusCode': response.statusCode};
     }
   }
 }

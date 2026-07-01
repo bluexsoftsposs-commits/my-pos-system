@@ -11,6 +11,7 @@ class AuthService {
       'email': email,
       'password': password,
     });
+    print('Raw login response (${response.statusCode}): ${response.body}');
     final result = ApiClient.parseResponse(response);
     return result['success'] ? result['data'] : null;
   }
