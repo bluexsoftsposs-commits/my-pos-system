@@ -64,6 +64,11 @@ export const listShops = async (req: Request, res: Response): Promise<void> => {
         orderBy: { createdAt: 'desc' },
         include: {
           _count: { select: { users: true, sales: true } },
+          users: {
+            where: { role: 'ADMIN' },
+            select: { id: true, name: true, email: true, createdAt: true },
+            take: 1,
+          },
           payments: { take: 1, orderBy: { createdAt: 'desc' }, select: { amount: true, paymentMethod: true, createdAt: true } },
         },
       }),

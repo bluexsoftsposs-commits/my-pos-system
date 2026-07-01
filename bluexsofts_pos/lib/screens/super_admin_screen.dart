@@ -155,7 +155,10 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
   }
 
   Widget _buildAdminsTab() {
-    final admins = _users.where((u) => u['role'] == 'ADMIN').toList();
+    final adminShops = _shops.where((s) {
+      final users = s['users'] as List?;
+      return users != null && users.isNotEmpty;
+    }).toList();
     return Column(
       children: [
         Padding(
@@ -174,41 +177,69 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
           ),
         ),
         Expanded(
-          child: admins.isEmpty
+          child: adminShops.isEmpty
               ? const Center(child: Text('No admins found'))
               : ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemCount: admins.length,
+                  itemCount: adminShops.length,
                   itemBuilder: (context, index) {
-                    final u = admins[index];
+                    final shop = adminShops[index];
+                    final admin = (shop['users'] as List).first as Map<String, dynamic>;
+                    final usersCount = shop['_count']?['users'] ?? 0;
+                    final dateStr = admin['createdAt'] as String? ?? '';
+                    final date = dateStr.isNotEmpty
+                        ? dateStr.split('T')[0]
+                        : '';
+
                     return Card(
                       margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: u['isActive'] == true
-                              ? AppTheme.success.withOpacity(0.2)
-                              : AppTheme.error.withOpacity(0.2),
-                          child: Icon(
-                            Icons.admin_panel_settings,
-                            color: u['isActive'] == true ? AppTheme.success : AppTheme.error,
-                          ),
-                        ),
-                        title: Text('${u['name']}'),
-                        subtitle: Text('${u['email']}\nShop: ${u['shop']?['shopName'] ?? 'N/A'}'),
-                        isThreeLine: true,
-                        trailing: Switch(
-                          value: u['isActive'] == true,
-                          onChanged: (_) async {
-                            await _adminService.toggleAdminStatus(u['id']);
-                            _loadData();
-                          },
-                          activeColor: AppTheme.success,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: AppTheme.primary.withOpacity(0.2),
+                                  child: const Icon(Icons.admin_panel_settings, color: AppTheme.primary),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('${admin['name']}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                                      Text('${admin['email']}', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(height: 20),
+                            _detailRow(Icons.store, 'Shop', '${shop['shopName']}'),
+                            const SizedBox(height: 4),
+                            _detailRow(Icons.people, 'Total Users', '$usersCount'),
+                            const SizedBox(height: 4),
+                            _detailRow(Icons.calendar_today, 'Admin Since', date),
+                          ],
                         ),
                       ),
                     );
                   },
                 ),
         ),
+      ],
+    );
+  }
+
+  Widget _detailRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey[600]),
+        const SizedBox(width: 8),
+        Text('$label: ', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
       ],
     );
   }
