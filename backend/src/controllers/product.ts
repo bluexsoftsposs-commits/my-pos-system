@@ -171,7 +171,8 @@ export const getCategories = async (req: Request, res: Response): Promise<void> 
 // GET /api/products/barcode/:barcode
 export const getProductByBarcode = async (req: Request, res: Response): Promise<void> => {
   try {
-    const barcode = toString(req.params.barcode);
+    const barcode = req.params.barcode;
+    console.log('BARCODE LOOKUP - received:', JSON.stringify(barcode));
 
     if (!barcode) {
       res.status(400).json({ error: 'Barcode is required' });
