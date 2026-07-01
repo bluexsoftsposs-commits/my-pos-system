@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
     if (!mounted) return;
     if (success) {
-      if (auth.isSuperAdmin) {
+      if (auth.isSuperAdmin || auth.user?.role == 'SUPERADMIN') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const SuperAdminScreen()),
         );
