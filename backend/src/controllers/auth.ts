@@ -139,7 +139,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const token = jwt.sign(
       { userId: user.id, role: user.role, shopId: user.shopId },
-      process.env.JWT_SECRET || 'secret',
+      process.env.JWT_SECRET || 'fallback-secret',
       { expiresIn: '7d' }
     );
 
