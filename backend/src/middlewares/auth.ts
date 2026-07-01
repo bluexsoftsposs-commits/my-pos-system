@@ -49,7 +49,9 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     }
 
     // If currentSessionToken is set, it must match the request token
+    console.log('SESSION CHECK - stored:', user.currentSessionToken?.substring(0, 20), 'received:', token?.substring(0, 20));
     if (user.currentSessionToken !== null && user.currentSessionToken !== token) {
+      console.log('SESSION MISMATCH: stored !== received token');
       res.status(401).json({ error: 'Session expired — logged in from another device' });
       return;
     }
