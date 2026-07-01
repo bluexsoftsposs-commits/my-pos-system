@@ -114,27 +114,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password, shopName } = req.body;
-
-    console.log('LOGIN ATTEMPT:', JSON.stringify(req.body));
+    const { email, password } = req.body;
 
     if (!email || !password) {
       res.status(400).json({ message: 'Email and password required' });
-      return;
-    }
-
-    // Super admin hardcoded check
-    console.log('Checking super admin:', shopName, email, password);
-    if (shopName === '__super_admin__' && email === 'superadmin@pos.com' && password === 'superadmin123') {
-      const token = jwt.sign(
-        { userId: 'superadmin', role: 'SUPERADMIN', shopId: '__super_admin__' },
-        process.env.JWT_SECRET || 'secret',
-        { expiresIn: '7d' }
-      );
-      res.status(200).json({
-        token,
-        user: { id: 'superadmin', email, name: 'Super Admin', role: 'SUPERADMIN', shopId: '__super_admin__' }
-      });
       return;
     }
 
