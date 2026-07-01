@@ -144,7 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text('App Info', style: Theme.of(context).textTheme.titleMedium),
                 const Divider(),
                 InfoRow(label: 'Version', value: '1.0.0'),
-                InfoRow(label: 'API URL', value: 'http://localhost:3000/api'),
+                InfoRow(label: 'API URL', value: 'https://my-pos-system-2.onrender.com/api'),
               ],
             ),
           ),

@@ -2,7 +2,7 @@ import prisma from '../config/db';
 
 const EASIPAISA_MERCHANT_ID = process.env.EASIPAISA_MERCHANT_ID || '';
 const EASIPAISA_API_KEY = process.env.EASIPAISA_API_KEY || '';
-const EASIPAISA_RETURN_URL = process.env.EASIPAISA_RETURN_URL || 'http://localhost:3000/api/payment/easypaisa/callback';
+const EASIPAISA_RETURN_URL = process.env.EASIPAISA_RETURN_URL || 'https://my-pos-system-2.onrender.com/api/payment/easypaisa/callback';
 const EASIPAISA_API_URL = process.env.EASIPAISA_API_URL || 'https://sandbox.easypaisa.com.pk/gateway/';
 
 interface EasyPaisaResponse {

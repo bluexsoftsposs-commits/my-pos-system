@@ -25,7 +25,7 @@ transporter.verify((err) => {
 });
 
 export async function sendVerificationEmail(email: string, token: string): Promise<void> {
-  const verifyUrl = `${process.env.APP_URL || 'http://localhost:3000'}/api/auth/verify-email?token=${token}`;
+  const verifyUrl = `${process.env.APP_URL || 'https://my-pos-system-2.onrender.com'}/api/auth/verify-email?token=${token}`;
 
   console.log(`[Email] Sending verification to: ${email}`);
   console.log(`[Email] Token: ${token.substring(0, 16)}...`);
@@ -53,7 +53,7 @@ export async function sendVerificationEmail(email: string, token: string): Promi
 }
 
 export async function sendPasswordResetEmail(email: string, token: string): Promise<void> {
-  const resetUrl = `${process.env.APP_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+  const resetUrl = `${process.env.APP_URL || 'https://my-pos-system-2.onrender.com'}/reset-password?token=${token}`;
 
   console.log(`[Email] Sending password reset to: ${email}`);
   console.log(`[Email] Token: ${token.substring(0, 16)}...`);

@@ -142,18 +142,18 @@ export const initiatePayment = async (req: Request, res: Response): Promise<void
 export const jazzCashCallback = async (req: Request, res: Response): Promise<void> => {
   const result = await handleJazzCashCallback(req.body as Record<string, string>);
   if (result.success) {
-    res.redirect(`${process.env.FLUTTER_APP_URL || 'http://localhost:3000'}/payment/success?paymentId=${result.paymentId}`);
+    res.redirect(`${process.env.FLUTTER_APP_URL || 'https://my-pos-system-2.onrender.com'}/payment/success?paymentId=${result.paymentId}`);
   } else {
-    res.redirect(`${process.env.FLUTTER_APP_URL || 'http://localhost:3000'}/payment/failed`);
+    res.redirect(`${process.env.FLUTTER_APP_URL || 'https://my-pos-system-2.onrender.com'}/payment/failed`);
   }
 };
 
 export const easyPaisaCallback = async (req: Request, res: Response): Promise<void> => {
   const result = await handleEasyPaisaCallback(req.body as Record<string, unknown>);
   if (result.success) {
-    res.redirect(`${process.env.FLUTTER_APP_URL || 'http://localhost:3000'}/payment/success?paymentId=${result.paymentId}`);
+    res.redirect(`${process.env.FLUTTER_APP_URL || 'https://my-pos-system-2.onrender.com'}/payment/success?paymentId=${result.paymentId}`);
   } else {
-    res.redirect(`${process.env.FLUTTER_APP_URL || 'http://localhost:3000'}/payment/failed`);
+    res.redirect(`${process.env.FLUTTER_APP_URL || 'https://my-pos-system-2.onrender.com'}/payment/failed`);
   }
 };
 

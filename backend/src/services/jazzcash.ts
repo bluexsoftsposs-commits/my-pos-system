@@ -4,7 +4,7 @@ import prisma from '../config/db';
 const JAZZCASH_MERCHANT_ID = process.env.JAZZCASH_MERCHANT_ID || '';
 const JAZZCASH_PASSWORD = process.env.JAZZCASH_PASSWORD || '';
 const JAZZCASH_INTEGRITY_SALT = process.env.JAZZCASH_INTEGRITY_SALT || '';
-const JAZZCASH_RETURN_URL = process.env.JAZZCASH_RETURN_URL || 'http://localhost:3000/api/payment/jazzcash/callback';
+const JAZZCASH_RETURN_URL = process.env.JAZZCASH_RETURN_URL || 'https://my-pos-system-2.onrender.com/api/payment/jazzcash/callback';
 const JAZZCASH_API_URL = process.env.JAZZCASH_API_URL || 'https://sandbox.jazzcash.com.pk/CustomerPortal/transactionmanagement/MerchantRegTransactionRequest';
 
 interface JazzCashResponse {
