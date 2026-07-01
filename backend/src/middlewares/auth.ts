@@ -29,6 +29,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   const token = authHeader.split(' ')[1];
 
   try {
+    console.log('AUTH HEADER:', req.headers.authorization?.substring(0, 15) || 'MISSING');
     console.log('AUTH MIDDLEWARE JWT_SECRET length:', process.env.JWT_SECRET?.length || 'UNDEFINED');
     const secret = process.env.JWT_SECRET || 'fallback-secret';
     const decoded = jwt.verify(token, secret) as AuthPayload;
@@ -55,6 +56,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     req.shopId = decoded.shopId;
     next();
   } catch (err) {
+    console.log('JWT VERIFY ERROR:', err.message);
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
