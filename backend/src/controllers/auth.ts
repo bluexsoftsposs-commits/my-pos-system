@@ -112,123 +112,58 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// POST /api/auth/login
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { shopName, email, password } = req.body;
+    const { email, password, shopName } = req.body;
 
-    if (!shopName || !email || !password) {
-      res.status(400).json({ error: 'shopName, email, and password are required' });
+    if (!email || !password) {
+      res.status(400).json({ message: 'Email and password required' });
       return;
     }
 
-    // Handle hardcoded super admin login
-    if (email === 'superadmin@pos.com' && password === 'superadmin123') {
-      const superShop = await prisma.shop.findUnique({ where: { shopName: '__super_admin__' } });
-      if (!superShop) {
-        res.status(401).json({ error: 'Invalid credentials' });
-        return;
-      }
-      let superUser = await prisma.user.findUnique({
-        where: { shopId_email: { shopId: superShop.id, email: 'superadmin@pos.com' } },
-      });
-      if (!superUser) {
-        const superHash = await bcrypt.hash('superadmin123', 12);
-        superUser = await prisma.user.create({
-          data: {
-            shopId: superShop.id,
-            name: 'Super Admin',
-            email: 'superadmin@pos.com',
-            passwordHash: superHash,
-            role: 'SUPER_ADMIN',
-          },
-        });
-      }
+    // Super admin hardcoded check
+    if (shopName === '__super_admin__' && email === 'superadmin@pos.com' && password === 'superadmin123') {
       const token = jwt.sign(
-        { userId: superUser.id, shopId: superShop.id, role: superUser.role, email: superUser.email },
-        JWT_SECRET,
-        { expiresIn: JWT_EXPIRES_IN }
+        { userId: 'superadmin', role: 'SUPERADMIN', shopId: '__super_admin__' },
+        process.env.JWT_SECRET || 'secret',
+        { expiresIn: '7d' }
       );
-      await prisma.user.update({
-        where: { id: superUser.id },
-        data: { currentSessionToken: token },
-      });
       res.status(200).json({
         token,
-        user: {
-          id: superUser.id,
-          name: superUser.name,
-          email: superUser.email,
-          role: superUser.role,
-          shopId: superShop.id,
-        },
-        shop: {
-          id: superShop.id,
-          shopName: superShop.shopName,
-          subscriptionPlan: superShop.subscriptionPlan,
-          subscriptionStatus: superShop.subscriptionStatus,
-        },
+        user: { id: 'superadmin', email, name: 'Super Admin', role: 'SUPERADMIN', shopId: '__super_admin__' }
       });
-      return;
-    }
-
-    const shop = await prisma.shop.findUnique({ where: { shopName } });
-    if (!shop || !shop.isActive) {
-      res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
 
     const user = await prisma.user.findUnique({
-      where: { shopId_email: { shopId: shop.id, email } },
+      where: { email },
+      include: { shop: true }
     });
 
-    if (!user || !user.isActive) {
-      res.status(401).json({ error: 'Invalid credentials' });
+    if (!user) {
+      res.status(401).json({ message: 'Invalid credentials' });
       return;
     }
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) {
-      res.status(401).json({ error: 'Invalid credentials' });
+    const validPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!validPassword) {
+      res.status(401).json({ message: 'Invalid credentials' });
       return;
     }
 
     const token = jwt.sign(
-      {
-        userId: user.id,
-        shopId: shop.id,
-        role: user.role,
-        email: user.email,
-      },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      { userId: user.id, role: user.role, shopId: user.shopId },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '7d' }
     );
-
-    // Update current session token to enforce single session per user
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { currentSessionToken: token },
-    });
 
     res.status(200).json({
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        shopId: user.shopId,
-      },
-      shop: {
-        id: shop.id,
-        shopName: shop.shopName,
-        subscriptionPlan: shop.subscriptionPlan,
-        subscriptionStatus: shop.subscriptionStatus,
-      },
+      user: { id: user.id, email: user.email, name: user.name, role: user.role, shopId: user.shopId, shop: user.shop }
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
