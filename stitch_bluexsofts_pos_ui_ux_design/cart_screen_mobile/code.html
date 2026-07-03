@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cart - BluexSofts POS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .active-state:active {
+            transform: scale(0.95);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#131313",
+                      "surface-container": "#201f1f",
+                      "secondary-fixed-dim": "#4bddb7",
+                      "tertiary-fixed": "#ffdea7",
+                      "outline-variant": "#474554",
+                      "error-container": "#93000a",
+                      "inverse-on-surface": "#313030",
+                      "surface-tint": "#c6bfff",
+                      "on-primary": "#2900a0",
+                      "on-primary-fixed": "#160066",
+                      "on-secondary": "#00382b",
+                      "tertiary-fixed-dim": "#f0bf63",
+                      "surface-variant": "#353534",
+                      "on-tertiary-container": "#fff6ee",
+                      "tertiary": "#f0bf63",
+                      "error": "#ffb4ab",
+                      "on-secondary-container": "#004233",
+                      "on-primary-fixed-variant": "#4029ba",
+                      "primary": "#c6bfff",
+                      "secondary-fixed": "#6dfad2",
+                      "primary-fixed": "#e4dfff",
+                      "surface-dim": "#131313",
+                      "on-background": "#e5e2e1",
+                      "secondary-container": "#02b894",
+                      "on-tertiary-fixed": "#271900",
+                      "on-tertiary-fixed-variant": "#5e4200",
+                      "on-tertiary": "#412d00",
+                      "inverse-primary": "#5847d2",
+                      "on-primary-container": "#faf6ff",
+                      "on-surface-variant": "#c8c4d7",
+                      "secondary": "#4bddb7",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-highest": "#353534",
+                      "outline": "#928ea0",
+                      "surface": "#131313",
+                      "primary-fixed-dim": "#c6bfff",
+                      "on-secondary-fixed-variant": "#005140",
+                      "inverse-surface": "#e5e2e1",
+                      "surface-container-high": "#2a2a2a",
+                      "surface-container-low": "#1c1b1b",
+                      "tertiary-container": "#926b15",
+                      "on-error": "#690005",
+                      "on-surface": "#e5e2e1",
+                      "surface-container-lowest": "#0e0e0e",
+                      "on-secondary-fixed": "#002018",
+                      "surface-bright": "#393939",
+                      "primary-container": "#6c5ce7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "12px",
+                      "margin-desktop": "40px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "margin-mobile": "16px",
+                      "xl": "32px",
+                      "base": "8px",
+                      "gutter": "20px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Be Vietnam Pro"],
+                      "headline-lg": ["Be Vietnam Pro"],
+                      "title-md": ["Be Vietnam Pro"],
+                      "body-lg": ["Be Vietnam Pro"],
+                      "label-md": ["Be Vietnam Pro"],
+                      "display-lg": ["Be Vietnam Pro"],
+                      "body-sm": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile py-base bg-background/80 backdrop-blur-md lg:hidden">
+<div class="flex items-center gap-2">
+<button class="w-11 h-11 flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Your Cart</h1>
+</div>
+<div class="flex gap-2">
+<button class="w-11 h-11 flex items-center justify-center hover:bg-surface-container-high rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="storefront">storefront</span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-margin-mobile pt-4 pb-40 overflow-y-auto no-scrollbar">
+<!-- Item List -->
+<div class="space-y-4">
+<!-- Item 1: Artisan Croissant -->
+<div class="bg-surface-container rounded-xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a golden, flaky artisan croissant on a dark slate surface, illuminated by warm, high-contrast side lighting to emphasize the delicate layers. The aesthetic is modern and sophisticated, featuring a deep indigo and charcoal color palette consistent with a premium retail dark theme. Subtle highlights on the pastry crust provide a sense of freshness and high quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIdCD2yj-dcXao0ITrmPttUlAJRYOr93cN81DXz5hcsokPgC7amxzR-szA0F_GsmSkGoXL5lLUzoxShGld7xM3gAegV3WJniwMxQy5deXZSZqc9kQBU_hXWmjELURAbqardXt34Ei31O58GMLzopID5Yw6qNbwPqRTYMZzWRSno4_0X6QzSTMIT_g8GcvkQ_AD8W_T1GmRJ2elX5AdOomaujnlQzCgsit0y6PzhI2CP_yy4BLnzW2nJg"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-title-md text-title-md text-on-surface">Artisan Croissant</h3>
+<button class="text-error w-11 h-11 -mt-2 -mr-2 flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3">Freshly baked daily</p>
+<div class="flex justify-between items-center">
+<span class="font-title-md text-title-md text-primary">$4.50</span>
+<!-- Stepper -->
+<div class="flex items-center bg-surface-container-highest rounded-full p-1 gap-4">
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center active:bg-primary-container active:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-body-lg text-body-lg w-4 text-center">2</span>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center active:bg-primary-container active:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2: Cold Brew -->
+<div class="bg-surface-container rounded-xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A chilled glass of dark, rich cold brew coffee with a few square ice cubes, captured in a minimalist studio setting. The lighting is cool-toned and dramatic, creating sleek reflections on the glassware against a dark, textured background. The image evokes a sense of refreshing energy and professional craftsmanship, aligned with the Indigo-themed modern POS interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsihNxj7uFqZscE4Kyb6m_T728uKHs7zyBsPy2DYdkFzNyl2guYmdWBkQgGl7fFjM45IXpbMKxuNyJOgETjUSiey0jGAza2RZHMPAxQMQMzeKz6T-phxdxQTB4M2ijJV99Qf-aZVvxR3jhyRCwsUuhhD7Y29CD0OdWRHcSLWu7BoV_DoIWnQLG1r9zPjbC38tPWX8Zlf6_WheefdKb943HXhjywmDP4I9_L-0I4jT0hHJWqM8o1_5XcQ"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-title-md text-title-md text-on-surface">Cold Brew</h3>
+<button class="text-error w-11 h-11 -mt-2 -mr-2 flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3">12oz • Single Origin</p>
+<div class="flex justify-between items-center">
+<span class="font-title-md text-title-md text-primary">$6.20</span>
+<!-- Stepper -->
+<div class="flex items-center bg-surface-container-highest rounded-full p-1 gap-4">
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center active:bg-primary-container active:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-body-lg text-body-lg w-4 text-center">1</span>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center active:bg-primary-container active:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary Section -->
+<section class="mt-8 space-y-4">
+<h2 class="font-title-md text-title-md text-on-surface-variant">Order Summary</h2>
+<div class="bg-surface-container-low rounded-2xl p-6 space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Subtotal</span>
+<span class="font-body-lg text-body-lg text-on-surface">$15.20</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Tax (8%)</span>
+<span class="font-body-lg text-body-lg text-on-surface">$1.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Discount</span>
+<button class="flex items-center gap-1 text-secondary font-label-md px-2 py-0.5 rounded-full bg-secondary/10 active:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+                            EDIT
+                        </button>
+</div>
+<span class="font-body-lg text-body-lg text-secondary">-$0.00</span>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-center">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Total</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary">$16.20</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Area (Fixed Bottom) -->
+<div class="fixed bottom-16 left-0 w-full p-margin-mobile bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+<button class="pointer-events-auto w-full h-14 bg-primary-container text-on-primary-container rounded-xl font-title-md text-title-md flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+<span>Proceed to Payment</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe bg-surface-container-low border-t border-outline-variant lg:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="point_of_sale" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-md text-label-md">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for steppers
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.classList.add('active:scale-95');
+            });
+        });
+
+        // Simple mock behavior for quantity buttons
+        document.querySelectorAll('.flex.items-center.bg-surface-container-highest').forEach(stepper => {
+            const countDisplay = stepper.querySelector('.font-body-lg');
+            const buttons = stepper.querySelectorAll('button');
+            
+            buttons[0].addEventListener('click', () => {
+                let count = parseInt(countDisplay.textContent);
+                if (count > 1) countDisplay.textContent = count - 1;
+            });
+            
+            buttons[1].addEventListener('click', () => {
+                let count = parseInt(countDisplay.textContent);
+                countDisplay.textContent = count + 1;
+            });
+        });
+    </script>
+</body></html>

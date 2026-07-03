@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/auth_provider.dart';
@@ -6,6 +8,7 @@ import '../models/product.dart';
 import '../core/theme.dart';
 import '../core/currency_formatter.dart';
 import '../views/shared/product_form.dart';
+import 'barcode_scanner_screen.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -29,7 +32,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
     super.dispose();
   }
 
-  void _showProductForm({Product? product}) {
+  void _showProductForm({
+    Product? product,
+    String? initialBarcode,
+    String? initialName,
+    String? initialImageUrl,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -37,8 +45,122 @@ class _ProductsScreenState extends State<ProductsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => ProductForm(product: product),
+      builder: (_) => ProductForm(
+        product: product,
+        initialBarcode: initialBarcode,
+        initialName: initialName,
+        initialImageUrl: initialImageUrl,
+      ),
     );
+  }
+
+  Future<void> _handleBarcodeScan() async {
+    final barcode = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (_) => const BarcodeScannerScreen()),
+    );
+    if (barcode == null || barcode.isEmpty) return;
+    if (!mounted) return;
+
+    _showScanningOverlay(true);
+
+    // Layer 1: check locally
+    final existing = await context.read<ProductProvider>().findProductByBarcode(barcode);
+    if (!mounted) return;
+
+    if (existing != null) {
+      _showScanningOverlay(false);
+      _showProductForm(product: existing);
+      return;
+    }
+
+    // Layer 2: query Open Food Facts API
+    try {
+      final response = await http.get(
+        Uri.parse('https://world.openfoodfacts.org/api/v2/product/$barcode.json'),
+      ).timeout(const Duration(seconds: 8));
+
+      if (!mounted) return;
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        if (body['status'] == 1) {
+          final product = body['product'] as Map<String, dynamic>?;
+          if (product != null) {
+            final productName = product['product_name'] as String? ?? product['brands'] as String? ?? '';
+            final imageUrl = product['image_url'] as String?;
+            final apiCategories = product['categories'] as String? ?? '';
+
+            _showScanningOverlay(false);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Found: $productName'),
+                backgroundColor: AppTheme.success,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+
+            _showProductForm(
+              initialBarcode: barcode,
+              initialName: productName,
+              initialImageUrl: imageUrl,
+            );
+            return;
+          }
+        }
+      }
+    } catch (_) {
+      // Fall through to layer 3
+    }
+
+    if (!mounted) return;
+    _showScanningOverlay(false);
+
+    // Layer 3: not found anywhere
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Product not found in database — enter details manually.'),
+        backgroundColor: AppTheme.warning,
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 3),
+      ),
+    );
+
+    _showProductForm(initialBarcode: barcode);
+  }
+
+  OverlayEntry? _scanOverlay;
+
+  void _showScanningOverlay(bool show) {
+    if (show) {
+      _scanOverlay?.remove();
+      _scanOverlay = OverlayEntry(
+        builder: (_) => Container(
+          color: Colors.black.withValues(alpha: 0.5),
+          child: const Center(
+            child: Card(
+              color: AppTheme.darkSurface,
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(color: AppTheme.primary),
+                    SizedBox(height: 16),
+                    Text('Looking up product...', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      Overlay.of(context).insert(_scanOverlay!);
+    } else {
+      _scanOverlay?.remove();
+      _scanOverlay = null;
+    }
   }
 
   @override
@@ -134,12 +256,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ],
       ),
       floatingActionButton: auth.isAdmin
-          ? FloatingActionButton.extended(
-              onPressed: () => _showProductForm(),
-              icon: const Icon(Icons.add),
-              label: const Text('Add Product'),
-              backgroundColor: AppTheme.primary,
-              elevation: 4,
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton(
+                  heroTag: 'scan',
+                  mini: true,
+                  onPressed: _handleBarcodeScan,
+                  backgroundColor: AppTheme.darkCard,
+                  child: const Icon(Icons.qr_code_scanner, color: AppTheme.primary),
+                ),
+                const SizedBox(height: 12),
+                FloatingActionButton.extended(
+                  heroTag: 'add',
+                  onPressed: () => _showProductForm(),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add Product'),
+                  backgroundColor: AppTheme.primary,
+                  elevation: 4,
+                ),
+              ],
             )
           : null,
     );

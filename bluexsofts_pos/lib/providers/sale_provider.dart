@@ -38,9 +38,9 @@ class SaleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadSummary() async {
+  Future<void> loadSummary({String? from, String? to}) async {
     try {
-      final data = await _saleService.getSummary();
+      final data = await _saleService.getSummary(from: from, to: to);
       if (data != null) {
         _summary = data;
         notifyListeners();
@@ -57,12 +57,18 @@ class SaleProvider with ChangeNotifier {
         notifyListeners();
         return sale;
       }
-    } catch (_) {}
+      _error = 'API returned error — saved offline';
+      debugPrint('createSale failed: $data');
+    } catch (e, stack) {
+      _error = 'Exception creating sale: $e';
+      debugPrint('createSale exception: $e\n$stack');
+    }
 
     final box = Hive.box(AppConstants.offlineQueueBox);
     final queue = box.get('sales', defaultValue: <String>[]).cast<String>();
     queue.add(jsonEncode(payload));
     await box.put('sales', queue);
+    notifyListeners();
     return null;
   }
 

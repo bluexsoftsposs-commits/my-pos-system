@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BluexSofts POS - Merchant Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#F8F9FD",
+                        "surface": "#FFFFFF",
+                        "surface-container": "#F1F1F5",
+                        "surface-container-low": "#F8F9FD",
+                        "surface-container-high": "#EBEBEF",
+                        "surface-container-highest": "#E2E2E6",
+                        "primary": "#6C5CE7",
+                        "primary-container": "#E4DFFF",
+                        "on-primary-container": "#160066",
+                        "secondary": "#02B894",
+                        "secondary-container": "#D1F7ED",
+                        "tertiary": "#F0BF63",
+                        "outline": "#928EA0",
+                        "outline-variant": "#E2E2E6",
+                        "on-surface": "#131313",
+                        "on-surface-variant": "#474554",
+                        "error": "#BA1A1A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "margin-desktop": "40px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "8px",
+                        "gutter": "20px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "title-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #F8F9FD;
+            color: #131313;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E2E2E6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-white border-r border-outline-variant hidden lg:flex flex-col z-50">
+<div class="p-lg flex flex-col gap-xs">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary mb-1">BluexSofts POS</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Modern Retail Solutions</p>
+</div>
+<nav class="flex-1 px-md mt-lg space-y-1 custom-scrollbar overflow-y-auto">
+<!-- Active Home Tab -->
+<div class="flex items-center gap-md px-md py-3 text-primary font-bold border-r-4 border-primary bg-primary-container/20 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">home</span>
+<span class="font-body-lg text-body-lg">Home</span>
+</div>
+<!-- Inactive Tabs Mapping from JSON -->
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-body-lg text-body-lg">POS</span>
+</div>
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-lg text-body-lg">Products</span>
+</div>
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-lg text-body-lg">Sales</span>
+</div>
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-lg text-body-lg">Users</span>
+</div>
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-lg text-body-lg">Invoices</span>
+</div>
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">subscriptions</span>
+<span class="font-body-lg text-body-lg">Plans</span>
+</div>
+<div class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</div>
+</nav>
+<div class="p-lg mt-auto">
+<button class="w-full bg-primary text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+                New Transaction
+            </button>
+<div class="mt-lg flex items-center gap-md p-2 bg-surface-container rounded-lg">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A professional studio portrait of a business owner, a middle-aged woman with a warm smile and professional attire. She is in a high-key, brightly lit modern office environment with soft focus on a sleek computer setup in the background. The aesthetic is clean, light, and inspires trust, using a palette of soft whites and corporate grays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe3SsyoJGn1wVeS-bT2kuedg98UX98ijXIwt2Yr3EBX956VJKnd_HxksfSNeyycD45WnDtfh_SXyigSoOhcKXWTyLk8dXwFc1GTXtcRKu4KXBRZXj7iqD-YAilKUj7fCaYmqVbXFqVgBj5UAOklSnlQsHO0tocguqMvg2mm6CVMYWVv-mUrRktbjt_phv6pjxMsGYjGvSs2j_wCZSy3Hn03Qv9EwOn8BlyY-COqAZQK7cTLpUSt5eV8w"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold">Merchant Profile</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest">Main Branch</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-[280px] min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile lg:px-margin-desktop py-base bg-white/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-lg flex-1">
+<span class="lg:hidden font-bold text-primary text-2xl">B.</span>
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary/20 text-body-sm transition-all" placeholder="Search sales, products or customers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200">
+<span class="material-symbols-outlined text-on-surface-variant">storefront</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-xs cursor-pointer hover:bg-surface-container rounded-full pl-1 pr-3 py-1 transition-all">
+<img class="w-8 h-8 rounded-full" data-alt="Close up of a professional user avatar icon, minimalist and clean. A placeholder silhouette on a soft indigo gradient background, representing a high-end digital identity in a clean retail software interface. The style is modern, sleek, and high-fidelity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXJQyphXrRBwwXty6UBBG8C4Ew1nZlM5WLYHpR-Hjv80RpApiduUapwRVoUzzLmcEZOqnrnf_2GjqzReIQsXXmur_IVhtu5c-2K2IDuVvgYDF00fXmQ8g-pGCMWabRIvMGHqkS3hndv-RZlu9Aeh2f40UHCzl2IVQMqnUr_zHPv8qjXtRJYgVVXj9jg8kD6eZT_bCA8XV235ErsgtXL8IUCp2LOs-ogbg3Sf0JkQH5gA5uOBF8WAT9mQ"/>
+<span class="font-label-md text-label-md font-bold text-on-surface">Profile</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<section class="p-margin-mobile lg:p-margin-desktop space-y-lg">
+<!-- Welcome Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Good morning, Sarah</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Here's what's happening at your store today.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors">Export Report</button>
+<button class="px-md py-2 bg-primary text-white rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-opacity-90">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                        This Week
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Total Sales -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col gap-xs group hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Gross Sales</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">+12.4%</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">$24,492.00</div>
+<div class="w-full h-8 mt-2 overflow-hidden">
+<svg class="w-full h-full stroke-secondary fill-none stroke-2" viewbox="0 0 100 20">
+<path d="M0 15 Q 10 5, 20 12 T 40 8 T 60 15 T 80 5 T 100 10"></path>
+</svg>
+</div>
+</div>
+<!-- Transactions -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col gap-xs hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Transactions</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">+5.2%</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">1,208</div>
+<div class="w-full h-8 mt-2 overflow-hidden">
+<svg class="w-full h-full stroke-primary fill-none stroke-2" viewbox="0 0 100 20">
+<path d="M0 10 Q 15 15, 30 10 T 60 5 T 90 12 L 100 8"></path>
+</svg>
+</div>
+</div>
+<!-- Average Basket -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col gap-xs hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Avg. Ticket</span>
+<span class="bg-error/10 text-error px-2 py-0.5 rounded-full text-[10px] font-bold">-2.1%</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">$42.15</div>
+<div class="w-full h-8 mt-2 overflow-hidden">
+<svg class="w-full h-full stroke-error fill-none stroke-2" viewbox="0 0 100 20">
+<path d="M0 5 Q 20 15, 40 5 T 70 12 T 100 18"></path>
+</svg>
+</div>
+</div>
+<!-- Active Customers -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col gap-xs hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">New Customers</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">+18.0%</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">342</div>
+<div class="flex -space-x-2 mt-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-300"></div></div></div></div></section></main></body></html>

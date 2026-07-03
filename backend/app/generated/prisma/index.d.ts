@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Shop = $Result.DefaultSelection<Prisma.$ShopPayload>
 /**
+ * Model Branch
+ * 
+ */
+export type Branch = $Result.DefaultSelection<Prisma.$BranchPayload>
+/**
  * Model Payment
  * 
  */
@@ -53,6 +58,16 @@ export type Invoice = $Result.DefaultSelection<Prisma.$InvoicePayload>
  * 
  */
 export type SaleItem = $Result.DefaultSelection<Prisma.$SaleItemPayload>
+/**
+ * Model Customer
+ * 
+ */
+export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
+/**
+ * Model LedgerEntry
+ * 
+ */
+export type LedgerEntry = $Result.DefaultSelection<Prisma.$LedgerEntryPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -188,6 +203,16 @@ export class PrismaClient<
   get shop(): Prisma.ShopDelegate<ExtArgs>;
 
   /**
+   * `prisma.branch`: Exposes CRUD operations for the **Branch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Branches
+    * const branches = await prisma.branch.findMany()
+    * ```
+    */
+  get branch(): Prisma.BranchDelegate<ExtArgs>;
+
+  /**
    * `prisma.payment`: Exposes CRUD operations for the **Payment** model.
     * Example usage:
     * ```ts
@@ -256,6 +281,26 @@ export class PrismaClient<
     * ```
     */
   get saleItem(): Prisma.SaleItemDelegate<ExtArgs>;
+
+  /**
+   * `prisma.customer`: Exposes CRUD operations for the **Customer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Customers
+    * const customers = await prisma.customer.findMany()
+    * ```
+    */
+  get customer(): Prisma.CustomerDelegate<ExtArgs>;
+
+  /**
+   * `prisma.ledgerEntry`: Exposes CRUD operations for the **LedgerEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LedgerEntries
+    * const ledgerEntries = await prisma.ledgerEntry.findMany()
+    * ```
+    */
+  get ledgerEntry(): Prisma.LedgerEntryDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -698,13 +743,16 @@ export namespace Prisma {
 
   export const ModelName: {
     Shop: 'Shop',
+    Branch: 'Branch',
     Payment: 'Payment',
     User: 'User',
     PasswordResetToken: 'PasswordResetToken',
     Product: 'Product',
     Sale: 'Sale',
     Invoice: 'Invoice',
-    SaleItem: 'SaleItem'
+    SaleItem: 'SaleItem',
+    Customer: 'Customer',
+    LedgerEntry: 'LedgerEntry'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -720,7 +768,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "shop" | "payment" | "user" | "passwordResetToken" | "product" | "sale" | "invoice" | "saleItem"
+      modelProps: "shop" | "branch" | "payment" | "user" | "passwordResetToken" | "product" | "sale" | "invoice" | "saleItem" | "customer" | "ledgerEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -791,6 +839,76 @@ export namespace Prisma {
           count: {
             args: Prisma.ShopCountArgs<ExtArgs>
             result: $Utils.Optional<ShopCountAggregateOutputType> | number
+          }
+        }
+      }
+      Branch: {
+        payload: Prisma.$BranchPayload<ExtArgs>
+        fields: Prisma.BranchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BranchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BranchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          findFirst: {
+            args: Prisma.BranchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BranchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          findMany: {
+            args: Prisma.BranchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>[]
+          }
+          create: {
+            args: Prisma.BranchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          createMany: {
+            args: Prisma.BranchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BranchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>[]
+          }
+          delete: {
+            args: Prisma.BranchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          update: {
+            args: Prisma.BranchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          deleteMany: {
+            args: Prisma.BranchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BranchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BranchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          aggregate: {
+            args: Prisma.BranchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBranch>
+          }
+          groupBy: {
+            args: Prisma.BranchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BranchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BranchCountArgs<ExtArgs>
+            result: $Utils.Optional<BranchCountAggregateOutputType> | number
           }
         }
       }
@@ -1284,6 +1402,146 @@ export namespace Prisma {
           }
         }
       }
+      Customer: {
+        payload: Prisma.$CustomerPayload<ExtArgs>
+        fields: Prisma.CustomerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>
+          }
+          findMany: {
+            args: Prisma.CustomerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>[]
+          }
+          create: {
+            args: Prisma.CustomerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>
+          }
+          createMany: {
+            args: Prisma.CustomerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>
+          }
+          update: {
+            args: Prisma.CustomerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CustomerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomer>
+          }
+          groupBy: {
+            args: Prisma.CustomerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerCountAggregateOutputType> | number
+          }
+        }
+      }
+      LedgerEntry: {
+        payload: Prisma.$LedgerEntryPayload<ExtArgs>
+        fields: Prisma.LedgerEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LedgerEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LedgerEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.LedgerEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LedgerEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>
+          }
+          findMany: {
+            args: Prisma.LedgerEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>[]
+          }
+          create: {
+            args: Prisma.LedgerEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>
+          }
+          createMany: {
+            args: Prisma.LedgerEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LedgerEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.LedgerEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>
+          }
+          update: {
+            args: Prisma.LedgerEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.LedgerEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LedgerEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.LedgerEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LedgerEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.LedgerEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLedgerEntry>
+          }
+          groupBy: {
+            args: Prisma.LedgerEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LedgerEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LedgerEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<LedgerEntryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1451,6 +1709,9 @@ export namespace Prisma {
     saleItems: number
     invoices: number
     users: number
+    customers: number
+    ledgerEntries: number
+    branches: number
   }
 
   export type ShopCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1460,6 +1721,9 @@ export namespace Prisma {
     saleItems?: boolean | ShopCountOutputTypeCountSaleItemsArgs
     invoices?: boolean | ShopCountOutputTypeCountInvoicesArgs
     users?: boolean | ShopCountOutputTypeCountUsersArgs
+    customers?: boolean | ShopCountOutputTypeCountCustomersArgs
+    ledgerEntries?: boolean | ShopCountOutputTypeCountLedgerEntriesArgs
+    branches?: boolean | ShopCountOutputTypeCountBranchesArgs
   }
 
   // Custom InputTypes
@@ -1513,6 +1777,27 @@ export namespace Prisma {
    */
   export type ShopCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * ShopCountOutputType without action
+   */
+  export type ShopCountOutputTypeCountCustomersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * ShopCountOutputType without action
+   */
+  export type ShopCountOutputTypeCountLedgerEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LedgerEntryWhereInput
+  }
+
+  /**
+   * ShopCountOutputType without action
+   */
+  export type ShopCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BranchWhereInput
   }
 
 
@@ -1628,6 +1913,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type CustomerCountOutputType
+   */
+
+  export type CustomerCountOutputType = {
+    entries: number
+    sales: number
+  }
+
+  export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entries?: boolean | CustomerCountOutputTypeCountEntriesArgs
+    sales?: boolean | CustomerCountOutputTypeCountSalesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCountOutputType
+     */
+    select?: CustomerCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LedgerEntryWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SaleWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -1644,6 +1969,7 @@ export namespace Prisma {
   export type ShopMinAggregateOutputType = {
     id: string | null
     shopName: string | null
+    category: string | null
     subscriptionPlan: string | null
     subscriptionStatus: string | null
     subscriptionEndsAt: Date | null
@@ -1655,6 +1981,7 @@ export namespace Prisma {
   export type ShopMaxAggregateOutputType = {
     id: string | null
     shopName: string | null
+    category: string | null
     subscriptionPlan: string | null
     subscriptionStatus: string | null
     subscriptionEndsAt: Date | null
@@ -1666,6 +1993,7 @@ export namespace Prisma {
   export type ShopCountAggregateOutputType = {
     id: number
     shopName: number
+    category: number
     subscriptionPlan: number
     subscriptionStatus: number
     subscriptionEndsAt: number
@@ -1679,6 +2007,7 @@ export namespace Prisma {
   export type ShopMinAggregateInputType = {
     id?: true
     shopName?: true
+    category?: true
     subscriptionPlan?: true
     subscriptionStatus?: true
     subscriptionEndsAt?: true
@@ -1690,6 +2019,7 @@ export namespace Prisma {
   export type ShopMaxAggregateInputType = {
     id?: true
     shopName?: true
+    category?: true
     subscriptionPlan?: true
     subscriptionStatus?: true
     subscriptionEndsAt?: true
@@ -1701,6 +2031,7 @@ export namespace Prisma {
   export type ShopCountAggregateInputType = {
     id?: true
     shopName?: true
+    category?: true
     subscriptionPlan?: true
     subscriptionStatus?: true
     subscriptionEndsAt?: true
@@ -1785,6 +2116,7 @@ export namespace Prisma {
   export type ShopGroupByOutputType = {
     id: string
     shopName: string
+    category: string
     subscriptionPlan: string
     subscriptionStatus: string
     subscriptionEndsAt: Date | null
@@ -1813,6 +2145,7 @@ export namespace Prisma {
   export type ShopSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     shopName?: boolean
+    category?: boolean
     subscriptionPlan?: boolean
     subscriptionStatus?: boolean
     subscriptionEndsAt?: boolean
@@ -1825,12 +2158,16 @@ export namespace Prisma {
     saleItems?: boolean | Shop$saleItemsArgs<ExtArgs>
     invoices?: boolean | Shop$invoicesArgs<ExtArgs>
     users?: boolean | Shop$usersArgs<ExtArgs>
+    customers?: boolean | Shop$customersArgs<ExtArgs>
+    ledgerEntries?: boolean | Shop$ledgerEntriesArgs<ExtArgs>
+    branches?: boolean | Shop$branchesArgs<ExtArgs>
     _count?: boolean | ShopCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["shop"]>
 
   export type ShopSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     shopName?: boolean
+    category?: boolean
     subscriptionPlan?: boolean
     subscriptionStatus?: boolean
     subscriptionEndsAt?: boolean
@@ -1842,6 +2179,7 @@ export namespace Prisma {
   export type ShopSelectScalar = {
     id?: boolean
     shopName?: boolean
+    category?: boolean
     subscriptionPlan?: boolean
     subscriptionStatus?: boolean
     subscriptionEndsAt?: boolean
@@ -1857,6 +2195,9 @@ export namespace Prisma {
     saleItems?: boolean | Shop$saleItemsArgs<ExtArgs>
     invoices?: boolean | Shop$invoicesArgs<ExtArgs>
     users?: boolean | Shop$usersArgs<ExtArgs>
+    customers?: boolean | Shop$customersArgs<ExtArgs>
+    ledgerEntries?: boolean | Shop$ledgerEntriesArgs<ExtArgs>
+    branches?: boolean | Shop$branchesArgs<ExtArgs>
     _count?: boolean | ShopCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ShopIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1870,10 +2211,14 @@ export namespace Prisma {
       saleItems: Prisma.$SaleItemPayload<ExtArgs>[]
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
+      customers: Prisma.$CustomerPayload<ExtArgs>[]
+      ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
+      branches: Prisma.$BranchPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       shopName: string
+      category: string
       subscriptionPlan: string
       subscriptionStatus: string
       subscriptionEndsAt: Date | null
@@ -2250,6 +2595,9 @@ export namespace Prisma {
     saleItems<T extends Shop$saleItemsArgs<ExtArgs> = {}>(args?: Subset<T, Shop$saleItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SaleItemPayload<ExtArgs>, T, "findMany"> | Null>
     invoices<T extends Shop$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Shop$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany"> | Null>
     users<T extends Shop$usersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    customers<T extends Shop$customersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany"> | Null>
+    ledgerEntries<T extends Shop$ledgerEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Shop$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany"> | Null>
+    branches<T extends Shop$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Shop$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2281,6 +2629,7 @@ export namespace Prisma {
   interface ShopFieldRefs {
     readonly id: FieldRef<"Shop", 'String'>
     readonly shopName: FieldRef<"Shop", 'String'>
+    readonly category: FieldRef<"Shop", 'String'>
     readonly subscriptionPlan: FieldRef<"Shop", 'String'>
     readonly subscriptionStatus: FieldRef<"Shop", 'String'>
     readonly subscriptionEndsAt: FieldRef<"Shop", 'DateTime'>
@@ -2721,6 +3070,66 @@ export namespace Prisma {
   }
 
   /**
+   * Shop.customers
+   */
+  export type Shop$customersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    cursor?: CustomerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
+  }
+
+  /**
+   * Shop.ledgerEntries
+   */
+  export type Shop$ledgerEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    where?: LedgerEntryWhereInput
+    orderBy?: LedgerEntryOrderByWithRelationInput | LedgerEntryOrderByWithRelationInput[]
+    cursor?: LedgerEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LedgerEntryScalarFieldEnum | LedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * Shop.branches
+   */
+  export type Shop$branchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    cursor?: BranchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
    * Shop without action
    */
   export type ShopDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2732,6 +3141,963 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ShopInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Branch
+   */
+
+  export type AggregateBranch = {
+    _count: BranchCountAggregateOutputType | null
+    _min: BranchMinAggregateOutputType | null
+    _max: BranchMaxAggregateOutputType | null
+  }
+
+  export type BranchMinAggregateOutputType = {
+    id: string | null
+    shopId: string | null
+    name: string | null
+    address: string | null
+    phone: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BranchMaxAggregateOutputType = {
+    id: string | null
+    shopId: string | null
+    name: string | null
+    address: string | null
+    phone: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BranchCountAggregateOutputType = {
+    id: number
+    shopId: number
+    name: number
+    address: number
+    phone: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BranchMinAggregateInputType = {
+    id?: true
+    shopId?: true
+    name?: true
+    address?: true
+    phone?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BranchMaxAggregateInputType = {
+    id?: true
+    shopId?: true
+    name?: true
+    address?: true
+    phone?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BranchCountAggregateInputType = {
+    id?: true
+    shopId?: true
+    name?: true
+    address?: true
+    phone?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BranchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Branch to aggregate.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Branches
+    **/
+    _count?: true | BranchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BranchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BranchMaxAggregateInputType
+  }
+
+  export type GetBranchAggregateType<T extends BranchAggregateArgs> = {
+        [P in keyof T & keyof AggregateBranch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBranch[P]>
+      : GetScalarType<T[P], AggregateBranch[P]>
+  }
+
+
+
+
+  export type BranchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BranchWhereInput
+    orderBy?: BranchOrderByWithAggregationInput | BranchOrderByWithAggregationInput[]
+    by: BranchScalarFieldEnum[] | BranchScalarFieldEnum
+    having?: BranchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BranchCountAggregateInputType | true
+    _min?: BranchMinAggregateInputType
+    _max?: BranchMaxAggregateInputType
+  }
+
+  export type BranchGroupByOutputType = {
+    id: string
+    shopId: string
+    name: string
+    address: string
+    phone: string
+    createdAt: Date
+    updatedAt: Date
+    _count: BranchCountAggregateOutputType | null
+    _min: BranchMinAggregateOutputType | null
+    _max: BranchMaxAggregateOutputType | null
+  }
+
+  type GetBranchGroupByPayload<T extends BranchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BranchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BranchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BranchGroupByOutputType[P]>
+            : GetScalarType<T[P], BranchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BranchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shopId?: boolean
+    name?: boolean
+    address?: boolean
+    phone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branch"]>
+
+  export type BranchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shopId?: boolean
+    name?: boolean
+    address?: boolean
+    phone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branch"]>
+
+  export type BranchSelectScalar = {
+    id?: boolean
+    shopId?: boolean
+    name?: boolean
+    address?: boolean
+    phone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }
+  export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }
+
+  export type $BranchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Branch"
+    objects: {
+      shop: Prisma.$ShopPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      shopId: string
+      name: string
+      address: string
+      phone: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["branch"]>
+    composites: {}
+  }
+
+  type BranchGetPayload<S extends boolean | null | undefined | BranchDefaultArgs> = $Result.GetResult<Prisma.$BranchPayload, S>
+
+  type BranchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BranchFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BranchCountAggregateInputType | true
+    }
+
+  export interface BranchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Branch'], meta: { name: 'Branch' } }
+    /**
+     * Find zero or one Branch that matches the filter.
+     * @param {BranchFindUniqueArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BranchFindUniqueArgs>(args: SelectSubset<T, BranchFindUniqueArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Branch that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BranchFindUniqueOrThrowArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BranchFindUniqueOrThrowArgs>(args: SelectSubset<T, BranchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Branch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchFindFirstArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BranchFindFirstArgs>(args?: SelectSubset<T, BranchFindFirstArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Branch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchFindFirstOrThrowArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BranchFindFirstOrThrowArgs>(args?: SelectSubset<T, BranchFindFirstOrThrowArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Branches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Branches
+     * const branches = await prisma.branch.findMany()
+     * 
+     * // Get first 10 Branches
+     * const branches = await prisma.branch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const branchWithIdOnly = await prisma.branch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BranchFindManyArgs>(args?: SelectSubset<T, BranchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Branch.
+     * @param {BranchCreateArgs} args - Arguments to create a Branch.
+     * @example
+     * // Create one Branch
+     * const Branch = await prisma.branch.create({
+     *   data: {
+     *     // ... data to create a Branch
+     *   }
+     * })
+     * 
+     */
+    create<T extends BranchCreateArgs>(args: SelectSubset<T, BranchCreateArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Branches.
+     * @param {BranchCreateManyArgs} args - Arguments to create many Branches.
+     * @example
+     * // Create many Branches
+     * const branch = await prisma.branch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BranchCreateManyArgs>(args?: SelectSubset<T, BranchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Branches and returns the data saved in the database.
+     * @param {BranchCreateManyAndReturnArgs} args - Arguments to create many Branches.
+     * @example
+     * // Create many Branches
+     * const branch = await prisma.branch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Branches and only return the `id`
+     * const branchWithIdOnly = await prisma.branch.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BranchCreateManyAndReturnArgs>(args?: SelectSubset<T, BranchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Branch.
+     * @param {BranchDeleteArgs} args - Arguments to delete one Branch.
+     * @example
+     * // Delete one Branch
+     * const Branch = await prisma.branch.delete({
+     *   where: {
+     *     // ... filter to delete one Branch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BranchDeleteArgs>(args: SelectSubset<T, BranchDeleteArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Branch.
+     * @param {BranchUpdateArgs} args - Arguments to update one Branch.
+     * @example
+     * // Update one Branch
+     * const branch = await prisma.branch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BranchUpdateArgs>(args: SelectSubset<T, BranchUpdateArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Branches.
+     * @param {BranchDeleteManyArgs} args - Arguments to filter Branches to delete.
+     * @example
+     * // Delete a few Branches
+     * const { count } = await prisma.branch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BranchDeleteManyArgs>(args?: SelectSubset<T, BranchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Branches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Branches
+     * const branch = await prisma.branch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BranchUpdateManyArgs>(args: SelectSubset<T, BranchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Branch.
+     * @param {BranchUpsertArgs} args - Arguments to update or create a Branch.
+     * @example
+     * // Update or create a Branch
+     * const branch = await prisma.branch.upsert({
+     *   create: {
+     *     // ... data to create a Branch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Branch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BranchUpsertArgs>(args: SelectSubset<T, BranchUpsertArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Branches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchCountArgs} args - Arguments to filter Branches to count.
+     * @example
+     * // Count the number of Branches
+     * const count = await prisma.branch.count({
+     *   where: {
+     *     // ... the filter for the Branches we want to count
+     *   }
+     * })
+    **/
+    count<T extends BranchCountArgs>(
+      args?: Subset<T, BranchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BranchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Branch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BranchAggregateArgs>(args: Subset<T, BranchAggregateArgs>): Prisma.PrismaPromise<GetBranchAggregateType<T>>
+
+    /**
+     * Group by Branch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BranchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BranchGroupByArgs['orderBy'] }
+        : { orderBy?: BranchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BranchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBranchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Branch model
+   */
+  readonly fields: BranchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Branch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BranchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Branch model
+   */ 
+  interface BranchFieldRefs {
+    readonly id: FieldRef<"Branch", 'String'>
+    readonly shopId: FieldRef<"Branch", 'String'>
+    readonly name: FieldRef<"Branch", 'String'>
+    readonly address: FieldRef<"Branch", 'String'>
+    readonly phone: FieldRef<"Branch", 'String'>
+    readonly createdAt: FieldRef<"Branch", 'DateTime'>
+    readonly updatedAt: FieldRef<"Branch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Branch findUnique
+   */
+  export type BranchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch findUniqueOrThrow
+   */
+  export type BranchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch findFirst
+   */
+  export type BranchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Branches.
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Branches.
+     */
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Branch findFirstOrThrow
+   */
+  export type BranchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Branches.
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Branches.
+     */
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Branch findMany
+   */
+  export type BranchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branches to fetch.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Branches.
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Branch create
+   */
+  export type BranchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Branch.
+     */
+    data: XOR<BranchCreateInput, BranchUncheckedCreateInput>
+  }
+
+  /**
+   * Branch createMany
+   */
+  export type BranchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Branches.
+     */
+    data: BranchCreateManyInput | BranchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Branch createManyAndReturn
+   */
+  export type BranchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Branches.
+     */
+    data: BranchCreateManyInput | BranchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Branch update
+   */
+  export type BranchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Branch.
+     */
+    data: XOR<BranchUpdateInput, BranchUncheckedUpdateInput>
+    /**
+     * Choose, which Branch to update.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch updateMany
+   */
+  export type BranchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Branches.
+     */
+    data: XOR<BranchUpdateManyMutationInput, BranchUncheckedUpdateManyInput>
+    /**
+     * Filter which Branches to update
+     */
+    where?: BranchWhereInput
+  }
+
+  /**
+   * Branch upsert
+   */
+  export type BranchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Branch to update in case it exists.
+     */
+    where: BranchWhereUniqueInput
+    /**
+     * In case the Branch found by the `where` argument doesn't exist, create a new Branch with this data.
+     */
+    create: XOR<BranchCreateInput, BranchUncheckedCreateInput>
+    /**
+     * In case the Branch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BranchUpdateInput, BranchUncheckedUpdateInput>
+  }
+
+  /**
+   * Branch delete
+   */
+  export type BranchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter which Branch to delete.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch deleteMany
+   */
+  export type BranchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Branches to delete
+     */
+    where?: BranchWhereInput
+  }
+
+  /**
+   * Branch without action
+   */
+  export type BranchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
   }
 
 
@@ -6909,6 +8275,7 @@ export namespace Prisma {
     id: string | null
     shopId: string | null
     userId: string | null
+    customerId: string | null
     total: number | null
     subtotal: number | null
     tax: number | null
@@ -6923,6 +8290,7 @@ export namespace Prisma {
     id: string | null
     shopId: string | null
     userId: string | null
+    customerId: string | null
     total: number | null
     subtotal: number | null
     tax: number | null
@@ -6937,6 +8305,7 @@ export namespace Prisma {
     id: number
     shopId: number
     userId: number
+    customerId: number
     total: number
     subtotal: number
     tax: number
@@ -6967,6 +8336,7 @@ export namespace Prisma {
     id?: true
     shopId?: true
     userId?: true
+    customerId?: true
     total?: true
     subtotal?: true
     tax?: true
@@ -6981,6 +8351,7 @@ export namespace Prisma {
     id?: true
     shopId?: true
     userId?: true
+    customerId?: true
     total?: true
     subtotal?: true
     tax?: true
@@ -6995,6 +8366,7 @@ export namespace Prisma {
     id?: true
     shopId?: true
     userId?: true
+    customerId?: true
     total?: true
     subtotal?: true
     tax?: true
@@ -7096,6 +8468,7 @@ export namespace Prisma {
     id: string
     shopId: string
     userId: string
+    customerId: string | null
     total: number
     subtotal: number
     tax: number
@@ -7129,6 +8502,7 @@ export namespace Prisma {
     id?: boolean
     shopId?: boolean
     userId?: boolean
+    customerId?: boolean
     total?: boolean
     subtotal?: boolean
     tax?: boolean
@@ -7138,6 +8512,7 @@ export namespace Prisma {
     notes?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
     saleItems?: boolean | Sale$saleItemsArgs<ExtArgs>
     invoice?: boolean | Sale$invoiceArgs<ExtArgs>
@@ -7148,6 +8523,7 @@ export namespace Prisma {
     id?: boolean
     shopId?: boolean
     userId?: boolean
+    customerId?: boolean
     total?: boolean
     subtotal?: boolean
     tax?: boolean
@@ -7157,6 +8533,7 @@ export namespace Prisma {
     notes?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sale"]>
 
@@ -7164,6 +8541,7 @@ export namespace Prisma {
     id?: boolean
     shopId?: boolean
     userId?: boolean
+    customerId?: boolean
     total?: boolean
     subtotal?: boolean
     tax?: boolean
@@ -7176,6 +8554,7 @@ export namespace Prisma {
 
   export type SaleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
     saleItems?: boolean | Sale$saleItemsArgs<ExtArgs>
     invoice?: boolean | Sale$invoiceArgs<ExtArgs>
@@ -7183,6 +8562,7 @@ export namespace Prisma {
   }
   export type SaleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
   }
 
@@ -7190,6 +8570,7 @@ export namespace Prisma {
     name: "Sale"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
       shop: Prisma.$ShopPayload<ExtArgs>
       saleItems: Prisma.$SaleItemPayload<ExtArgs>[]
       invoice: Prisma.$InvoicePayload<ExtArgs> | null
@@ -7198,6 +8579,7 @@ export namespace Prisma {
       id: string
       shopId: string
       userId: string
+      customerId: string | null
       total: number
       subtotal: number
       tax: number
@@ -7571,6 +8953,7 @@ export namespace Prisma {
   export interface Prisma__SaleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    customer<T extends Sale$customerArgs<ExtArgs> = {}>(args?: Subset<T, Sale$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     saleItems<T extends Sale$saleItemsArgs<ExtArgs> = {}>(args?: Subset<T, Sale$saleItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SaleItemPayload<ExtArgs>, T, "findMany"> | Null>
     invoice<T extends Sale$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, Sale$invoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -7606,6 +8989,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Sale", 'String'>
     readonly shopId: FieldRef<"Sale", 'String'>
     readonly userId: FieldRef<"Sale", 'String'>
+    readonly customerId: FieldRef<"Sale", 'String'>
     readonly total: FieldRef<"Sale", 'Float'>
     readonly subtotal: FieldRef<"Sale", 'Float'>
     readonly tax: FieldRef<"Sale", 'Float'>
@@ -7929,6 +9313,21 @@ export namespace Prisma {
      * Filter which Sales to delete
      */
     where?: SaleWhereInput
+  }
+
+  /**
+   * Sale.customer
+   */
+  export type Sale$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
   }
 
   /**
@@ -10056,6 +11455,2084 @@ export namespace Prisma {
 
 
   /**
+   * Model Customer
+   */
+
+  export type AggregateCustomer = {
+    _count: CustomerCountAggregateOutputType | null
+    _avg: CustomerAvgAggregateOutputType | null
+    _sum: CustomerSumAggregateOutputType | null
+    _min: CustomerMinAggregateOutputType | null
+    _max: CustomerMaxAggregateOutputType | null
+  }
+
+  export type CustomerAvgAggregateOutputType = {
+    totalOwed: number | null
+    totalPaid: number | null
+  }
+
+  export type CustomerSumAggregateOutputType = {
+    totalOwed: number | null
+    totalPaid: number | null
+  }
+
+  export type CustomerMinAggregateOutputType = {
+    id: string | null
+    shopId: string | null
+    name: string | null
+    phone: string | null
+    totalOwed: number | null
+    totalPaid: number | null
+    lastPaymentAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomerMaxAggregateOutputType = {
+    id: string | null
+    shopId: string | null
+    name: string | null
+    phone: string | null
+    totalOwed: number | null
+    totalPaid: number | null
+    lastPaymentAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomerCountAggregateOutputType = {
+    id: number
+    shopId: number
+    name: number
+    phone: number
+    totalOwed: number
+    totalPaid: number
+    lastPaymentAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CustomerAvgAggregateInputType = {
+    totalOwed?: true
+    totalPaid?: true
+  }
+
+  export type CustomerSumAggregateInputType = {
+    totalOwed?: true
+    totalPaid?: true
+  }
+
+  export type CustomerMinAggregateInputType = {
+    id?: true
+    shopId?: true
+    name?: true
+    phone?: true
+    totalOwed?: true
+    totalPaid?: true
+    lastPaymentAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomerMaxAggregateInputType = {
+    id?: true
+    shopId?: true
+    name?: true
+    phone?: true
+    totalOwed?: true
+    totalPaid?: true
+    lastPaymentAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomerCountAggregateInputType = {
+    id?: true
+    shopId?: true
+    name?: true
+    phone?: true
+    totalOwed?: true
+    totalPaid?: true
+    lastPaymentAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CustomerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Customer to aggregate.
+     */
+    where?: CustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Customers to fetch.
+     */
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Customers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Customers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Customers
+    **/
+    _count?: true | CustomerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerMaxAggregateInputType
+  }
+
+  export type GetCustomerAggregateType<T extends CustomerAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomer[P]>
+      : GetScalarType<T[P], AggregateCustomer[P]>
+  }
+
+
+
+
+  export type CustomerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerWhereInput
+    orderBy?: CustomerOrderByWithAggregationInput | CustomerOrderByWithAggregationInput[]
+    by: CustomerScalarFieldEnum[] | CustomerScalarFieldEnum
+    having?: CustomerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerCountAggregateInputType | true
+    _avg?: CustomerAvgAggregateInputType
+    _sum?: CustomerSumAggregateInputType
+    _min?: CustomerMinAggregateInputType
+    _max?: CustomerMaxAggregateInputType
+  }
+
+  export type CustomerGroupByOutputType = {
+    id: string
+    shopId: string
+    name: string
+    phone: string
+    totalOwed: number
+    totalPaid: number
+    lastPaymentAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CustomerCountAggregateOutputType | null
+    _avg: CustomerAvgAggregateOutputType | null
+    _sum: CustomerSumAggregateOutputType | null
+    _min: CustomerMinAggregateOutputType | null
+    _max: CustomerMaxAggregateOutputType | null
+  }
+
+  type GetCustomerGroupByPayload<T extends CustomerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shopId?: boolean
+    name?: boolean
+    phone?: boolean
+    totalOwed?: boolean
+    totalPaid?: boolean
+    lastPaymentAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+    entries?: boolean | Customer$entriesArgs<ExtArgs>
+    sales?: boolean | Customer$salesArgs<ExtArgs>
+    _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customer"]>
+
+  export type CustomerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shopId?: boolean
+    name?: boolean
+    phone?: boolean
+    totalOwed?: boolean
+    totalPaid?: boolean
+    lastPaymentAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customer"]>
+
+  export type CustomerSelectScalar = {
+    id?: boolean
+    shopId?: boolean
+    name?: boolean
+    phone?: boolean
+    totalOwed?: boolean
+    totalPaid?: boolean
+    lastPaymentAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+    entries?: boolean | Customer$entriesArgs<ExtArgs>
+    sales?: boolean | Customer$salesArgs<ExtArgs>
+    _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Customer"
+    objects: {
+      shop: Prisma.$ShopPayload<ExtArgs>
+      entries: Prisma.$LedgerEntryPayload<ExtArgs>[]
+      sales: Prisma.$SalePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      shopId: string
+      name: string
+      phone: string
+      totalOwed: number
+      totalPaid: number
+      lastPaymentAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["customer"]>
+    composites: {}
+  }
+
+  type CustomerGetPayload<S extends boolean | null | undefined | CustomerDefaultArgs> = $Result.GetResult<Prisma.$CustomerPayload, S>
+
+  type CustomerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CustomerFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CustomerCountAggregateInputType | true
+    }
+
+  export interface CustomerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Customer'], meta: { name: 'Customer' } }
+    /**
+     * Find zero or one Customer that matches the filter.
+     * @param {CustomerFindUniqueArgs} args - Arguments to find a Customer
+     * @example
+     * // Get one Customer
+     * const customer = await prisma.customer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerFindUniqueArgs>(args: SelectSubset<T, CustomerFindUniqueArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Customer that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CustomerFindUniqueOrThrowArgs} args - Arguments to find a Customer
+     * @example
+     * // Get one Customer
+     * const customer = await prisma.customer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Customer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFindFirstArgs} args - Arguments to find a Customer
+     * @example
+     * // Get one Customer
+     * const customer = await prisma.customer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerFindFirstArgs>(args?: SelectSubset<T, CustomerFindFirstArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Customer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFindFirstOrThrowArgs} args - Arguments to find a Customer
+     * @example
+     * // Get one Customer
+     * const customer = await prisma.customer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Customers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Customers
+     * const customers = await prisma.customer.findMany()
+     * 
+     * // Get first 10 Customers
+     * const customers = await prisma.customer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerWithIdOnly = await prisma.customer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerFindManyArgs>(args?: SelectSubset<T, CustomerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Customer.
+     * @param {CustomerCreateArgs} args - Arguments to create a Customer.
+     * @example
+     * // Create one Customer
+     * const Customer = await prisma.customer.create({
+     *   data: {
+     *     // ... data to create a Customer
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerCreateArgs>(args: SelectSubset<T, CustomerCreateArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Customers.
+     * @param {CustomerCreateManyArgs} args - Arguments to create many Customers.
+     * @example
+     * // Create many Customers
+     * const customer = await prisma.customer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerCreateManyArgs>(args?: SelectSubset<T, CustomerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Customers and returns the data saved in the database.
+     * @param {CustomerCreateManyAndReturnArgs} args - Arguments to create many Customers.
+     * @example
+     * // Create many Customers
+     * const customer = await prisma.customer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Customers and only return the `id`
+     * const customerWithIdOnly = await prisma.customer.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Customer.
+     * @param {CustomerDeleteArgs} args - Arguments to delete one Customer.
+     * @example
+     * // Delete one Customer
+     * const Customer = await prisma.customer.delete({
+     *   where: {
+     *     // ... filter to delete one Customer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerDeleteArgs>(args: SelectSubset<T, CustomerDeleteArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Customer.
+     * @param {CustomerUpdateArgs} args - Arguments to update one Customer.
+     * @example
+     * // Update one Customer
+     * const customer = await prisma.customer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerUpdateArgs>(args: SelectSubset<T, CustomerUpdateArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Customers.
+     * @param {CustomerDeleteManyArgs} args - Arguments to filter Customers to delete.
+     * @example
+     * // Delete a few Customers
+     * const { count } = await prisma.customer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerDeleteManyArgs>(args?: SelectSubset<T, CustomerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Customers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Customers
+     * const customer = await prisma.customer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerUpdateManyArgs>(args: SelectSubset<T, CustomerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Customer.
+     * @param {CustomerUpsertArgs} args - Arguments to update or create a Customer.
+     * @example
+     * // Update or create a Customer
+     * const customer = await prisma.customer.upsert({
+     *   create: {
+     *     // ... data to create a Customer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Customer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerUpsertArgs>(args: SelectSubset<T, CustomerUpsertArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Customers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCountArgs} args - Arguments to filter Customers to count.
+     * @example
+     * // Count the number of Customers
+     * const count = await prisma.customer.count({
+     *   where: {
+     *     // ... the filter for the Customers we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerCountArgs>(
+      args?: Subset<T, CustomerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Customer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerAggregateArgs>(args: Subset<T, CustomerAggregateArgs>): Prisma.PrismaPromise<GetCustomerAggregateType<T>>
+
+    /**
+     * Group by Customer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Customer model
+   */
+  readonly fields: CustomerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Customer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    entries<T extends Customer$entriesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany"> | Null>
+    sales<T extends Customer$salesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Customer model
+   */ 
+  interface CustomerFieldRefs {
+    readonly id: FieldRef<"Customer", 'String'>
+    readonly shopId: FieldRef<"Customer", 'String'>
+    readonly name: FieldRef<"Customer", 'String'>
+    readonly phone: FieldRef<"Customer", 'String'>
+    readonly totalOwed: FieldRef<"Customer", 'Float'>
+    readonly totalPaid: FieldRef<"Customer", 'Float'>
+    readonly lastPaymentAt: FieldRef<"Customer", 'DateTime'>
+    readonly createdAt: FieldRef<"Customer", 'DateTime'>
+    readonly updatedAt: FieldRef<"Customer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Customer findUnique
+   */
+  export type CustomerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which Customer to fetch.
+     */
+    where: CustomerWhereUniqueInput
+  }
+
+  /**
+   * Customer findUniqueOrThrow
+   */
+  export type CustomerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which Customer to fetch.
+     */
+    where: CustomerWhereUniqueInput
+  }
+
+  /**
+   * Customer findFirst
+   */
+  export type CustomerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which Customer to fetch.
+     */
+    where?: CustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Customers to fetch.
+     */
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Customers.
+     */
+    cursor?: CustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Customers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Customers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Customers.
+     */
+    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
+  }
+
+  /**
+   * Customer findFirstOrThrow
+   */
+  export type CustomerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which Customer to fetch.
+     */
+    where?: CustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Customers to fetch.
+     */
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Customers.
+     */
+    cursor?: CustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Customers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Customers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Customers.
+     */
+    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
+  }
+
+  /**
+   * Customer findMany
+   */
+  export type CustomerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which Customers to fetch.
+     */
+    where?: CustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Customers to fetch.
+     */
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Customers.
+     */
+    cursor?: CustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Customers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Customers.
+     */
+    skip?: number
+    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
+  }
+
+  /**
+   * Customer create
+   */
+  export type CustomerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Customer.
+     */
+    data: XOR<CustomerCreateInput, CustomerUncheckedCreateInput>
+  }
+
+  /**
+   * Customer createMany
+   */
+  export type CustomerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Customers.
+     */
+    data: CustomerCreateManyInput | CustomerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Customer createManyAndReturn
+   */
+  export type CustomerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Customers.
+     */
+    data: CustomerCreateManyInput | CustomerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Customer update
+   */
+  export type CustomerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Customer.
+     */
+    data: XOR<CustomerUpdateInput, CustomerUncheckedUpdateInput>
+    /**
+     * Choose, which Customer to update.
+     */
+    where: CustomerWhereUniqueInput
+  }
+
+  /**
+   * Customer updateMany
+   */
+  export type CustomerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Customers.
+     */
+    data: XOR<CustomerUpdateManyMutationInput, CustomerUncheckedUpdateManyInput>
+    /**
+     * Filter which Customers to update
+     */
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * Customer upsert
+   */
+  export type CustomerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Customer to update in case it exists.
+     */
+    where: CustomerWhereUniqueInput
+    /**
+     * In case the Customer found by the `where` argument doesn't exist, create a new Customer with this data.
+     */
+    create: XOR<CustomerCreateInput, CustomerUncheckedCreateInput>
+    /**
+     * In case the Customer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerUpdateInput, CustomerUncheckedUpdateInput>
+  }
+
+  /**
+   * Customer delete
+   */
+  export type CustomerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    /**
+     * Filter which Customer to delete.
+     */
+    where: CustomerWhereUniqueInput
+  }
+
+  /**
+   * Customer deleteMany
+   */
+  export type CustomerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Customers to delete
+     */
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * Customer.entries
+   */
+  export type Customer$entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    where?: LedgerEntryWhereInput
+    orderBy?: LedgerEntryOrderByWithRelationInput | LedgerEntryOrderByWithRelationInput[]
+    cursor?: LedgerEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LedgerEntryScalarFieldEnum | LedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.sales
+   */
+  export type Customer$salesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale
+     */
+    select?: SaleSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SaleInclude<ExtArgs> | null
+    where?: SaleWhereInput
+    orderBy?: SaleOrderByWithRelationInput | SaleOrderByWithRelationInput[]
+    cursor?: SaleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SaleScalarFieldEnum | SaleScalarFieldEnum[]
+  }
+
+  /**
+   * Customer without action
+   */
+  export type CustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LedgerEntry
+   */
+
+  export type AggregateLedgerEntry = {
+    _count: LedgerEntryCountAggregateOutputType | null
+    _avg: LedgerEntryAvgAggregateOutputType | null
+    _sum: LedgerEntrySumAggregateOutputType | null
+    _min: LedgerEntryMinAggregateOutputType | null
+    _max: LedgerEntryMaxAggregateOutputType | null
+  }
+
+  export type LedgerEntryAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type LedgerEntrySumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type LedgerEntryMinAggregateOutputType = {
+    id: string | null
+    shopId: string | null
+    customerId: string | null
+    type: string | null
+    amount: number | null
+    saleId: string | null
+    note: string | null
+    createdAt: Date | null
+  }
+
+  export type LedgerEntryMaxAggregateOutputType = {
+    id: string | null
+    shopId: string | null
+    customerId: string | null
+    type: string | null
+    amount: number | null
+    saleId: string | null
+    note: string | null
+    createdAt: Date | null
+  }
+
+  export type LedgerEntryCountAggregateOutputType = {
+    id: number
+    shopId: number
+    customerId: number
+    type: number
+    amount: number
+    saleId: number
+    note: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LedgerEntryAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type LedgerEntrySumAggregateInputType = {
+    amount?: true
+  }
+
+  export type LedgerEntryMinAggregateInputType = {
+    id?: true
+    shopId?: true
+    customerId?: true
+    type?: true
+    amount?: true
+    saleId?: true
+    note?: true
+    createdAt?: true
+  }
+
+  export type LedgerEntryMaxAggregateInputType = {
+    id?: true
+    shopId?: true
+    customerId?: true
+    type?: true
+    amount?: true
+    saleId?: true
+    note?: true
+    createdAt?: true
+  }
+
+  export type LedgerEntryCountAggregateInputType = {
+    id?: true
+    shopId?: true
+    customerId?: true
+    type?: true
+    amount?: true
+    saleId?: true
+    note?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LedgerEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LedgerEntry to aggregate.
+     */
+    where?: LedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LedgerEntries to fetch.
+     */
+    orderBy?: LedgerEntryOrderByWithRelationInput | LedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LedgerEntries
+    **/
+    _count?: true | LedgerEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LedgerEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LedgerEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LedgerEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LedgerEntryMaxAggregateInputType
+  }
+
+  export type GetLedgerEntryAggregateType<T extends LedgerEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateLedgerEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLedgerEntry[P]>
+      : GetScalarType<T[P], AggregateLedgerEntry[P]>
+  }
+
+
+
+
+  export type LedgerEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LedgerEntryWhereInput
+    orderBy?: LedgerEntryOrderByWithAggregationInput | LedgerEntryOrderByWithAggregationInput[]
+    by: LedgerEntryScalarFieldEnum[] | LedgerEntryScalarFieldEnum
+    having?: LedgerEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LedgerEntryCountAggregateInputType | true
+    _avg?: LedgerEntryAvgAggregateInputType
+    _sum?: LedgerEntrySumAggregateInputType
+    _min?: LedgerEntryMinAggregateInputType
+    _max?: LedgerEntryMaxAggregateInputType
+  }
+
+  export type LedgerEntryGroupByOutputType = {
+    id: string
+    shopId: string
+    customerId: string
+    type: string
+    amount: number
+    saleId: string | null
+    note: string
+    createdAt: Date
+    _count: LedgerEntryCountAggregateOutputType | null
+    _avg: LedgerEntryAvgAggregateOutputType | null
+    _sum: LedgerEntrySumAggregateOutputType | null
+    _min: LedgerEntryMinAggregateOutputType | null
+    _max: LedgerEntryMaxAggregateOutputType | null
+  }
+
+  type GetLedgerEntryGroupByPayload<T extends LedgerEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LedgerEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LedgerEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LedgerEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], LedgerEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LedgerEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shopId?: boolean
+    customerId?: boolean
+    type?: boolean
+    amount?: boolean
+    saleId?: boolean
+    note?: boolean
+    createdAt?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ledgerEntry"]>
+
+  export type LedgerEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shopId?: boolean
+    customerId?: boolean
+    type?: boolean
+    amount?: boolean
+    saleId?: boolean
+    note?: boolean
+    createdAt?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ledgerEntry"]>
+
+  export type LedgerEntrySelectScalar = {
+    id?: boolean
+    shopId?: boolean
+    customerId?: boolean
+    type?: boolean
+    amount?: boolean
+    saleId?: boolean
+    note?: boolean
+    createdAt?: boolean
+  }
+
+  export type LedgerEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }
+  export type LedgerEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
+  }
+
+  export type $LedgerEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LedgerEntry"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs>
+      shop: Prisma.$ShopPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      shopId: string
+      customerId: string
+      type: string
+      amount: number
+      saleId: string | null
+      note: string
+      createdAt: Date
+    }, ExtArgs["result"]["ledgerEntry"]>
+    composites: {}
+  }
+
+  type LedgerEntryGetPayload<S extends boolean | null | undefined | LedgerEntryDefaultArgs> = $Result.GetResult<Prisma.$LedgerEntryPayload, S>
+
+  type LedgerEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<LedgerEntryFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: LedgerEntryCountAggregateInputType | true
+    }
+
+  export interface LedgerEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LedgerEntry'], meta: { name: 'LedgerEntry' } }
+    /**
+     * Find zero or one LedgerEntry that matches the filter.
+     * @param {LedgerEntryFindUniqueArgs} args - Arguments to find a LedgerEntry
+     * @example
+     * // Get one LedgerEntry
+     * const ledgerEntry = await prisma.ledgerEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LedgerEntryFindUniqueArgs>(args: SelectSubset<T, LedgerEntryFindUniqueArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one LedgerEntry that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {LedgerEntryFindUniqueOrThrowArgs} args - Arguments to find a LedgerEntry
+     * @example
+     * // Get one LedgerEntry
+     * const ledgerEntry = await prisma.ledgerEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LedgerEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, LedgerEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first LedgerEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryFindFirstArgs} args - Arguments to find a LedgerEntry
+     * @example
+     * // Get one LedgerEntry
+     * const ledgerEntry = await prisma.ledgerEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LedgerEntryFindFirstArgs>(args?: SelectSubset<T, LedgerEntryFindFirstArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first LedgerEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryFindFirstOrThrowArgs} args - Arguments to find a LedgerEntry
+     * @example
+     * // Get one LedgerEntry
+     * const ledgerEntry = await prisma.ledgerEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LedgerEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, LedgerEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more LedgerEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LedgerEntries
+     * const ledgerEntries = await prisma.ledgerEntry.findMany()
+     * 
+     * // Get first 10 LedgerEntries
+     * const ledgerEntries = await prisma.ledgerEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ledgerEntryWithIdOnly = await prisma.ledgerEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LedgerEntryFindManyArgs>(args?: SelectSubset<T, LedgerEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a LedgerEntry.
+     * @param {LedgerEntryCreateArgs} args - Arguments to create a LedgerEntry.
+     * @example
+     * // Create one LedgerEntry
+     * const LedgerEntry = await prisma.ledgerEntry.create({
+     *   data: {
+     *     // ... data to create a LedgerEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends LedgerEntryCreateArgs>(args: SelectSubset<T, LedgerEntryCreateArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many LedgerEntries.
+     * @param {LedgerEntryCreateManyArgs} args - Arguments to create many LedgerEntries.
+     * @example
+     * // Create many LedgerEntries
+     * const ledgerEntry = await prisma.ledgerEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LedgerEntryCreateManyArgs>(args?: SelectSubset<T, LedgerEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LedgerEntries and returns the data saved in the database.
+     * @param {LedgerEntryCreateManyAndReturnArgs} args - Arguments to create many LedgerEntries.
+     * @example
+     * // Create many LedgerEntries
+     * const ledgerEntry = await prisma.ledgerEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LedgerEntries and only return the `id`
+     * const ledgerEntryWithIdOnly = await prisma.ledgerEntry.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LedgerEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, LedgerEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a LedgerEntry.
+     * @param {LedgerEntryDeleteArgs} args - Arguments to delete one LedgerEntry.
+     * @example
+     * // Delete one LedgerEntry
+     * const LedgerEntry = await prisma.ledgerEntry.delete({
+     *   where: {
+     *     // ... filter to delete one LedgerEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LedgerEntryDeleteArgs>(args: SelectSubset<T, LedgerEntryDeleteArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one LedgerEntry.
+     * @param {LedgerEntryUpdateArgs} args - Arguments to update one LedgerEntry.
+     * @example
+     * // Update one LedgerEntry
+     * const ledgerEntry = await prisma.ledgerEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LedgerEntryUpdateArgs>(args: SelectSubset<T, LedgerEntryUpdateArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more LedgerEntries.
+     * @param {LedgerEntryDeleteManyArgs} args - Arguments to filter LedgerEntries to delete.
+     * @example
+     * // Delete a few LedgerEntries
+     * const { count } = await prisma.ledgerEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LedgerEntryDeleteManyArgs>(args?: SelectSubset<T, LedgerEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LedgerEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LedgerEntries
+     * const ledgerEntry = await prisma.ledgerEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LedgerEntryUpdateManyArgs>(args: SelectSubset<T, LedgerEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one LedgerEntry.
+     * @param {LedgerEntryUpsertArgs} args - Arguments to update or create a LedgerEntry.
+     * @example
+     * // Update or create a LedgerEntry
+     * const ledgerEntry = await prisma.ledgerEntry.upsert({
+     *   create: {
+     *     // ... data to create a LedgerEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LedgerEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LedgerEntryUpsertArgs>(args: SelectSubset<T, LedgerEntryUpsertArgs<ExtArgs>>): Prisma__LedgerEntryClient<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of LedgerEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryCountArgs} args - Arguments to filter LedgerEntries to count.
+     * @example
+     * // Count the number of LedgerEntries
+     * const count = await prisma.ledgerEntry.count({
+     *   where: {
+     *     // ... the filter for the LedgerEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends LedgerEntryCountArgs>(
+      args?: Subset<T, LedgerEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LedgerEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LedgerEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LedgerEntryAggregateArgs>(args: Subset<T, LedgerEntryAggregateArgs>): Prisma.PrismaPromise<GetLedgerEntryAggregateType<T>>
+
+    /**
+     * Group by LedgerEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LedgerEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LedgerEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LedgerEntryGroupByArgs['orderBy'] }
+        : { orderBy?: LedgerEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LedgerEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLedgerEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LedgerEntry model
+   */
+  readonly fields: LedgerEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LedgerEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LedgerEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LedgerEntry model
+   */ 
+  interface LedgerEntryFieldRefs {
+    readonly id: FieldRef<"LedgerEntry", 'String'>
+    readonly shopId: FieldRef<"LedgerEntry", 'String'>
+    readonly customerId: FieldRef<"LedgerEntry", 'String'>
+    readonly type: FieldRef<"LedgerEntry", 'String'>
+    readonly amount: FieldRef<"LedgerEntry", 'Float'>
+    readonly saleId: FieldRef<"LedgerEntry", 'String'>
+    readonly note: FieldRef<"LedgerEntry", 'String'>
+    readonly createdAt: FieldRef<"LedgerEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LedgerEntry findUnique
+   */
+  export type LedgerEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which LedgerEntry to fetch.
+     */
+    where: LedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * LedgerEntry findUniqueOrThrow
+   */
+  export type LedgerEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which LedgerEntry to fetch.
+     */
+    where: LedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * LedgerEntry findFirst
+   */
+  export type LedgerEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which LedgerEntry to fetch.
+     */
+    where?: LedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LedgerEntries to fetch.
+     */
+    orderBy?: LedgerEntryOrderByWithRelationInput | LedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LedgerEntries.
+     */
+    cursor?: LedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LedgerEntries.
+     */
+    distinct?: LedgerEntryScalarFieldEnum | LedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * LedgerEntry findFirstOrThrow
+   */
+  export type LedgerEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which LedgerEntry to fetch.
+     */
+    where?: LedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LedgerEntries to fetch.
+     */
+    orderBy?: LedgerEntryOrderByWithRelationInput | LedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LedgerEntries.
+     */
+    cursor?: LedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LedgerEntries.
+     */
+    distinct?: LedgerEntryScalarFieldEnum | LedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * LedgerEntry findMany
+   */
+  export type LedgerEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which LedgerEntries to fetch.
+     */
+    where?: LedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LedgerEntries to fetch.
+     */
+    orderBy?: LedgerEntryOrderByWithRelationInput | LedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LedgerEntries.
+     */
+    cursor?: LedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LedgerEntries.
+     */
+    skip?: number
+    distinct?: LedgerEntryScalarFieldEnum | LedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * LedgerEntry create
+   */
+  export type LedgerEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LedgerEntry.
+     */
+    data: XOR<LedgerEntryCreateInput, LedgerEntryUncheckedCreateInput>
+  }
+
+  /**
+   * LedgerEntry createMany
+   */
+  export type LedgerEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LedgerEntries.
+     */
+    data: LedgerEntryCreateManyInput | LedgerEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LedgerEntry createManyAndReturn
+   */
+  export type LedgerEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many LedgerEntries.
+     */
+    data: LedgerEntryCreateManyInput | LedgerEntryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LedgerEntry update
+   */
+  export type LedgerEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LedgerEntry.
+     */
+    data: XOR<LedgerEntryUpdateInput, LedgerEntryUncheckedUpdateInput>
+    /**
+     * Choose, which LedgerEntry to update.
+     */
+    where: LedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * LedgerEntry updateMany
+   */
+  export type LedgerEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LedgerEntries.
+     */
+    data: XOR<LedgerEntryUpdateManyMutationInput, LedgerEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which LedgerEntries to update
+     */
+    where?: LedgerEntryWhereInput
+  }
+
+  /**
+   * LedgerEntry upsert
+   */
+  export type LedgerEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LedgerEntry to update in case it exists.
+     */
+    where: LedgerEntryWhereUniqueInput
+    /**
+     * In case the LedgerEntry found by the `where` argument doesn't exist, create a new LedgerEntry with this data.
+     */
+    create: XOR<LedgerEntryCreateInput, LedgerEntryUncheckedCreateInput>
+    /**
+     * In case the LedgerEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LedgerEntryUpdateInput, LedgerEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * LedgerEntry delete
+   */
+  export type LedgerEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+    /**
+     * Filter which LedgerEntry to delete.
+     */
+    where: LedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * LedgerEntry deleteMany
+   */
+  export type LedgerEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LedgerEntries to delete
+     */
+    where?: LedgerEntryWhereInput
+  }
+
+  /**
+   * LedgerEntry without action
+   */
+  export type LedgerEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerEntry
+     */
+    select?: LedgerEntrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -10072,6 +13549,7 @@ export namespace Prisma {
   export const ShopScalarFieldEnum: {
     id: 'id',
     shopName: 'shopName',
+    category: 'category',
     subscriptionPlan: 'subscriptionPlan',
     subscriptionStatus: 'subscriptionStatus',
     subscriptionEndsAt: 'subscriptionEndsAt',
@@ -10081,6 +13559,19 @@ export namespace Prisma {
   };
 
   export type ShopScalarFieldEnum = (typeof ShopScalarFieldEnum)[keyof typeof ShopScalarFieldEnum]
+
+
+  export const BranchScalarFieldEnum: {
+    id: 'id',
+    shopId: 'shopId',
+    name: 'name',
+    address: 'address',
+    phone: 'phone',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
 
 
   export const PaymentScalarFieldEnum: {
@@ -10151,6 +13642,7 @@ export namespace Prisma {
     id: 'id',
     shopId: 'shopId',
     userId: 'userId',
+    customerId: 'customerId',
     total: 'total',
     subtotal: 'subtotal',
     tax: 'tax',
@@ -10192,6 +13684,35 @@ export namespace Prisma {
   };
 
   export type SaleItemScalarFieldEnum = (typeof SaleItemScalarFieldEnum)[keyof typeof SaleItemScalarFieldEnum]
+
+
+  export const CustomerScalarFieldEnum: {
+    id: 'id',
+    shopId: 'shopId',
+    name: 'name',
+    phone: 'phone',
+    totalOwed: 'totalOwed',
+    totalPaid: 'totalPaid',
+    lastPaymentAt: 'lastPaymentAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+  export const LedgerEntryScalarFieldEnum: {
+    id: 'id',
+    shopId: 'shopId',
+    customerId: 'customerId',
+    type: 'type',
+    amount: 'amount',
+    saleId: 'saleId',
+    note: 'note',
+    createdAt: 'createdAt'
+  };
+
+  export type LedgerEntryScalarFieldEnum = (typeof LedgerEntryScalarFieldEnum)[keyof typeof LedgerEntryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -10295,6 +13816,7 @@ export namespace Prisma {
     NOT?: ShopWhereInput | ShopWhereInput[]
     id?: StringFilter<"Shop"> | string
     shopName?: StringFilter<"Shop"> | string
+    category?: StringFilter<"Shop"> | string
     subscriptionPlan?: StringFilter<"Shop"> | string
     subscriptionStatus?: StringFilter<"Shop"> | string
     subscriptionEndsAt?: DateTimeNullableFilter<"Shop"> | Date | string | null
@@ -10307,11 +13829,15 @@ export namespace Prisma {
     saleItems?: SaleItemListRelationFilter
     invoices?: InvoiceListRelationFilter
     users?: UserListRelationFilter
+    customers?: CustomerListRelationFilter
+    ledgerEntries?: LedgerEntryListRelationFilter
+    branches?: BranchListRelationFilter
   }
 
   export type ShopOrderByWithRelationInput = {
     id?: SortOrder
     shopName?: SortOrder
+    category?: SortOrder
     subscriptionPlan?: SortOrder
     subscriptionStatus?: SortOrder
     subscriptionEndsAt?: SortOrderInput | SortOrder
@@ -10324,6 +13850,9 @@ export namespace Prisma {
     saleItems?: SaleItemOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
+    customers?: CustomerOrderByRelationAggregateInput
+    ledgerEntries?: LedgerEntryOrderByRelationAggregateInput
+    branches?: BranchOrderByRelationAggregateInput
   }
 
   export type ShopWhereUniqueInput = Prisma.AtLeast<{
@@ -10332,6 +13861,7 @@ export namespace Prisma {
     AND?: ShopWhereInput | ShopWhereInput[]
     OR?: ShopWhereInput[]
     NOT?: ShopWhereInput | ShopWhereInput[]
+    category?: StringFilter<"Shop"> | string
     subscriptionPlan?: StringFilter<"Shop"> | string
     subscriptionStatus?: StringFilter<"Shop"> | string
     subscriptionEndsAt?: DateTimeNullableFilter<"Shop"> | Date | string | null
@@ -10344,11 +13874,15 @@ export namespace Prisma {
     saleItems?: SaleItemListRelationFilter
     invoices?: InvoiceListRelationFilter
     users?: UserListRelationFilter
+    customers?: CustomerListRelationFilter
+    ledgerEntries?: LedgerEntryListRelationFilter
+    branches?: BranchListRelationFilter
   }, "id" | "shopName">
 
   export type ShopOrderByWithAggregationInput = {
     id?: SortOrder
     shopName?: SortOrder
+    category?: SortOrder
     subscriptionPlan?: SortOrder
     subscriptionStatus?: SortOrder
     subscriptionEndsAt?: SortOrderInput | SortOrder
@@ -10366,12 +13900,79 @@ export namespace Prisma {
     NOT?: ShopScalarWhereWithAggregatesInput | ShopScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Shop"> | string
     shopName?: StringWithAggregatesFilter<"Shop"> | string
+    category?: StringWithAggregatesFilter<"Shop"> | string
     subscriptionPlan?: StringWithAggregatesFilter<"Shop"> | string
     subscriptionStatus?: StringWithAggregatesFilter<"Shop"> | string
     subscriptionEndsAt?: DateTimeNullableWithAggregatesFilter<"Shop"> | Date | string | null
     isActive?: BoolWithAggregatesFilter<"Shop"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Shop"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Shop"> | Date | string
+  }
+
+  export type BranchWhereInput = {
+    AND?: BranchWhereInput | BranchWhereInput[]
+    OR?: BranchWhereInput[]
+    NOT?: BranchWhereInput | BranchWhereInput[]
+    id?: StringFilter<"Branch"> | string
+    shopId?: StringFilter<"Branch"> | string
+    name?: StringFilter<"Branch"> | string
+    address?: StringFilter<"Branch"> | string
+    phone?: StringFilter<"Branch"> | string
+    createdAt?: DateTimeFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeFilter<"Branch"> | Date | string
+    shop?: XOR<ShopRelationFilter, ShopWhereInput>
+  }
+
+  export type BranchOrderByWithRelationInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    shop?: ShopOrderByWithRelationInput
+  }
+
+  export type BranchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    shopId_name?: BranchShopIdNameCompoundUniqueInput
+    AND?: BranchWhereInput | BranchWhereInput[]
+    OR?: BranchWhereInput[]
+    NOT?: BranchWhereInput | BranchWhereInput[]
+    shopId?: StringFilter<"Branch"> | string
+    name?: StringFilter<"Branch"> | string
+    address?: StringFilter<"Branch"> | string
+    phone?: StringFilter<"Branch"> | string
+    createdAt?: DateTimeFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeFilter<"Branch"> | Date | string
+    shop?: XOR<ShopRelationFilter, ShopWhereInput>
+  }, "id" | "shopId_name">
+
+  export type BranchOrderByWithAggregationInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BranchCountOrderByAggregateInput
+    _max?: BranchMaxOrderByAggregateInput
+    _min?: BranchMinOrderByAggregateInput
+  }
+
+  export type BranchScalarWhereWithAggregatesInput = {
+    AND?: BranchScalarWhereWithAggregatesInput | BranchScalarWhereWithAggregatesInput[]
+    OR?: BranchScalarWhereWithAggregatesInput[]
+    NOT?: BranchScalarWhereWithAggregatesInput | BranchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Branch"> | string
+    shopId?: StringWithAggregatesFilter<"Branch"> | string
+    name?: StringWithAggregatesFilter<"Branch"> | string
+    address?: StringWithAggregatesFilter<"Branch"> | string
+    phone?: StringWithAggregatesFilter<"Branch"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
   }
 
   export type PaymentWhereInput = {
@@ -10718,6 +14319,7 @@ export namespace Prisma {
     id?: StringFilter<"Sale"> | string
     shopId?: StringFilter<"Sale"> | string
     userId?: StringFilter<"Sale"> | string
+    customerId?: StringNullableFilter<"Sale"> | string | null
     total?: FloatFilter<"Sale"> | number
     subtotal?: FloatFilter<"Sale"> | number
     tax?: FloatFilter<"Sale"> | number
@@ -10727,6 +14329,7 @@ export namespace Prisma {
     notes?: StringFilter<"Sale"> | string
     createdAt?: DateTimeFilter<"Sale"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
+    customer?: XOR<CustomerNullableRelationFilter, CustomerWhereInput> | null
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
     saleItems?: SaleItemListRelationFilter
     invoice?: XOR<InvoiceNullableRelationFilter, InvoiceWhereInput> | null
@@ -10736,6 +14339,7 @@ export namespace Prisma {
     id?: SortOrder
     shopId?: SortOrder
     userId?: SortOrder
+    customerId?: SortOrderInput | SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -10745,6 +14349,7 @@ export namespace Prisma {
     notes?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    customer?: CustomerOrderByWithRelationInput
     shop?: ShopOrderByWithRelationInput
     saleItems?: SaleItemOrderByRelationAggregateInput
     invoice?: InvoiceOrderByWithRelationInput
@@ -10757,6 +14362,7 @@ export namespace Prisma {
     NOT?: SaleWhereInput | SaleWhereInput[]
     shopId?: StringFilter<"Sale"> | string
     userId?: StringFilter<"Sale"> | string
+    customerId?: StringNullableFilter<"Sale"> | string | null
     total?: FloatFilter<"Sale"> | number
     subtotal?: FloatFilter<"Sale"> | number
     tax?: FloatFilter<"Sale"> | number
@@ -10766,6 +14372,7 @@ export namespace Prisma {
     notes?: StringFilter<"Sale"> | string
     createdAt?: DateTimeFilter<"Sale"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
+    customer?: XOR<CustomerNullableRelationFilter, CustomerWhereInput> | null
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
     saleItems?: SaleItemListRelationFilter
     invoice?: XOR<InvoiceNullableRelationFilter, InvoiceWhereInput> | null
@@ -10775,6 +14382,7 @@ export namespace Prisma {
     id?: SortOrder
     shopId?: SortOrder
     userId?: SortOrder
+    customerId?: SortOrderInput | SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -10797,6 +14405,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Sale"> | string
     shopId?: StringWithAggregatesFilter<"Sale"> | string
     userId?: StringWithAggregatesFilter<"Sale"> | string
+    customerId?: StringNullableWithAggregatesFilter<"Sale"> | string | null
     total?: FloatWithAggregatesFilter<"Sale"> | number
     subtotal?: FloatWithAggregatesFilter<"Sale"> | number
     tax?: FloatWithAggregatesFilter<"Sale"> | number
@@ -10973,9 +14582,169 @@ export namespace Prisma {
     subtotal?: FloatWithAggregatesFilter<"SaleItem"> | number
   }
 
+  export type CustomerWhereInput = {
+    AND?: CustomerWhereInput | CustomerWhereInput[]
+    OR?: CustomerWhereInput[]
+    NOT?: CustomerWhereInput | CustomerWhereInput[]
+    id?: StringFilter<"Customer"> | string
+    shopId?: StringFilter<"Customer"> | string
+    name?: StringFilter<"Customer"> | string
+    phone?: StringFilter<"Customer"> | string
+    totalOwed?: FloatFilter<"Customer"> | number
+    totalPaid?: FloatFilter<"Customer"> | number
+    lastPaymentAt?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    createdAt?: DateTimeFilter<"Customer"> | Date | string
+    updatedAt?: DateTimeFilter<"Customer"> | Date | string
+    shop?: XOR<ShopRelationFilter, ShopWhereInput>
+    entries?: LedgerEntryListRelationFilter
+    sales?: SaleListRelationFilter
+  }
+
+  export type CustomerOrderByWithRelationInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+    lastPaymentAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    shop?: ShopOrderByWithRelationInput
+    entries?: LedgerEntryOrderByRelationAggregateInput
+    sales?: SaleOrderByRelationAggregateInput
+  }
+
+  export type CustomerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    shopId_name_phone?: CustomerShopIdNamePhoneCompoundUniqueInput
+    AND?: CustomerWhereInput | CustomerWhereInput[]
+    OR?: CustomerWhereInput[]
+    NOT?: CustomerWhereInput | CustomerWhereInput[]
+    shopId?: StringFilter<"Customer"> | string
+    name?: StringFilter<"Customer"> | string
+    phone?: StringFilter<"Customer"> | string
+    totalOwed?: FloatFilter<"Customer"> | number
+    totalPaid?: FloatFilter<"Customer"> | number
+    lastPaymentAt?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    createdAt?: DateTimeFilter<"Customer"> | Date | string
+    updatedAt?: DateTimeFilter<"Customer"> | Date | string
+    shop?: XOR<ShopRelationFilter, ShopWhereInput>
+    entries?: LedgerEntryListRelationFilter
+    sales?: SaleListRelationFilter
+  }, "id" | "shopId_name_phone">
+
+  export type CustomerOrderByWithAggregationInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+    lastPaymentAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CustomerCountOrderByAggregateInput
+    _avg?: CustomerAvgOrderByAggregateInput
+    _max?: CustomerMaxOrderByAggregateInput
+    _min?: CustomerMinOrderByAggregateInput
+    _sum?: CustomerSumOrderByAggregateInput
+  }
+
+  export type CustomerScalarWhereWithAggregatesInput = {
+    AND?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
+    OR?: CustomerScalarWhereWithAggregatesInput[]
+    NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Customer"> | string
+    shopId?: StringWithAggregatesFilter<"Customer"> | string
+    name?: StringWithAggregatesFilter<"Customer"> | string
+    phone?: StringWithAggregatesFilter<"Customer"> | string
+    totalOwed?: FloatWithAggregatesFilter<"Customer"> | number
+    totalPaid?: FloatWithAggregatesFilter<"Customer"> | number
+    lastPaymentAt?: DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
+  }
+
+  export type LedgerEntryWhereInput = {
+    AND?: LedgerEntryWhereInput | LedgerEntryWhereInput[]
+    OR?: LedgerEntryWhereInput[]
+    NOT?: LedgerEntryWhereInput | LedgerEntryWhereInput[]
+    id?: StringFilter<"LedgerEntry"> | string
+    shopId?: StringFilter<"LedgerEntry"> | string
+    customerId?: StringFilter<"LedgerEntry"> | string
+    type?: StringFilter<"LedgerEntry"> | string
+    amount?: FloatFilter<"LedgerEntry"> | number
+    saleId?: StringNullableFilter<"LedgerEntry"> | string | null
+    note?: StringFilter<"LedgerEntry"> | string
+    createdAt?: DateTimeFilter<"LedgerEntry"> | Date | string
+    customer?: XOR<CustomerRelationFilter, CustomerWhereInput>
+    shop?: XOR<ShopRelationFilter, ShopWhereInput>
+  }
+
+  export type LedgerEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    customerId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    saleId?: SortOrderInput | SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    customer?: CustomerOrderByWithRelationInput
+    shop?: ShopOrderByWithRelationInput
+  }
+
+  export type LedgerEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LedgerEntryWhereInput | LedgerEntryWhereInput[]
+    OR?: LedgerEntryWhereInput[]
+    NOT?: LedgerEntryWhereInput | LedgerEntryWhereInput[]
+    shopId?: StringFilter<"LedgerEntry"> | string
+    customerId?: StringFilter<"LedgerEntry"> | string
+    type?: StringFilter<"LedgerEntry"> | string
+    amount?: FloatFilter<"LedgerEntry"> | number
+    saleId?: StringNullableFilter<"LedgerEntry"> | string | null
+    note?: StringFilter<"LedgerEntry"> | string
+    createdAt?: DateTimeFilter<"LedgerEntry"> | Date | string
+    customer?: XOR<CustomerRelationFilter, CustomerWhereInput>
+    shop?: XOR<ShopRelationFilter, ShopWhereInput>
+  }, "id">
+
+  export type LedgerEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    customerId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    saleId?: SortOrderInput | SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    _count?: LedgerEntryCountOrderByAggregateInput
+    _avg?: LedgerEntryAvgOrderByAggregateInput
+    _max?: LedgerEntryMaxOrderByAggregateInput
+    _min?: LedgerEntryMinOrderByAggregateInput
+    _sum?: LedgerEntrySumOrderByAggregateInput
+  }
+
+  export type LedgerEntryScalarWhereWithAggregatesInput = {
+    AND?: LedgerEntryScalarWhereWithAggregatesInput | LedgerEntryScalarWhereWithAggregatesInput[]
+    OR?: LedgerEntryScalarWhereWithAggregatesInput[]
+    NOT?: LedgerEntryScalarWhereWithAggregatesInput | LedgerEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LedgerEntry"> | string
+    shopId?: StringWithAggregatesFilter<"LedgerEntry"> | string
+    customerId?: StringWithAggregatesFilter<"LedgerEntry"> | string
+    type?: StringWithAggregatesFilter<"LedgerEntry"> | string
+    amount?: FloatWithAggregatesFilter<"LedgerEntry"> | number
+    saleId?: StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
+    note?: StringWithAggregatesFilter<"LedgerEntry"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"LedgerEntry"> | Date | string
+  }
+
   export type ShopCreateInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -10988,11 +14757,15 @@ export namespace Prisma {
     saleItems?: SaleItemCreateNestedManyWithoutShopInput
     invoices?: InvoiceCreateNestedManyWithoutShopInput
     users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -11005,11 +14778,15 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
     users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11022,11 +14799,15 @@ export namespace Prisma {
     saleItems?: SaleItemUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUpdateManyWithoutShopNestedInput
     users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11039,11 +14820,15 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
     users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type ShopCreateManyInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -11055,6 +14840,7 @@ export namespace Prisma {
   export type ShopUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11066,10 +14852,80 @@ export namespace Prisma {
   export type ShopUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchCreateInput = {
+    id?: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shop: ShopCreateNestedOneWithoutBranchesInput
+  }
+
+  export type BranchUncheckedCreateInput = {
+    id?: string
+    shopId: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutBranchesNestedInput
+  }
+
+  export type BranchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchCreateManyInput = {
+    id?: string
+    shopId: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11461,6 +15317,7 @@ export namespace Prisma {
     notes?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
@@ -11470,6 +15327,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     userId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -11493,6 +15351,7 @@ export namespace Prisma {
     notes?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
@@ -11502,6 +15361,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -11518,6 +15378,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     userId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -11544,6 +15405,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -11716,6 +15578,172 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
+  export type CustomerCreateInput = {
+    id?: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shop: ShopCreateNestedOneWithoutCustomersInput
+    entries?: LedgerEntryCreateNestedManyWithoutCustomerInput
+    sales?: SaleCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateInput = {
+    id?: string
+    shopId: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: LedgerEntryUncheckedCreateNestedManyWithoutCustomerInput
+    sales?: SaleUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutCustomersNestedInput
+    entries?: LedgerEntryUpdateManyWithoutCustomerNestedInput
+    sales?: SaleUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: LedgerEntryUncheckedUpdateManyWithoutCustomerNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerCreateManyInput = {
+    id?: string
+    shopId: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LedgerEntryCreateInput = {
+    id?: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutEntriesInput
+    shop: ShopCreateNestedOneWithoutLedgerEntriesInput
+  }
+
+  export type LedgerEntryUncheckedCreateInput = {
+    id?: string
+    shopId: string
+    customerId: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+  }
+
+  export type LedgerEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutEntriesNestedInput
+    shop?: ShopUpdateOneRequiredWithoutLedgerEntriesNestedInput
+  }
+
+  export type LedgerEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LedgerEntryCreateManyInput = {
+    id?: string
+    shopId: string
+    customerId: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+  }
+
+  export type LedgerEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LedgerEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -11794,6 +15822,24 @@ export namespace Prisma {
     none?: UserWhereInput
   }
 
+  export type CustomerListRelationFilter = {
+    every?: CustomerWhereInput
+    some?: CustomerWhereInput
+    none?: CustomerWhereInput
+  }
+
+  export type LedgerEntryListRelationFilter = {
+    every?: LedgerEntryWhereInput
+    some?: LedgerEntryWhereInput
+    none?: LedgerEntryWhereInput
+  }
+
+  export type BranchListRelationFilter = {
+    every?: BranchWhereInput
+    some?: BranchWhereInput
+    none?: BranchWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -11823,9 +15869,22 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type CustomerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LedgerEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BranchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ShopCountOrderByAggregateInput = {
     id?: SortOrder
     shopName?: SortOrder
+    category?: SortOrder
     subscriptionPlan?: SortOrder
     subscriptionStatus?: SortOrder
     subscriptionEndsAt?: SortOrder
@@ -11837,6 +15896,7 @@ export namespace Prisma {
   export type ShopMaxOrderByAggregateInput = {
     id?: SortOrder
     shopName?: SortOrder
+    category?: SortOrder
     subscriptionPlan?: SortOrder
     subscriptionStatus?: SortOrder
     subscriptionEndsAt?: SortOrder
@@ -11848,6 +15908,7 @@ export namespace Prisma {
   export type ShopMinOrderByAggregateInput = {
     id?: SortOrder
     shopName?: SortOrder
+    category?: SortOrder
     subscriptionPlan?: SortOrder
     subscriptionStatus?: SortOrder
     subscriptionEndsAt?: SortOrder
@@ -11910,6 +15971,46 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type ShopRelationFilter = {
+    is?: ShopWhereInput
+    isNot?: ShopWhereInput
+  }
+
+  export type BranchShopIdNameCompoundUniqueInput = {
+    shopId: string
+    name: string
+  }
+
+  export type BranchCountOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BranchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BranchMinOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -11919,11 +16020,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type ShopRelationFilter = {
-    is?: ShopWhereInput
-    isNot?: ShopWhereInput
   }
 
   export type PaymentCountOrderByAggregateInput = {
@@ -12196,6 +16292,11 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type CustomerNullableRelationFilter = {
+    is?: CustomerWhereInput | null
+    isNot?: CustomerWhereInput | null
+  }
+
   export type InvoiceNullableRelationFilter = {
     is?: InvoiceWhereInput | null
     isNot?: InvoiceWhereInput | null
@@ -12205,6 +16306,7 @@ export namespace Prisma {
     id?: SortOrder
     shopId?: SortOrder
     userId?: SortOrder
+    customerId?: SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -12226,6 +16328,7 @@ export namespace Prisma {
     id?: SortOrder
     shopId?: SortOrder
     userId?: SortOrder
+    customerId?: SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -12240,6 +16343,7 @@ export namespace Prisma {
     id?: SortOrder
     shopId?: SortOrder
     userId?: SortOrder
+    customerId?: SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -12365,6 +16469,104 @@ export namespace Prisma {
     subtotal?: SortOrder
   }
 
+  export type CustomerShopIdNamePhoneCompoundUniqueInput = {
+    shopId: string
+    name: string
+    phone: string
+  }
+
+  export type CustomerCountOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+    lastPaymentAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomerAvgOrderByAggregateInput = {
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+  }
+
+  export type CustomerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+    lastPaymentAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomerMinOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+    lastPaymentAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomerSumOrderByAggregateInput = {
+    totalOwed?: SortOrder
+    totalPaid?: SortOrder
+  }
+
+  export type CustomerRelationFilter = {
+    is?: CustomerWhereInput
+    isNot?: CustomerWhereInput
+  }
+
+  export type LedgerEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    customerId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    saleId?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LedgerEntryAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type LedgerEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    customerId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    saleId?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LedgerEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    shopId?: SortOrder
+    customerId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    saleId?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LedgerEntrySumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
   export type PaymentCreateNestedManyWithoutShopInput = {
     create?: XOR<PaymentCreateWithoutShopInput, PaymentUncheckedCreateWithoutShopInput> | PaymentCreateWithoutShopInput[] | PaymentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutShopInput | PaymentCreateOrConnectWithoutShopInput[]
@@ -12407,6 +16609,27 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type CustomerCreateNestedManyWithoutShopInput = {
+    create?: XOR<CustomerCreateWithoutShopInput, CustomerUncheckedCreateWithoutShopInput> | CustomerCreateWithoutShopInput[] | CustomerUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutShopInput | CustomerCreateOrConnectWithoutShopInput[]
+    createMany?: CustomerCreateManyShopInputEnvelope
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+  }
+
+  export type LedgerEntryCreateNestedManyWithoutShopInput = {
+    create?: XOR<LedgerEntryCreateWithoutShopInput, LedgerEntryUncheckedCreateWithoutShopInput> | LedgerEntryCreateWithoutShopInput[] | LedgerEntryUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutShopInput | LedgerEntryCreateOrConnectWithoutShopInput[]
+    createMany?: LedgerEntryCreateManyShopInputEnvelope
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+  }
+
+  export type BranchCreateNestedManyWithoutShopInput = {
+    create?: XOR<BranchCreateWithoutShopInput, BranchUncheckedCreateWithoutShopInput> | BranchCreateWithoutShopInput[] | BranchUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutShopInput | BranchCreateOrConnectWithoutShopInput[]
+    createMany?: BranchCreateManyShopInputEnvelope
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+  }
+
   export type PaymentUncheckedCreateNestedManyWithoutShopInput = {
     create?: XOR<PaymentCreateWithoutShopInput, PaymentUncheckedCreateWithoutShopInput> | PaymentCreateWithoutShopInput[] | PaymentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutShopInput | PaymentCreateOrConnectWithoutShopInput[]
@@ -12447,6 +16670,27 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
     createMany?: UserCreateManyShopInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CustomerUncheckedCreateNestedManyWithoutShopInput = {
+    create?: XOR<CustomerCreateWithoutShopInput, CustomerUncheckedCreateWithoutShopInput> | CustomerCreateWithoutShopInput[] | CustomerUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutShopInput | CustomerCreateOrConnectWithoutShopInput[]
+    createMany?: CustomerCreateManyShopInputEnvelope
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+  }
+
+  export type LedgerEntryUncheckedCreateNestedManyWithoutShopInput = {
+    create?: XOR<LedgerEntryCreateWithoutShopInput, LedgerEntryUncheckedCreateWithoutShopInput> | LedgerEntryCreateWithoutShopInput[] | LedgerEntryUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutShopInput | LedgerEntryCreateOrConnectWithoutShopInput[]
+    createMany?: LedgerEntryCreateManyShopInputEnvelope
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+  }
+
+  export type BranchUncheckedCreateNestedManyWithoutShopInput = {
+    create?: XOR<BranchCreateWithoutShopInput, BranchUncheckedCreateWithoutShopInput> | BranchCreateWithoutShopInput[] | BranchUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutShopInput | BranchCreateOrConnectWithoutShopInput[]
+    createMany?: BranchCreateManyShopInputEnvelope
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -12549,6 +16793,48 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type CustomerUpdateManyWithoutShopNestedInput = {
+    create?: XOR<CustomerCreateWithoutShopInput, CustomerUncheckedCreateWithoutShopInput> | CustomerCreateWithoutShopInput[] | CustomerUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutShopInput | CustomerCreateOrConnectWithoutShopInput[]
+    upsert?: CustomerUpsertWithWhereUniqueWithoutShopInput | CustomerUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: CustomerCreateManyShopInputEnvelope
+    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    update?: CustomerUpdateWithWhereUniqueWithoutShopInput | CustomerUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: CustomerUpdateManyWithWhereWithoutShopInput | CustomerUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
+  }
+
+  export type LedgerEntryUpdateManyWithoutShopNestedInput = {
+    create?: XOR<LedgerEntryCreateWithoutShopInput, LedgerEntryUncheckedCreateWithoutShopInput> | LedgerEntryCreateWithoutShopInput[] | LedgerEntryUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutShopInput | LedgerEntryCreateOrConnectWithoutShopInput[]
+    upsert?: LedgerEntryUpsertWithWhereUniqueWithoutShopInput | LedgerEntryUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: LedgerEntryCreateManyShopInputEnvelope
+    set?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    disconnect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    delete?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    update?: LedgerEntryUpdateWithWhereUniqueWithoutShopInput | LedgerEntryUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: LedgerEntryUpdateManyWithWhereWithoutShopInput | LedgerEntryUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
+  }
+
+  export type BranchUpdateManyWithoutShopNestedInput = {
+    create?: XOR<BranchCreateWithoutShopInput, BranchUncheckedCreateWithoutShopInput> | BranchCreateWithoutShopInput[] | BranchUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutShopInput | BranchCreateOrConnectWithoutShopInput[]
+    upsert?: BranchUpsertWithWhereUniqueWithoutShopInput | BranchUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: BranchCreateManyShopInputEnvelope
+    set?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    disconnect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    delete?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    update?: BranchUpdateWithWhereUniqueWithoutShopInput | BranchUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: BranchUpdateManyWithWhereWithoutShopInput | BranchUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
+  }
+
   export type PaymentUncheckedUpdateManyWithoutShopNestedInput = {
     create?: XOR<PaymentCreateWithoutShopInput, PaymentUncheckedCreateWithoutShopInput> | PaymentCreateWithoutShopInput[] | PaymentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutShopInput | PaymentCreateOrConnectWithoutShopInput[]
@@ -12631,6 +16917,62 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutShopInput | UserUpdateWithWhereUniqueWithoutShopInput[]
     updateMany?: UserUpdateManyWithWhereWithoutShopInput | UserUpdateManyWithWhereWithoutShopInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CustomerUncheckedUpdateManyWithoutShopNestedInput = {
+    create?: XOR<CustomerCreateWithoutShopInput, CustomerUncheckedCreateWithoutShopInput> | CustomerCreateWithoutShopInput[] | CustomerUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutShopInput | CustomerCreateOrConnectWithoutShopInput[]
+    upsert?: CustomerUpsertWithWhereUniqueWithoutShopInput | CustomerUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: CustomerCreateManyShopInputEnvelope
+    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    update?: CustomerUpdateWithWhereUniqueWithoutShopInput | CustomerUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: CustomerUpdateManyWithWhereWithoutShopInput | CustomerUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
+  }
+
+  export type LedgerEntryUncheckedUpdateManyWithoutShopNestedInput = {
+    create?: XOR<LedgerEntryCreateWithoutShopInput, LedgerEntryUncheckedCreateWithoutShopInput> | LedgerEntryCreateWithoutShopInput[] | LedgerEntryUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutShopInput | LedgerEntryCreateOrConnectWithoutShopInput[]
+    upsert?: LedgerEntryUpsertWithWhereUniqueWithoutShopInput | LedgerEntryUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: LedgerEntryCreateManyShopInputEnvelope
+    set?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    disconnect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    delete?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    update?: LedgerEntryUpdateWithWhereUniqueWithoutShopInput | LedgerEntryUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: LedgerEntryUpdateManyWithWhereWithoutShopInput | LedgerEntryUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
+  }
+
+  export type BranchUncheckedUpdateManyWithoutShopNestedInput = {
+    create?: XOR<BranchCreateWithoutShopInput, BranchUncheckedCreateWithoutShopInput> | BranchCreateWithoutShopInput[] | BranchUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutShopInput | BranchCreateOrConnectWithoutShopInput[]
+    upsert?: BranchUpsertWithWhereUniqueWithoutShopInput | BranchUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: BranchCreateManyShopInputEnvelope
+    set?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    disconnect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    delete?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    update?: BranchUpdateWithWhereUniqueWithoutShopInput | BranchUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: BranchUpdateManyWithWhereWithoutShopInput | BranchUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
+  }
+
+  export type ShopCreateNestedOneWithoutBranchesInput = {
+    create?: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutBranchesInput
+    connect?: ShopWhereUniqueInput
+  }
+
+  export type ShopUpdateOneRequiredWithoutBranchesNestedInput = {
+    create?: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutBranchesInput
+    upsert?: ShopUpsertWithoutBranchesInput
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutBranchesInput, ShopUpdateWithoutBranchesInput>, ShopUncheckedUpdateWithoutBranchesInput>
   }
 
   export type ShopCreateNestedOneWithoutPaymentsInput = {
@@ -12883,6 +17225,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type CustomerCreateNestedOneWithoutSalesInput = {
+    create?: XOR<CustomerCreateWithoutSalesInput, CustomerUncheckedCreateWithoutSalesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutSalesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
   export type ShopCreateNestedOneWithoutSalesInput = {
     create?: XOR<ShopCreateWithoutSalesInput, ShopUncheckedCreateWithoutSalesInput>
     connectOrCreate?: ShopCreateOrConnectWithoutSalesInput
@@ -12921,6 +17269,16 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutSalesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSalesInput, UserUpdateWithoutSalesInput>, UserUncheckedUpdateWithoutSalesInput>
+  }
+
+  export type CustomerUpdateOneWithoutSalesNestedInput = {
+    create?: XOR<CustomerCreateWithoutSalesInput, CustomerUncheckedCreateWithoutSalesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutSalesInput
+    upsert?: CustomerUpsertWithoutSalesInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutSalesInput, CustomerUpdateWithoutSalesInput>, CustomerUncheckedUpdateWithoutSalesInput>
   }
 
   export type ShopUpdateOneRequiredWithoutSalesNestedInput = {
@@ -13061,6 +17419,132 @@ export namespace Prisma {
     upsert?: ShopUpsertWithoutSaleItemsInput
     connect?: ShopWhereUniqueInput
     update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutSaleItemsInput, ShopUpdateWithoutSaleItemsInput>, ShopUncheckedUpdateWithoutSaleItemsInput>
+  }
+
+  export type ShopCreateNestedOneWithoutCustomersInput = {
+    create?: XOR<ShopCreateWithoutCustomersInput, ShopUncheckedCreateWithoutCustomersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutCustomersInput
+    connect?: ShopWhereUniqueInput
+  }
+
+  export type LedgerEntryCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<LedgerEntryCreateWithoutCustomerInput, LedgerEntryUncheckedCreateWithoutCustomerInput> | LedgerEntryCreateWithoutCustomerInput[] | LedgerEntryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutCustomerInput | LedgerEntryCreateOrConnectWithoutCustomerInput[]
+    createMany?: LedgerEntryCreateManyCustomerInputEnvelope
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+  }
+
+  export type SaleCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<SaleCreateWithoutCustomerInput, SaleUncheckedCreateWithoutCustomerInput> | SaleCreateWithoutCustomerInput[] | SaleUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutCustomerInput | SaleCreateOrConnectWithoutCustomerInput[]
+    createMany?: SaleCreateManyCustomerInputEnvelope
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+  }
+
+  export type LedgerEntryUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<LedgerEntryCreateWithoutCustomerInput, LedgerEntryUncheckedCreateWithoutCustomerInput> | LedgerEntryCreateWithoutCustomerInput[] | LedgerEntryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutCustomerInput | LedgerEntryCreateOrConnectWithoutCustomerInput[]
+    createMany?: LedgerEntryCreateManyCustomerInputEnvelope
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+  }
+
+  export type SaleUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<SaleCreateWithoutCustomerInput, SaleUncheckedCreateWithoutCustomerInput> | SaleCreateWithoutCustomerInput[] | SaleUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutCustomerInput | SaleCreateOrConnectWithoutCustomerInput[]
+    createMany?: SaleCreateManyCustomerInputEnvelope
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+  }
+
+  export type ShopUpdateOneRequiredWithoutCustomersNestedInput = {
+    create?: XOR<ShopCreateWithoutCustomersInput, ShopUncheckedCreateWithoutCustomersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutCustomersInput
+    upsert?: ShopUpsertWithoutCustomersInput
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutCustomersInput, ShopUpdateWithoutCustomersInput>, ShopUncheckedUpdateWithoutCustomersInput>
+  }
+
+  export type LedgerEntryUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<LedgerEntryCreateWithoutCustomerInput, LedgerEntryUncheckedCreateWithoutCustomerInput> | LedgerEntryCreateWithoutCustomerInput[] | LedgerEntryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutCustomerInput | LedgerEntryCreateOrConnectWithoutCustomerInput[]
+    upsert?: LedgerEntryUpsertWithWhereUniqueWithoutCustomerInput | LedgerEntryUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: LedgerEntryCreateManyCustomerInputEnvelope
+    set?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    disconnect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    delete?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    update?: LedgerEntryUpdateWithWhereUniqueWithoutCustomerInput | LedgerEntryUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: LedgerEntryUpdateManyWithWhereWithoutCustomerInput | LedgerEntryUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
+  }
+
+  export type SaleUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<SaleCreateWithoutCustomerInput, SaleUncheckedCreateWithoutCustomerInput> | SaleCreateWithoutCustomerInput[] | SaleUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutCustomerInput | SaleCreateOrConnectWithoutCustomerInput[]
+    upsert?: SaleUpsertWithWhereUniqueWithoutCustomerInput | SaleUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: SaleCreateManyCustomerInputEnvelope
+    set?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    disconnect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    delete?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    update?: SaleUpdateWithWhereUniqueWithoutCustomerInput | SaleUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: SaleUpdateManyWithWhereWithoutCustomerInput | SaleUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: SaleScalarWhereInput | SaleScalarWhereInput[]
+  }
+
+  export type LedgerEntryUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<LedgerEntryCreateWithoutCustomerInput, LedgerEntryUncheckedCreateWithoutCustomerInput> | LedgerEntryCreateWithoutCustomerInput[] | LedgerEntryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: LedgerEntryCreateOrConnectWithoutCustomerInput | LedgerEntryCreateOrConnectWithoutCustomerInput[]
+    upsert?: LedgerEntryUpsertWithWhereUniqueWithoutCustomerInput | LedgerEntryUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: LedgerEntryCreateManyCustomerInputEnvelope
+    set?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    disconnect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    delete?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
+    update?: LedgerEntryUpdateWithWhereUniqueWithoutCustomerInput | LedgerEntryUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: LedgerEntryUpdateManyWithWhereWithoutCustomerInput | LedgerEntryUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
+  }
+
+  export type SaleUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<SaleCreateWithoutCustomerInput, SaleUncheckedCreateWithoutCustomerInput> | SaleCreateWithoutCustomerInput[] | SaleUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutCustomerInput | SaleCreateOrConnectWithoutCustomerInput[]
+    upsert?: SaleUpsertWithWhereUniqueWithoutCustomerInput | SaleUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: SaleCreateManyCustomerInputEnvelope
+    set?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    disconnect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    delete?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    update?: SaleUpdateWithWhereUniqueWithoutCustomerInput | SaleUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: SaleUpdateManyWithWhereWithoutCustomerInput | SaleUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: SaleScalarWhereInput | SaleScalarWhereInput[]
+  }
+
+  export type CustomerCreateNestedOneWithoutEntriesInput = {
+    create?: XOR<CustomerCreateWithoutEntriesInput, CustomerUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutEntriesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type ShopCreateNestedOneWithoutLedgerEntriesInput = {
+    create?: XOR<ShopCreateWithoutLedgerEntriesInput, ShopUncheckedCreateWithoutLedgerEntriesInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutLedgerEntriesInput
+    connect?: ShopWhereUniqueInput
+  }
+
+  export type CustomerUpdateOneRequiredWithoutEntriesNestedInput = {
+    create?: XOR<CustomerCreateWithoutEntriesInput, CustomerUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutEntriesInput
+    upsert?: CustomerUpsertWithoutEntriesInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutEntriesInput, CustomerUpdateWithoutEntriesInput>, CustomerUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type ShopUpdateOneRequiredWithoutLedgerEntriesNestedInput = {
+    create?: XOR<ShopCreateWithoutLedgerEntriesInput, ShopUncheckedCreateWithoutLedgerEntriesInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutLedgerEntriesInput
+    upsert?: ShopUpsertWithoutLedgerEntriesInput
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutLedgerEntriesInput, ShopUpdateWithoutLedgerEntriesInput>, ShopUncheckedUpdateWithoutLedgerEntriesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -13338,6 +17822,7 @@ export namespace Prisma {
     notes?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
@@ -13345,6 +17830,7 @@ export namespace Prisma {
   export type SaleUncheckedCreateWithoutShopInput = {
     id?: string
     userId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -13475,6 +17961,100 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerCreateWithoutShopInput = {
+    id?: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: LedgerEntryCreateNestedManyWithoutCustomerInput
+    sales?: SaleCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutShopInput = {
+    id?: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: LedgerEntryUncheckedCreateNestedManyWithoutCustomerInput
+    sales?: SaleUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutShopInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutShopInput, CustomerUncheckedCreateWithoutShopInput>
+  }
+
+  export type CustomerCreateManyShopInputEnvelope = {
+    data: CustomerCreateManyShopInput | CustomerCreateManyShopInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LedgerEntryCreateWithoutShopInput = {
+    id?: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutEntriesInput
+  }
+
+  export type LedgerEntryUncheckedCreateWithoutShopInput = {
+    id?: string
+    customerId: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+  }
+
+  export type LedgerEntryCreateOrConnectWithoutShopInput = {
+    where: LedgerEntryWhereUniqueInput
+    create: XOR<LedgerEntryCreateWithoutShopInput, LedgerEntryUncheckedCreateWithoutShopInput>
+  }
+
+  export type LedgerEntryCreateManyShopInputEnvelope = {
+    data: LedgerEntryCreateManyShopInput | LedgerEntryCreateManyShopInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BranchCreateWithoutShopInput = {
+    id?: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchUncheckedCreateWithoutShopInput = {
+    id?: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchCreateOrConnectWithoutShopInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutShopInput, BranchUncheckedCreateWithoutShopInput>
+  }
+
+  export type BranchCreateManyShopInputEnvelope = {
+    data: BranchCreateManyShopInput | BranchCreateManyShopInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PaymentUpsertWithWhereUniqueWithoutShopInput = {
     where: PaymentWhereUniqueInput
     update: XOR<PaymentUpdateWithoutShopInput, PaymentUncheckedUpdateWithoutShopInput>
@@ -13564,6 +18144,7 @@ export namespace Prisma {
     id?: StringFilter<"Sale"> | string
     shopId?: StringFilter<"Sale"> | string
     userId?: StringFilter<"Sale"> | string
+    customerId?: StringNullableFilter<"Sale"> | string | null
     total?: FloatFilter<"Sale"> | number
     subtotal?: FloatFilter<"Sale"> | number
     tax?: FloatFilter<"Sale"> | number
@@ -13670,9 +18251,196 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
+  export type CustomerUpsertWithWhereUniqueWithoutShopInput = {
+    where: CustomerWhereUniqueInput
+    update: XOR<CustomerUpdateWithoutShopInput, CustomerUncheckedUpdateWithoutShopInput>
+    create: XOR<CustomerCreateWithoutShopInput, CustomerUncheckedCreateWithoutShopInput>
+  }
+
+  export type CustomerUpdateWithWhereUniqueWithoutShopInput = {
+    where: CustomerWhereUniqueInput
+    data: XOR<CustomerUpdateWithoutShopInput, CustomerUncheckedUpdateWithoutShopInput>
+  }
+
+  export type CustomerUpdateManyWithWhereWithoutShopInput = {
+    where: CustomerScalarWhereInput
+    data: XOR<CustomerUpdateManyMutationInput, CustomerUncheckedUpdateManyWithoutShopInput>
+  }
+
+  export type CustomerScalarWhereInput = {
+    AND?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
+    OR?: CustomerScalarWhereInput[]
+    NOT?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
+    id?: StringFilter<"Customer"> | string
+    shopId?: StringFilter<"Customer"> | string
+    name?: StringFilter<"Customer"> | string
+    phone?: StringFilter<"Customer"> | string
+    totalOwed?: FloatFilter<"Customer"> | number
+    totalPaid?: FloatFilter<"Customer"> | number
+    lastPaymentAt?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    createdAt?: DateTimeFilter<"Customer"> | Date | string
+    updatedAt?: DateTimeFilter<"Customer"> | Date | string
+  }
+
+  export type LedgerEntryUpsertWithWhereUniqueWithoutShopInput = {
+    where: LedgerEntryWhereUniqueInput
+    update: XOR<LedgerEntryUpdateWithoutShopInput, LedgerEntryUncheckedUpdateWithoutShopInput>
+    create: XOR<LedgerEntryCreateWithoutShopInput, LedgerEntryUncheckedCreateWithoutShopInput>
+  }
+
+  export type LedgerEntryUpdateWithWhereUniqueWithoutShopInput = {
+    where: LedgerEntryWhereUniqueInput
+    data: XOR<LedgerEntryUpdateWithoutShopInput, LedgerEntryUncheckedUpdateWithoutShopInput>
+  }
+
+  export type LedgerEntryUpdateManyWithWhereWithoutShopInput = {
+    where: LedgerEntryScalarWhereInput
+    data: XOR<LedgerEntryUpdateManyMutationInput, LedgerEntryUncheckedUpdateManyWithoutShopInput>
+  }
+
+  export type LedgerEntryScalarWhereInput = {
+    AND?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
+    OR?: LedgerEntryScalarWhereInput[]
+    NOT?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
+    id?: StringFilter<"LedgerEntry"> | string
+    shopId?: StringFilter<"LedgerEntry"> | string
+    customerId?: StringFilter<"LedgerEntry"> | string
+    type?: StringFilter<"LedgerEntry"> | string
+    amount?: FloatFilter<"LedgerEntry"> | number
+    saleId?: StringNullableFilter<"LedgerEntry"> | string | null
+    note?: StringFilter<"LedgerEntry"> | string
+    createdAt?: DateTimeFilter<"LedgerEntry"> | Date | string
+  }
+
+  export type BranchUpsertWithWhereUniqueWithoutShopInput = {
+    where: BranchWhereUniqueInput
+    update: XOR<BranchUpdateWithoutShopInput, BranchUncheckedUpdateWithoutShopInput>
+    create: XOR<BranchCreateWithoutShopInput, BranchUncheckedCreateWithoutShopInput>
+  }
+
+  export type BranchUpdateWithWhereUniqueWithoutShopInput = {
+    where: BranchWhereUniqueInput
+    data: XOR<BranchUpdateWithoutShopInput, BranchUncheckedUpdateWithoutShopInput>
+  }
+
+  export type BranchUpdateManyWithWhereWithoutShopInput = {
+    where: BranchScalarWhereInput
+    data: XOR<BranchUpdateManyMutationInput, BranchUncheckedUpdateManyWithoutShopInput>
+  }
+
+  export type BranchScalarWhereInput = {
+    AND?: BranchScalarWhereInput | BranchScalarWhereInput[]
+    OR?: BranchScalarWhereInput[]
+    NOT?: BranchScalarWhereInput | BranchScalarWhereInput[]
+    id?: StringFilter<"Branch"> | string
+    shopId?: StringFilter<"Branch"> | string
+    name?: StringFilter<"Branch"> | string
+    address?: StringFilter<"Branch"> | string
+    phone?: StringFilter<"Branch"> | string
+    createdAt?: DateTimeFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeFilter<"Branch"> | Date | string
+  }
+
+  export type ShopCreateWithoutBranchesInput = {
+    id?: string
+    shopName: string
+    category?: string
+    subscriptionPlan?: string
+    subscriptionStatus?: string
+    subscriptionEndsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentCreateNestedManyWithoutShopInput
+    products?: ProductCreateNestedManyWithoutShopInput
+    sales?: SaleCreateNestedManyWithoutShopInput
+    saleItems?: SaleItemCreateNestedManyWithoutShopInput
+    invoices?: InvoiceCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopUncheckedCreateWithoutBranchesInput = {
+    id?: string
+    shopName: string
+    category?: string
+    subscriptionPlan?: string
+    subscriptionStatus?: string
+    subscriptionEndsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentUncheckedCreateNestedManyWithoutShopInput
+    products?: ProductUncheckedCreateNestedManyWithoutShopInput
+    sales?: SaleUncheckedCreateNestedManyWithoutShopInput
+    saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopCreateOrConnectWithoutBranchesInput = {
+    where: ShopWhereUniqueInput
+    create: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
+  }
+
+  export type ShopUpsertWithoutBranchesInput = {
+    update: XOR<ShopUpdateWithoutBranchesInput, ShopUncheckedUpdateWithoutBranchesInput>
+    create: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
+    where?: ShopWhereInput
+  }
+
+  export type ShopUpdateToOneWithWhereWithoutBranchesInput = {
+    where?: ShopWhereInput
+    data: XOR<ShopUpdateWithoutBranchesInput, ShopUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type ShopUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUpdateManyWithoutShopNestedInput
+    products?: ProductUpdateManyWithoutShopNestedInput
+    sales?: SaleUpdateManyWithoutShopNestedInput
+    saleItems?: SaleItemUpdateManyWithoutShopNestedInput
+    invoices?: InvoiceUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+  }
+
+  export type ShopUncheckedUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUncheckedUpdateManyWithoutShopNestedInput
+    products?: ProductUncheckedUpdateManyWithoutShopNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutShopNestedInput
+    saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+  }
+
   export type ShopCreateWithoutPaymentsInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -13684,11 +18452,15 @@ export namespace Prisma {
     saleItems?: SaleItemCreateNestedManyWithoutShopInput
     invoices?: InvoiceCreateNestedManyWithoutShopInput
     users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutPaymentsInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -13700,6 +18472,9 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
     users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutPaymentsInput = {
@@ -13721,6 +18496,7 @@ export namespace Prisma {
   export type ShopUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13732,11 +18508,15 @@ export namespace Prisma {
     saleItems?: SaleItemUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUpdateManyWithoutShopNestedInput
     users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13748,6 +18528,9 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
     users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type SaleCreateWithoutUserInput = {
@@ -13760,6 +18543,7 @@ export namespace Prisma {
     status?: string
     notes?: string
     createdAt?: Date | string
+    customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
@@ -13768,6 +18552,7 @@ export namespace Prisma {
   export type SaleUncheckedCreateWithoutUserInput = {
     id?: string
     shopId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -13829,6 +18614,7 @@ export namespace Prisma {
   export type ShopCreateWithoutUsersInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -13840,11 +18626,15 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutShopInput
     saleItems?: SaleItemCreateNestedManyWithoutShopInput
     invoices?: InvoiceCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutUsersInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -13856,6 +18646,9 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutShopInput
     saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutUsersInput = {
@@ -13935,6 +18728,7 @@ export namespace Prisma {
   export type ShopUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13946,11 +18740,15 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutShopNestedInput
     saleItems?: SaleItemUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13962,6 +18760,9 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutShopNestedInput
     saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type PasswordResetTokenUpsertWithWhereUniqueWithoutUserInput = {
@@ -14079,6 +18880,7 @@ export namespace Prisma {
   export type ShopCreateWithoutProductsInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14090,11 +18892,15 @@ export namespace Prisma {
     saleItems?: SaleItemCreateNestedManyWithoutShopInput
     invoices?: InvoiceCreateNestedManyWithoutShopInput
     users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutProductsInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14106,6 +18912,9 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
     users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutProductsInput = {
@@ -14155,6 +18964,7 @@ export namespace Prisma {
   export type ShopUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14166,11 +18976,15 @@ export namespace Prisma {
     saleItems?: SaleItemUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUpdateManyWithoutShopNestedInput
     users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14182,6 +18996,9 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
     users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type SaleItemUpsertWithWhereUniqueWithoutProductInput = {
@@ -14239,9 +19056,41 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutSalesInput, UserUncheckedCreateWithoutSalesInput>
   }
 
+  export type CustomerCreateWithoutSalesInput = {
+    id?: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shop: ShopCreateNestedOneWithoutCustomersInput
+    entries?: LedgerEntryCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutSalesInput = {
+    id?: string
+    shopId: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: LedgerEntryUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutSalesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutSalesInput, CustomerUncheckedCreateWithoutSalesInput>
+  }
+
   export type ShopCreateWithoutSalesInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14253,11 +19102,15 @@ export namespace Prisma {
     saleItems?: SaleItemCreateNestedManyWithoutShopInput
     invoices?: InvoiceCreateNestedManyWithoutShopInput
     users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutSalesInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14269,6 +19122,9 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
     users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutSalesInput = {
@@ -14380,6 +19236,43 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type CustomerUpsertWithoutSalesInput = {
+    update: XOR<CustomerUpdateWithoutSalesInput, CustomerUncheckedUpdateWithoutSalesInput>
+    create: XOR<CustomerCreateWithoutSalesInput, CustomerUncheckedCreateWithoutSalesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutSalesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutSalesInput, CustomerUncheckedUpdateWithoutSalesInput>
+  }
+
+  export type CustomerUpdateWithoutSalesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutCustomersNestedInput
+    entries?: LedgerEntryUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutSalesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: LedgerEntryUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
   export type ShopUpsertWithoutSalesInput = {
     update: XOR<ShopUpdateWithoutSalesInput, ShopUncheckedUpdateWithoutSalesInput>
     create: XOR<ShopCreateWithoutSalesInput, ShopUncheckedCreateWithoutSalesInput>
@@ -14394,6 +19287,7 @@ export namespace Prisma {
   export type ShopUpdateWithoutSalesInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14405,11 +19299,15 @@ export namespace Prisma {
     saleItems?: SaleItemUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUpdateManyWithoutShopNestedInput
     users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutSalesInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14421,6 +19319,9 @@ export namespace Prisma {
     saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
     users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type SaleItemUpsertWithWhereUniqueWithoutSaleInput = {
@@ -14487,6 +19388,7 @@ export namespace Prisma {
     notes?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
   }
@@ -14495,6 +19397,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     userId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -14514,6 +19417,7 @@ export namespace Prisma {
   export type ShopCreateWithoutInvoicesInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14525,11 +19429,15 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutShopInput
     saleItems?: SaleItemCreateNestedManyWithoutShopInput
     users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutInvoicesInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14541,6 +19449,9 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutShopInput
     saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
     users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutInvoicesInput = {
@@ -14609,6 +19520,7 @@ export namespace Prisma {
     notes?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
   }
@@ -14617,6 +19529,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -14642,6 +19555,7 @@ export namespace Prisma {
   export type ShopUpdateWithoutInvoicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14653,11 +19567,15 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutShopNestedInput
     saleItems?: SaleItemUpdateManyWithoutShopNestedInput
     users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutInvoicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14669,6 +19587,9 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutShopNestedInput
     saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
     users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type UserUpsertWithoutInvoicesInput = {
@@ -14764,6 +19685,7 @@ export namespace Prisma {
     notes?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
@@ -14772,6 +19694,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     userId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -14791,6 +19714,7 @@ export namespace Prisma {
   export type ShopCreateWithoutSaleItemsInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14802,11 +19726,15 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutShopInput
     invoices?: InvoiceCreateNestedManyWithoutShopInput
     users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutSaleItemsInput = {
     id?: string
     shopName: string
+    category?: string
     subscriptionPlan?: string
     subscriptionStatus?: string
     subscriptionEndsAt?: Date | string | null
@@ -14818,6 +19746,9 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutShopInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
     users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutSaleItemsInput = {
@@ -14890,6 +19821,7 @@ export namespace Prisma {
     notes?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
@@ -14898,6 +19830,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -14923,6 +19856,7 @@ export namespace Prisma {
   export type ShopUpdateWithoutSaleItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14934,11 +19868,15 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUpdateManyWithoutShopNestedInput
     users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutSaleItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
     subscriptionPlan?: StringFieldUpdateOperationsInput | string
     subscriptionStatus?: StringFieldUpdateOperationsInput | string
     subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14950,6 +19888,373 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutShopNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
     users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
+  }
+
+  export type ShopCreateWithoutCustomersInput = {
+    id?: string
+    shopName: string
+    category?: string
+    subscriptionPlan?: string
+    subscriptionStatus?: string
+    subscriptionEndsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentCreateNestedManyWithoutShopInput
+    products?: ProductCreateNestedManyWithoutShopInput
+    sales?: SaleCreateNestedManyWithoutShopInput
+    saleItems?: SaleItemCreateNestedManyWithoutShopInput
+    invoices?: InvoiceCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopUncheckedCreateWithoutCustomersInput = {
+    id?: string
+    shopName: string
+    category?: string
+    subscriptionPlan?: string
+    subscriptionStatus?: string
+    subscriptionEndsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentUncheckedCreateNestedManyWithoutShopInput
+    products?: ProductUncheckedCreateNestedManyWithoutShopInput
+    sales?: SaleUncheckedCreateNestedManyWithoutShopInput
+    saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopCreateOrConnectWithoutCustomersInput = {
+    where: ShopWhereUniqueInput
+    create: XOR<ShopCreateWithoutCustomersInput, ShopUncheckedCreateWithoutCustomersInput>
+  }
+
+  export type LedgerEntryCreateWithoutCustomerInput = {
+    id?: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+    shop: ShopCreateNestedOneWithoutLedgerEntriesInput
+  }
+
+  export type LedgerEntryUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    shopId: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+  }
+
+  export type LedgerEntryCreateOrConnectWithoutCustomerInput = {
+    where: LedgerEntryWhereUniqueInput
+    create: XOR<LedgerEntryCreateWithoutCustomerInput, LedgerEntryUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type LedgerEntryCreateManyCustomerInputEnvelope = {
+    data: LedgerEntryCreateManyCustomerInput | LedgerEntryCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SaleCreateWithoutCustomerInput = {
+    id?: string
+    total: number
+    subtotal: number
+    tax?: number
+    discount?: number
+    paymentMethod?: string
+    status?: string
+    notes?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutSalesInput
+    shop: ShopCreateNestedOneWithoutSalesInput
+    saleItems?: SaleItemCreateNestedManyWithoutSaleInput
+    invoice?: InvoiceCreateNestedOneWithoutSaleInput
+  }
+
+  export type SaleUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    shopId: string
+    userId: string
+    total: number
+    subtotal: number
+    tax?: number
+    discount?: number
+    paymentMethod?: string
+    status?: string
+    notes?: string
+    createdAt?: Date | string
+    saleItems?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
+    invoice?: InvoiceUncheckedCreateNestedOneWithoutSaleInput
+  }
+
+  export type SaleCreateOrConnectWithoutCustomerInput = {
+    where: SaleWhereUniqueInput
+    create: XOR<SaleCreateWithoutCustomerInput, SaleUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type SaleCreateManyCustomerInputEnvelope = {
+    data: SaleCreateManyCustomerInput | SaleCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ShopUpsertWithoutCustomersInput = {
+    update: XOR<ShopUpdateWithoutCustomersInput, ShopUncheckedUpdateWithoutCustomersInput>
+    create: XOR<ShopCreateWithoutCustomersInput, ShopUncheckedCreateWithoutCustomersInput>
+    where?: ShopWhereInput
+  }
+
+  export type ShopUpdateToOneWithWhereWithoutCustomersInput = {
+    where?: ShopWhereInput
+    data: XOR<ShopUpdateWithoutCustomersInput, ShopUncheckedUpdateWithoutCustomersInput>
+  }
+
+  export type ShopUpdateWithoutCustomersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUpdateManyWithoutShopNestedInput
+    products?: ProductUpdateManyWithoutShopNestedInput
+    sales?: SaleUpdateManyWithoutShopNestedInput
+    saleItems?: SaleItemUpdateManyWithoutShopNestedInput
+    invoices?: InvoiceUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
+  }
+
+  export type ShopUncheckedUpdateWithoutCustomersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUncheckedUpdateManyWithoutShopNestedInput
+    products?: ProductUncheckedUpdateManyWithoutShopNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutShopNestedInput
+    saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
+  }
+
+  export type LedgerEntryUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: LedgerEntryWhereUniqueInput
+    update: XOR<LedgerEntryUpdateWithoutCustomerInput, LedgerEntryUncheckedUpdateWithoutCustomerInput>
+    create: XOR<LedgerEntryCreateWithoutCustomerInput, LedgerEntryUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type LedgerEntryUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: LedgerEntryWhereUniqueInput
+    data: XOR<LedgerEntryUpdateWithoutCustomerInput, LedgerEntryUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type LedgerEntryUpdateManyWithWhereWithoutCustomerInput = {
+    where: LedgerEntryScalarWhereInput
+    data: XOR<LedgerEntryUpdateManyMutationInput, LedgerEntryUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type SaleUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: SaleWhereUniqueInput
+    update: XOR<SaleUpdateWithoutCustomerInput, SaleUncheckedUpdateWithoutCustomerInput>
+    create: XOR<SaleCreateWithoutCustomerInput, SaleUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type SaleUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: SaleWhereUniqueInput
+    data: XOR<SaleUpdateWithoutCustomerInput, SaleUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type SaleUpdateManyWithWhereWithoutCustomerInput = {
+    where: SaleScalarWhereInput
+    data: XOR<SaleUpdateManyMutationInput, SaleUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerCreateWithoutEntriesInput = {
+    id?: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shop: ShopCreateNestedOneWithoutCustomersInput
+    sales?: SaleCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutEntriesInput = {
+    id?: string
+    shopId: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sales?: SaleUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutEntriesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutEntriesInput, CustomerUncheckedCreateWithoutEntriesInput>
+  }
+
+  export type ShopCreateWithoutLedgerEntriesInput = {
+    id?: string
+    shopName: string
+    category?: string
+    subscriptionPlan?: string
+    subscriptionStatus?: string
+    subscriptionEndsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentCreateNestedManyWithoutShopInput
+    products?: ProductCreateNestedManyWithoutShopInput
+    sales?: SaleCreateNestedManyWithoutShopInput
+    saleItems?: SaleItemCreateNestedManyWithoutShopInput
+    invoices?: InvoiceCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    branches?: BranchCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopUncheckedCreateWithoutLedgerEntriesInput = {
+    id?: string
+    shopName: string
+    category?: string
+    subscriptionPlan?: string
+    subscriptionStatus?: string
+    subscriptionEndsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentUncheckedCreateNestedManyWithoutShopInput
+    products?: ProductUncheckedCreateNestedManyWithoutShopInput
+    sales?: SaleUncheckedCreateNestedManyWithoutShopInput
+    saleItems?: SaleItemUncheckedCreateNestedManyWithoutShopInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    branches?: BranchUncheckedCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopCreateOrConnectWithoutLedgerEntriesInput = {
+    where: ShopWhereUniqueInput
+    create: XOR<ShopCreateWithoutLedgerEntriesInput, ShopUncheckedCreateWithoutLedgerEntriesInput>
+  }
+
+  export type CustomerUpsertWithoutEntriesInput = {
+    update: XOR<CustomerUpdateWithoutEntriesInput, CustomerUncheckedUpdateWithoutEntriesInput>
+    create: XOR<CustomerCreateWithoutEntriesInput, CustomerUncheckedCreateWithoutEntriesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutEntriesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutEntriesInput, CustomerUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type CustomerUpdateWithoutEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutCustomersNestedInput
+    sales?: SaleUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sales?: SaleUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type ShopUpsertWithoutLedgerEntriesInput = {
+    update: XOR<ShopUpdateWithoutLedgerEntriesInput, ShopUncheckedUpdateWithoutLedgerEntriesInput>
+    create: XOR<ShopCreateWithoutLedgerEntriesInput, ShopUncheckedCreateWithoutLedgerEntriesInput>
+    where?: ShopWhereInput
+  }
+
+  export type ShopUpdateToOneWithWhereWithoutLedgerEntriesInput = {
+    where?: ShopWhereInput
+    data: XOR<ShopUpdateWithoutLedgerEntriesInput, ShopUncheckedUpdateWithoutLedgerEntriesInput>
+  }
+
+  export type ShopUpdateWithoutLedgerEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUpdateManyWithoutShopNestedInput
+    products?: ProductUpdateManyWithoutShopNestedInput
+    sales?: SaleUpdateManyWithoutShopNestedInput
+    saleItems?: SaleItemUpdateManyWithoutShopNestedInput
+    invoices?: InvoiceUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    branches?: BranchUpdateManyWithoutShopNestedInput
+  }
+
+  export type ShopUncheckedUpdateWithoutLedgerEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUncheckedUpdateManyWithoutShopNestedInput
+    products?: ProductUncheckedUpdateManyWithoutShopNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutShopNestedInput
+    saleItems?: SaleItemUncheckedUpdateManyWithoutShopNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type PaymentCreateManyShopInput = {
@@ -14981,6 +20286,7 @@ export namespace Prisma {
   export type SaleCreateManyShopInput = {
     id?: string
     userId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -15023,6 +20329,36 @@ export namespace Prisma {
     emailVerified?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomerCreateManyShopInput = {
+    id?: string
+    name: string
+    phone?: string
+    totalOwed?: number
+    totalPaid?: number
+    lastPaymentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LedgerEntryCreateManyShopInput = {
+    id?: string
+    customerId: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+  }
+
+  export type BranchCreateManyShopInput = {
+    id?: string
+    name: string
+    address?: string
+    phone?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15118,6 +20454,7 @@ export namespace Prisma {
     notes?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
@@ -15125,6 +20462,7 @@ export namespace Prisma {
   export type SaleUncheckedUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -15140,6 +20478,7 @@ export namespace Prisma {
   export type SaleUncheckedUpdateManyWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -15264,9 +20603,104 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomerUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: LedgerEntryUpdateManyWithoutCustomerNestedInput
+    sales?: SaleUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: LedgerEntryUncheckedUpdateManyWithoutCustomerNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateManyWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    totalOwed?: FloatFieldUpdateOperationsInput | number
+    totalPaid?: FloatFieldUpdateOperationsInput | number
+    lastPaymentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LedgerEntryUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutEntriesNestedInput
+  }
+
+  export type LedgerEntryUncheckedUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LedgerEntryUncheckedUpdateManyWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchUncheckedUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchUncheckedUpdateManyWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SaleCreateManyUserInput = {
     id?: string
     shopId: string
+    customerId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -15308,6 +20742,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     notes?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
@@ -15316,6 +20751,7 @@ export namespace Prisma {
   export type SaleUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -15331,6 +20767,7 @@ export namespace Prisma {
   export type SaleUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -15476,6 +20913,106 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
+  export type LedgerEntryCreateManyCustomerInput = {
+    id?: string
+    shopId: string
+    type: string
+    amount: number
+    saleId?: string | null
+    note?: string
+    createdAt?: Date | string
+  }
+
+  export type SaleCreateManyCustomerInput = {
+    id?: string
+    shopId: string
+    userId: string
+    total: number
+    subtotal: number
+    tax?: number
+    discount?: number
+    paymentMethod?: string
+    status?: string
+    notes?: string
+    createdAt?: Date | string
+  }
+
+  export type LedgerEntryUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutLedgerEntriesNestedInput
+  }
+
+  export type LedgerEntryUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LedgerEntryUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SaleUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    total?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    tax?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
+    invoice?: InvoiceUpdateOneWithoutSaleNestedInput
+  }
+
+  export type SaleUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    total?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    tax?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    saleItems?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
+    invoice?: InvoiceUncheckedUpdateOneWithoutSaleNestedInput
+  }
+
+  export type SaleUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    total?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    tax?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -15498,9 +21035,17 @@ export namespace Prisma {
      */
     export type SaleCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SaleCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use CustomerCountOutputTypeDefaultArgs instead
+     */
+    export type CustomerCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CustomerCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ShopDefaultArgs instead
      */
     export type ShopArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ShopDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BranchDefaultArgs instead
+     */
+    export type BranchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BranchDefaultArgs<ExtArgs>
     /**
      * @deprecated Use PaymentDefaultArgs instead
      */
@@ -15529,6 +21074,14 @@ export namespace Prisma {
      * @deprecated Use SaleItemDefaultArgs instead
      */
     export type SaleItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SaleItemDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CustomerDefaultArgs instead
+     */
+    export type CustomerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CustomerDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use LedgerEntryDefaultArgs instead
+     */
+    export type LedgerEntryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LedgerEntryDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

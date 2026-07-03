@@ -9,7 +9,6 @@ import '../shared/product_card.dart';
 import '../pos/cart_panel.dart';
 import '../pos/checkout_panel.dart';
 import '../../screens/barcode_scanner_screen.dart';
-import '../../core/currency_formatter.dart';
 
 class ProductPanel extends StatefulWidget {
   final ProductProvider productProv;
@@ -34,204 +33,232 @@ class _ProductPanelState extends State<ProductPanel> {
   Widget build(BuildContext context) {
     final productProv = widget.productProv;
     final cart = widget.cart;
+    final isDesktop = MediaQuery.of(context).size.width >= 1024;
 
-    return Column(
+    if (_showCheckout) {
+      return CheckoutPanel(
+        cart: cart,
+        saleProv: context.read<SaleProvider>(),
+        onBack: () => setState(() => _showCheckout = false),
+      );
+    }
+
+    if (productProv.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (productProv.products.isEmpty) {
+      return const Center(child: Text('No products found'));
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: isDesktop ? _buildDesktopLayout(productProv, cart) : _buildMobileLayout(productProv, cart),
+      floatingActionButton: !isDesktop
+          ? FloatingActionButton(
+              backgroundColor: AppTheme.primary,
+              onPressed: _openBarcodeScanner,
+              child: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 28),
+            )
+          : null,
+    );
+  }
+
+  Widget _buildDesktopLayout(ProductProvider productProv, CartProvider cart) {
+    return Row(
       children: [
         Expanded(
-          child: _showCheckout
-              ? CheckoutPanel(
-                  cart: cart,
-                  saleProv: context.read<SaleProvider>(),
-                  onBack: () => setState(() => _showCheckout = false),
-                )
-              : productProv.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : productProv.products.isEmpty
-                      ? const Center(child: Text('No products found'))
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-                            final isWide = constraints.maxWidth >= 768;
-                            if (isWide) {
-                              return Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: _buildProductGrid(constraints, productProv),
-                                  ),
-                                  Container(
-                                    width: 1,
-                                    color: AppTheme.darkBorder.withOpacity(0.5),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: CartPanel(
-                                      cart: cart,
-                                      onCheckout: () => setState(() => _showCheckout = true),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                            return _buildProductGrid(constraints, productProv);
-                          },
-                        ),
-        ),
-        if (!_showCheckout && widget.cart.itemCount > 0)
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            decoration: BoxDecoration(
-              color: AppTheme.darkSurface,
-              border: Border(top: BorderSide(color: AppTheme.darkBorder.withOpacity(0.5))),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${widget.cart.itemCount} item(s)',
-                        style: const TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      Text(
-                        CurrencyFormatter.format(widget.cart.total),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.success,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () => setState(() => _showCheckout = true),
-                  icon: const Icon(Icons.shopping_cart_checkout, size: 20),
-                  label: const Text('Checkout'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.success,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                  ),
-                ),
-              ],
-            ),
+          flex: 7,
+          child: Column(
+            children: [
+              _buildSearchBar(productProv),
+              _buildCategoryChips(productProv),
+              Expanded(child: _buildProductGrid(productProv, cart)),
+            ],
           ),
+        ),
+        SizedBox(
+          width: 420,
+          child: CartPanel(
+            cart: cart,
+            onCheckout: () => setState(() => _showCheckout = true),
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildProductGrid(BoxConstraints constraints, ProductProvider productProv) {
-    final crossAxisCount = constraints.maxWidth > 900 ? 4 : constraints.maxWidth > 600 ? 3 : 2;
-    final aspectRatio = constraints.maxWidth > 600 ? 1.1 : 0.95;
-    final spacing = constraints.maxWidth > 600 ? 8.0 : 4.0;
+  Widget _buildMobileLayout(ProductProvider productProv, CartProvider cart) {
+    return Column(
+      children: [
+        _buildSearchBar(productProv),
+        _buildCategoryChips(productProv),
+        Expanded(child: _buildProductGrid(productProv, cart)),
+        if (cart.itemCount > 0)
+          _buildMobileBottomBar(cart),
+      ],
+    );
+  }
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchCtrl,
-                    decoration: InputDecoration(
-                      hintText: 'Search products...',
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: _searchCtrl.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                _searchCtrl.clear();
-                                productProv.setSearchQuery('');
-                              },
-                            )
-                          : null,
-                    ),
-                    onChanged: productProv.setSearchQuery,
-                  ),
+  Widget _buildSearchBar(ProductProvider productProv) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppTheme.darkCard,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: TextField(
+                controller: _searchCtrl,
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Search products, SKUs, or categories...',
+                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 14),
+                  prefixIcon: Icon(Icons.search, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  suffixIcon: _searchCtrl.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.clear, size: 18, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          onPressed: () {
+                            _searchCtrl.clear();
+                            productProv.setSearchQuery('');
+                          },
+                        )
+                      : null,
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                const SizedBox(width: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.accentGradient,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.accent.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
-                    onPressed: () => _openBarcodeScanner(),
-                    tooltip: 'Scan barcode',
-                  ),
+                onChanged: productProv.setSearchQuery,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppTheme.darkCard,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.qr_code_scanner, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              onPressed: _openBarcodeScanner,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryChips(ProductProvider productProv) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+      child: SizedBox(
+        height: 36,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            _buildChip('All Items', productProv.selectedCategory == null, () => productProv.setCategory('')),
+            ...productProv.categories.map((cat) {
+              final selected = productProv.selectedCategory == cat;
+              return Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: _buildChip(cat, selected, () => productProv.setCategory(cat)),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChip(String label, bool selected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? AppTheme.primary : AppTheme.darkCard,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: selected ? Colors.white : Colors.grey,
+            letterSpacing: 0.03,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductGrid(ProductProvider productProv, CartProvider cart) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final crossAxisCount = constraints.maxWidth > 1200 ? 4 : constraints.maxWidth > 800 ? 3 : 2;
+
+        return GridView.builder(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: productProv.products.length,
+          itemBuilder: (context, index) {
+            return ProductCard(
+              product: productProv.products[index],
+              cart: cart,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildMobileBottomBar(CartProvider cart) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      decoration: BoxDecoration(
+        color: AppTheme.darkSurface,
+        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${cart.itemCount} item(s)',
+                  style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                ),
+                Text(CurrencyFormatter.format(cart.total),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.success),
                 ),
               ],
             ),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-            child: SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: productProv.categories.map((cat) {
-                  final selected = productProv.selectedCategory == cat;
-                  final categoryColors = {
-                    'General': Colors.blue,
-                    'Groceries': Colors.green,
-                    'Beverages': Colors.cyan,
-                    'Meat & Poultry': Colors.red,
-                    'Spices & Condiments': Colors.orange,
-                    'Bakery': Colors.amber,
-                  };
-                  final catColor = categoryColors[cat] ?? AppTheme.primary;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: FilterChip(
-                      label: Text(cat, style: TextStyle(
-                        fontSize: 13,
-                        color: selected ? Colors.white : catColor,
-                      )),
-                      selected: selected,
-                      selectedColor: catColor,
-                      backgroundColor: catColor.withOpacity(0.1),
-                      checkmarkColor: Colors.white,
-                      showCheckmark: false,
-                      side: BorderSide(color: selected ? catColor : catColor.withOpacity(0.3)),
-                      onSelected: (_) => productProv.setCategory(cat),
-                    ),
-                  );
-                }).toList(),
-              ),
+          ElevatedButton.icon(
+            onPressed: () => setState(() => _showCheckout = true),
+            icon: const Icon(Icons.shopping_cart_checkout, size: 20),
+            label: const Text('Checkout'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
-        ),
-        SliverToBoxAdapter(child: const SizedBox(height: 8)),
-        SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: aspectRatio,
-            crossAxisSpacing: spacing,
-            mainAxisSpacing: spacing,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final product = productProv.products[index];
-              return ProductCard(product: product, cart: widget.cart);
-            },
-            childCount: productProv.products.length,
-          ),
-        ),
-        SliverToBoxAdapter(child: const SizedBox(height: 80)),
-      ],
+        ],
+      ),
     );
   }
 
@@ -243,7 +270,6 @@ class _ProductPanelState extends State<ProductPanel> {
     if (barcode == null || barcode.isEmpty) return;
     if (!mounted) return;
 
-    // Try to find the product by barcode
     final product = await context.read<ProductProvider>().findProductByBarcode(barcode);
 
     if (!mounted) return;
@@ -283,5 +309,4 @@ class _ProductPanelState extends State<ProductPanel> {
       );
     }
   }
-
 }

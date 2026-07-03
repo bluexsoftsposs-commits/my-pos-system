@@ -4,6 +4,7 @@ import '../../providers/cart_provider.dart';
 import '../../providers/sale_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/ledger_provider.dart';
 import '../../models/sale.dart';
 import '../shared/summary_row.dart';
 import '../../core/theme.dart';
@@ -42,9 +43,32 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
     final cart = widget.cart;
     final saleProv = widget.saleProv;
     final payload = cart.toCheckoutPayload();
+
+    if (cart.paymentMethod == 'CREDIT') {
+      if (cart.creditCustomerName.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Customer name required for credit sale'), backgroundColor: AppTheme.error),
+        );
+        return;
+      }
+      final ledgerProv = context.read<LedgerProvider>();
+      final customer = await ledgerProv.findOrCreateCustomer(
+        cart.creditCustomerName,
+        phone: cart.creditCustomerPhone,
+      );
+      if (customer == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to create customer'), backgroundColor: AppTheme.error),
+        );
+        return;
+      }
+      cart.setCustomerId(customer.id);
+      payload['customerId'] = customer.id;
+    }
     final sale = await saleProv.createSale(payload);
     if (!mounted) return;
     if (sale != null) {
+      final customerName = cart.customerName;
       for (final item in cart.items) {
         context.read<ProductProvider>().decrementStock(item.product.id, item.quantity);
       }
@@ -74,7 +98,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
       );
       // Auto-show print dialog
       final auth = context.read<AuthProvider>();
-      _showPrintDialog(sale, auth.shop?.shopName);
+      _showPrintDialog(sale, auth.shop?.shopName, customerName: customerName);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -94,7 +118,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
     }
   }
 
-  void _showPrintDialog(Sale sale, String? shopName) {
+  void _showPrintDialog(Sale sale, String? shopName, {String? customerName}) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -129,7 +153,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.of(ctx).pop();
-                    ReceiptService.printReceipt(sale, shopName: shopName);
+                    ReceiptService.printReceipt(sale, shopName: shopName, customerName: customerName);
                   },
                   icon: const Icon(Icons.print),
                   label: const Text('Print Receipt'),
@@ -142,7 +166,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.of(ctx).pop();
-                    ReceiptService.shareReceipt(sale, shopName: shopName);
+                    ReceiptService.shareReceipt(sale, shopName: shopName, customerName: customerName);
                   },
                   icon: const Icon(Icons.share),
                   label: const Text('Share'),
@@ -253,7 +277,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
-                children: ['CASH', 'CARD', 'MOBILE'].map((method) {
+                children: ['CASH', 'CARD', 'MOBILE', 'CREDIT'].map((method) {
                   final selected = cart.paymentMethod == method;
                   return ChoiceChip(
                     label: Text(method),
@@ -264,6 +288,25 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                   );
                 }).toList(),
               ),
+              if (cart.paymentMethod == 'CREDIT') ...[
+                const SizedBox(height: 12),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Customer Name',
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  onChanged: cart.setCreditCustomerName,
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Phone (optional)',
+                    prefixIcon: Icon(Icons.phone),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  onChanged: cart.setCreditCustomerPhone,
+                ),
+              ],
               const SizedBox(height: 16),
               TextField(
                 decoration: const InputDecoration(

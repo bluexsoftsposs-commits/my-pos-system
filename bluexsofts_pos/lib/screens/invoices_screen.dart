@@ -6,6 +6,7 @@ import '../providers/auth_provider.dart';
 import '../models/invoice.dart';
 import '../core/theme.dart';
 import '../services/receipt_service.dart';
+import '../core/currency_formatter.dart';
 
 class InvoicesScreen extends StatefulWidget {
   const InvoicesScreen({super.key});
@@ -258,7 +259,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                         Text(dateStr, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
                         const SizedBox(width: 12),
                         Text(
-                          '\$${inv.total.toStringAsFixed(2)}',
+                          CurrencyFormatter.formatWithDecimals(inv.total),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -427,9 +428,9 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                             children: [
                               Expanded(flex: 3, child: Text(item.product?['name'] ?? 'Product', style: const TextStyle(fontSize: 13))),
                               Expanded(flex: 1, child: Text('${item.quantity}', textAlign: TextAlign.center)),
-                              Expanded(flex: 1, child: Text('\$${item.price.toStringAsFixed(2)}', textAlign: TextAlign.right)),
+                              Expanded(flex: 1, child: Text(CurrencyFormatter.formatWithDecimals(item.price), textAlign: TextAlign.right)),
                               Expanded(flex: 1, child: Text(
-                                '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                                CurrencyFormatter.formatWithDecimals(item.price * item.quantity),
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontWeight: FontWeight.w600),
                               )),
@@ -450,11 +451,11 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                   ),
                   child: Column(
                     children: [
-                      _totalRow('Subtotal', '\$${inv.subtotal.toStringAsFixed(2)}'),
-                      if (inv.tax > 0) _totalRow('Tax', '\$${inv.tax.toStringAsFixed(2)}'),
-                      if (inv.discount > 0) _totalRow('Discount', '-\$${inv.discount.toStringAsFixed(2)}'),
+                      _totalRow('Subtotal', CurrencyFormatter.formatWithDecimals(inv.subtotal)),
+                      if (inv.tax > 0) _totalRow('Tax', CurrencyFormatter.formatWithDecimals(inv.tax)),
+                      if (inv.discount > 0) _totalRow('Discount', '-${CurrencyFormatter.formatWithDecimals(inv.discount)}'),
                       const Divider(color: AppTheme.darkBorder),
-                      _totalRow('TOTAL', '\$${inv.total.toStringAsFixed(2)}', isBold: true),
+                      _totalRow('TOTAL', CurrencyFormatter.formatWithDecimals(inv.total), isBold: true),
                     ],
                   ),
                 ),

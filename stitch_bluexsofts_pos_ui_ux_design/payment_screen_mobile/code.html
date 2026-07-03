@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Payment - BluexSofts POS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-payment-card {
+            border-color: #c6bfff !important;
+            background-color: rgba(108, 92, 231, 0.1) !important;
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.2);
+        }
+        .success-overlay {
+            display: none;
+            backdrop-filter: blur(8px);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.4s ease-out forwards;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "background": "#131313",
+                "surface-container": "#201f1f",
+                "secondary-fixed-dim": "#4bddb7",
+                "tertiary-fixed": "#ffdea7",
+                "outline-variant": "#474554",
+                "error-container": "#93000a",
+                "inverse-on-surface": "#313030",
+                "surface-tint": "#c6bfff",
+                "on-primary": "#2900a0",
+                "on-primary-fixed": "#160066",
+                "on-secondary": "#00382b",
+                "tertiary-fixed-dim": "#f0bf63",
+                "surface-variant": "#353534",
+                "on-tertiary-container": "#fff6ee",
+                "tertiary": "#f0bf63",
+                "error": "#ffb4ab",
+                "on-secondary-container": "#004233",
+                "on-primary-fixed-variant": "#4029ba",
+                "primary": "#c6bfff",
+                "secondary-fixed": "#6dfad2",
+                "primary-fixed": "#e4dfff",
+                "surface-dim": "#131313",
+                "on-background": "#e5e2e1",
+                "secondary-container": "#02b894",
+                "on-tertiary-fixed": "#271900",
+                "on-tertiary-fixed-variant": "#5e4200",
+                "on-tertiary": "#412d00",
+                "inverse-primary": "#5847d2",
+                "on-primary-container": "#faf6ff",
+                "on-surface-variant": "#c8c4d7",
+                "secondary": "#4bddb7",
+                "on-error-container": "#ffdad6",
+                "surface-container-highest": "#353534",
+                "outline": "#928ea0",
+                "surface": "#131313",
+                "primary-fixed-dim": "#c6bfff",
+                "on-secondary-fixed-variant": "#005140",
+                "inverse-surface": "#e5e2e1",
+                "surface-container-high": "#2a2a2a",
+                "surface-container-low": "#1c1b1b",
+                "tertiary-container": "#926b15",
+                "on-error": "#690005",
+                "on-surface": "#e5e2e1",
+                "surface-container-lowest": "#0e0e0e",
+                "on-secondary-fixed": "#002018",
+                "surface-bright": "#393939",
+                "primary-container": "#6c5ce7"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "12px",
+                "margin-desktop": "40px",
+                "md": "16px",
+                "xs": "4px",
+                "margin-mobile": "16px",
+                "xl": "32px",
+                "base": "8px",
+                "gutter": "20px",
+                "lg": "24px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "title-md": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "body-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile lg:px-margin-desktop py-base bg-background/80 dark:bg-background/80 backdrop-blur-md">
+<div class="flex items-center gap-base">
+<button class="material-symbols-outlined p-2 text-on-surface-variant transition-all active:scale-90" onclick="window.history.back()">arrow_back</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary lg:hidden">Payment</h1>
+</div>
+<div class="flex items-center gap-md">
+<div class="material-symbols-outlined hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 cursor-pointer">notifications</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional merchant profile picture of a young entrepreneur in a modern office setting, styled with sharp cinematic lighting and a dark, moody background consistent with the Indigo and Slate color palette of a high-end POS application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZWw1nVWFAPk2NsEJE-m5FuWslhWvQnzAiQPKtfNm5uihWbmBW2yBp9n4esPIZdM_Hww1_SzCttH06E8E6Mg4FDCdJOg9nCKmc-mmHz9LayrgaAU9EMv5hGU0HxTE1cnPvMgTmTKyzNyc1PV9AipjC2G0KpDcLbjK37ip0FN3e9jEH2TMl14DCrseALl6Fw8TpZhjxb1ZtkchlXVVkmuIz9rnnnfk2zhX_h8-eb2MVqkfU5AGHxE_dZA"/>
+</div>
+</div>
+</header>
+<main class="flex-grow px-margin-mobile pb-32 pt-lg max-w-lg mx-auto w-full">
+<!-- Order Summary Section -->
+<section class="mb-xl animate-slide-up">
+<div class="bg-surface-container-high rounded-xl p-lg border border-outline-variant">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-xs">Amount Due</p>
+<div class="flex justify-between items-baseline">
+<h2 class="font-display-lg text-display-lg text-primary">$16.20</h2>
+<span class="font-label-md text-label-md text-secondary bg-secondary/10 px-2 py-1 rounded-full">Order #8821</span>
+</div>
+<div class="mt-md pt-md border-t border-outline-variant/30">
+<div class="flex justify-between text-body-sm text-on-surface-variant mb-xs">
+<span>Items (3)</span>
+<span>$14.50</span>
+</div>
+<div class="flex justify-between text-body-sm text-on-surface-variant">
+<span>Tax</span>
+<span>$1.70</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Payment Selection -->
+<section class="animate-slide-up" style="animation-delay: 0.1s;">
+<h3 class="font-title-md text-title-md mb-md">Select Payment Method</h3>
+<div class="grid grid-cols-1 gap-md">
+<!-- JazzCash Card -->
+<div class="payment-option bg-surface-container rounded-xl p-lg border border-outline-variant flex items-center gap-md cursor-pointer transition-all active:scale-95" onclick="selectPayment(this, 'JazzCash')">
+<div class="w-12 h-12 rounded-lg bg-[#DE2D35]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#DE2D35]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div class="flex-grow">
+<p class="font-title-md text-title-md">JazzCash</p>
+<p class="font-body-sm text-on-surface-variant">Mobile Wallet</p>
+</div>
+<span class="material-symbols-outlined text-outline check-icon hidden">check_circle</span>
+</div>
+<!-- EasyPaisa Card -->
+<div class="payment-option bg-surface-container rounded-xl p-lg border border-outline-variant flex items-center gap-md cursor-pointer transition-all active:scale-95" onclick="selectPayment(this, 'EasyPaisa')">
+<div class="w-12 h-12 rounded-lg bg-[#37B34A]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#37B34A]" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div class="flex-grow">
+<p class="font-title-md text-title-md">EasyPaisa</p>
+<p class="font-body-sm text-on-surface-variant">Instant Payment</p>
+</div>
+<span class="material-symbols-outlined text-outline check-icon hidden">check_circle</span>
+</div>
+<!-- Cash Card -->
+<div class="payment-option bg-surface-container rounded-xl p-lg border border-outline-variant flex items-center gap-md cursor-pointer transition-all active:scale-95" onclick="selectPayment(this, 'Cash')">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">local_atm</span>
+</div>
+<div class="flex-grow">
+<p class="font-title-md text-title-md">Cash</p>
+<p class="font-body-sm text-on-surface-variant">Physical Currency</p>
+</div>
+<span class="material-symbols-outlined text-outline check-icon hidden">check_circle</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Button (Conditional FAB/Action) -->
+<div class="fixed bottom-16 left-0 w-full px-margin-mobile pb-lg bg-gradient-to-t from-background via-background to-transparent pt-xl lg:hidden">
+<button class="w-full h-14 bg-primary text-on-primary font-title-md text-title-md rounded-full shadow-lg opacity-50 cursor-not-allowed transition-all active:scale-95 flex items-center justify-center gap-base" disabled="" id="confirmBtn" onclick="handlePayment()">
+            Confirm Payment
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe border-t border-outline-variant bg-surface-container-low dark:bg-surface-container-low lg:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Sales</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</div>
+</nav>
+<!-- Success State Overlay -->
+<div class="success-overlay fixed inset-0 z-[100] bg-background/90 flex flex-col items-center justify-center p-xl" id="successOverlay">
+<div class="w-full max-w-sm flex flex-col items-center animate-slide-up">
+<div class="w-32 h-32 mb-xl">
+<!-- Placeholder for success animation -->
+
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-base">Payment Successful!</h2>
+<p class="text-body-lg text-center text-on-surface-variant mb-xl">Order #8821 has been processed. A receipt has been sent to the customer.</p>
+<button class="w-full h-14 border-2 border-primary text-primary font-title-md text-title-md rounded-full transition-all active:scale-95" onclick="location.reload()">
+                New Transaction
+            </button>
+</div>
+</div>
+<script>
+        let selectedMethod = null;
+
+        function selectPayment(element, method) {
+            // Remove active classes from all options
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('active-payment-card');
+                opt.querySelector('.check-icon').classList.add('hidden');
+            });
+
+            // Add active classes to selected
+            element.classList.add('active-payment-card');
+            element.querySelector('.check-icon').classList.remove('hidden');
+            
+            selectedMethod = method;
+            
+            // Enable confirm button
+            const btn = document.getElementById('confirmBtn');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.classList.add('hover:bg-primary-container');
+        }
+
+        function handlePayment() {
+            if (!selectedMethod) return;
+
+            const btn = document.getElementById('confirmBtn');
+            const originalText = btn.innerHTML;
+            
+            // Show loading state
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Processing...';
+            btn.disabled = true;
+
+            // Simulate transaction delay
+            setTimeout(() => {
+                const overlay = document.getElementById('successOverlay');
+                overlay.style.display = 'flex';
+                // Trigger haptic feedback if available
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
+            }, 1800);
+        }
+
+        // Add some micro-interactions
+        document.querySelectorAll('.payment-option').forEach(el => {
+            el.addEventListener('touchstart', () => el.classList.add('scale-[0.98]'));
+            el.addEventListener('touchend', () => el.classList.remove('scale-[0.98]'));
+        });
+    </script>
+</body></html>

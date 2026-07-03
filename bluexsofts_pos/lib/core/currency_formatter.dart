@@ -2,13 +2,13 @@ import 'package:intl/intl.dart';
 
 class CurrencyFormatter {
   static final NumberFormat _pkrFormat = NumberFormat.currency(
-    symbol: '₨ ',
+    symbol: 'Rs ',
     decimalDigits: 0,
     locale: 'en_PK',
   );
 
   static final NumberFormat _pkrWithDecimals = NumberFormat.currency(
-    symbol: '₨ ',
+    symbol: 'Rs ',
     decimalDigits: 2,
     locale: 'en_PK',
   );
@@ -23,11 +23,11 @@ class CurrencyFormatter {
   /// Formats to compact form for large numbers, e.g. ₨ 1.2K
   static String formatCompact(num amount) {
     if (amount >= 10000000) {
-      return '₨ ${(amount / 10000000).toStringAsFixed(1)}Cr';
+      return 'Rs ${(amount / 10000000).toStringAsFixed(1)}Cr';
     } else if (amount >= 100000) {
-      return '₨ ${(amount / 100000).toStringAsFixed(1)}L';
+      return 'Rs ${(amount / 100000).toStringAsFixed(1)}L';
     } else if (amount >= 1000) {
-      return '₨ ${(amount / 1000).toStringAsFixed(1)}K';
+      return 'Rs ${(amount / 1000).toStringAsFixed(1)}K';
     }
     return format(amount);
   }

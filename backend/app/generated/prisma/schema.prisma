@@ -9,20 +9,37 @@ datasource db {
 }
 
 model Shop {
-  id                 String     @id @default(uuid())
-  shopName           String     @unique
-  subscriptionPlan   String     @default("NONE")
-  subscriptionStatus String     @default("PENDING")
+  id                 String        @id @default(uuid())
+  shopName           String        @unique
+  category           String        @default("General")
+  subscriptionPlan   String        @default("NONE")
+  subscriptionStatus String        @default("PENDING")
   subscriptionEndsAt DateTime?
-  isActive           Boolean    @default(true)
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
   payments           Payment[]
   products           Product[]
   sales              Sale[]
   saleItems          SaleItem[]
   invoices           Invoice[]
   users              User[]
+  customers          Customer[]
+  ledgerEntries      LedgerEntry[]
+  branches           Branch[]
+}
+
+model Branch {
+  id        String   @id @default(uuid())
+  shopId    String
+  name      String
+  address   String   @default("")
+  phone     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@unique([shopId, name])
 }
 
 model Payment {
@@ -91,6 +108,7 @@ model Sale {
   id            String     @id @default(uuid())
   shopId        String
   userId        String
+  customerId    String?
   total         Float
   subtotal      Float
   tax           Float      @default(0)
@@ -100,6 +118,7 @@ model Sale {
   notes         String     @default("")
   createdAt     DateTime   @default(now())
   user          User       @relation(fields: [userId], references: [id])
+  customer      Customer?  @relation(fields: [customerId], references: [id])
   shop          Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
   saleItems     SaleItem[]
   invoice       Invoice?
@@ -133,4 +152,35 @@ model SaleItem {
   product   Product @relation(fields: [productId], references: [id])
   sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
   shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
+
+model Customer {
+  id            String        @id @default(uuid())
+  shopId        String
+  name          String
+  phone         String        @default("")
+  totalOwed     Float         @default(0)
+  totalPaid     Float         @default(0)
+  lastPaymentAt DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  shop          Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  entries       LedgerEntry[]
+  sales         Sale[]
+
+  @@unique([shopId, name, phone])
+}
+
+model LedgerEntry {
+  id         String   @id @default(uuid())
+  shopId     String
+  customerId String
+  type       String // "DEBIT" for charges, "CREDIT" for payments
+  amount     Float
+  saleId     String?
+  note       String   @default("")
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  shop     Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
 }

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BluexSofts POS - Retail Terminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom Scrollbar for POS efficiency */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c6bfff;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6c5ce7;
+        }
+        .glass-header {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#F8F9FA",
+                        "surface-container": "#FFFFFF",
+                        "secondary-fixed-dim": "#4bddb7",
+                        "tertiary-fixed": "#ffdea7",
+                        "outline-variant": "#E0E0E0",
+                        "error-container": "#FDEAEA",
+                        "inverse-on-surface": "#313030",
+                        "surface-tint": "#6c5ce7",
+                        "on-primary": "#FFFFFF",
+                        "on-primary-fixed": "#160066",
+                        "on-secondary": "#00382b",
+                        "tertiary-fixed-dim": "#f0bf63",
+                        "surface-variant": "#F1F3F4",
+                        "on-tertiary-container": "#412d00",
+                        "tertiary": "#f0bf63",
+                        "error": "#D32F2F",
+                        "on-secondary-container": "#004233",
+                        "on-primary-fixed-variant": "#4029ba",
+                        "primary": "#6c5ce7",
+                        "secondary-fixed": "#6dfad2",
+                        "primary-fixed": "#e4dfff",
+                        "surface-dim": "#F8F9FA",
+                        "on-background": "#1A1C1E",
+                        "secondary-container": "#D1F7ED",
+                        "on-tertiary-fixed": "#271900",
+                        "on-tertiary-fixed-variant": "#5e4200",
+                        "on-tertiary": "#412d00",
+                        "inverse-primary": "#c6bfff",
+                        "on-primary-container": "#FFFFFF",
+                        "on-surface-variant": "#44474E",
+                        "secondary": "#02b894",
+                        "on-error-container": "#410002",
+                        "surface-container-highest": "#E1E2E4",
+                        "outline": "#74777F",
+                        "surface": "#FFFFFF",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-secondary-fixed-variant": "#005140",
+                        "inverse-surface": "#2F3033",
+                        "surface-bright": "#FFFFFF",
+                        "primary-container": "#6c5ce7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "margin-desktop": "40px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "8px",
+                        "gutter": "20px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "title-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen">
+<!-- SideNavBar (Desktop Shell) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface-container border-r border-outline-variant hidden lg:flex flex-col z-50">
+<div class="p-lg flex flex-col gap-xs">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">BluexSofts POS</h1>
+<p class="text-on-surface-variant font-label-md">Modern Retail Solutions</p>
+</div>
+<nav class="flex-1 px-md mt-lg space-y-base">
+<!-- Nav Item: Home -->
+<div class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95 group">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-body-lg">Home</span>
+</div>
+<!-- Nav Item: POS (Active) -->
+<div class="flex items-center gap-md p-md rounded-xl text-primary font-bold border-r-4 border-primary bg-primary/5 cursor-pointer active:scale-95 group active-tab">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+<span class="font-body-lg">POS</span>
+</div>
+<!-- Nav Item: Products -->
+<div class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95 group">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+<span class="font-body-lg">Products</span>
+</div>
+<!-- Nav Item: Sales -->
+<div class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95 group">
+<span class="material-symbols-outlined text-[24px]">payments</span>
+<span class="font-body-lg">Sales</span>
+</div>
+<!-- Nav Item: Users -->
+<div class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95 group">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<span class="font-body-lg">Users</span>
+</div>
+</nav>
+<div class="p-lg border-t border-outline-variant">
+<button class="w-full bg-primary text-on-primary py-md rounded-xl font-bold flex items-center justify-center gap-base transition-all hover:shadow-lg active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+                New Transaction
+            </button>
+</div>
+</aside>
+<!-- TopNavBar (Main Header) -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile lg:px-margin-desktop py-base lg:ml-[280px] lg:w-[calc(100%-280px)] bg-background/80 glass-header">
+<div class="flex items-center gap-md flex-1">
+<div class="relative max-w-md w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-full py-base pl-10 pr-md text-body-lg focus:ring-2 focus:ring-primary" placeholder="Search products, SKUs, or orders..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 text-on-surface-variant">
+<span class="material-symbols-outlined">storefront</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-xs"></div>
+<div class="flex items-center gap-sm cursor-pointer group">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-on-background">Store Manager</p>
+<p class="text-[10px] text-on-surface-variant">Terminal #04</p>
+</div>
+<img class="w-10 h-10 rounded-full border-2 border-primary-fixed object-cover" data-alt="A professional headshot of a store manager in a clean, modern retail environment. The manager has a friendly, professional expression. The photo is well-lit with soft, natural lighting, featuring a neutral, slightly out-of-focus boutique background with light wood accents and soft blue color palette to match the UI style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWGV7vxqnpTtbbiDD-RECSKhcPTJJ5g8UX-uYW8s1dC9jLwSBg3Kda2vzVM8konb8F_fIILi7oXKf12uGf0yPbXJ5j27yT_WteqAMvHhj0BmlM5bCRd4ymD4enWvLJBwIzhQoZTyJtsd5U7xx5Jfo_GnHy5C4A08m51J2YuA-X4VkeUWOgLuN5QgZcCWaA5qbsqh1VEl0ihWmdTSQFXRA80SBSejxjsFdwCzUNYLamR7963B-qXtn-Ew"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="lg:ml-[280px] p-md lg:p-margin-desktop grid grid-cols-12 gap-lg h-[calc(100vh-64px)]">
+<!-- Product Catalog Section (Left Column) -->
+<section class="col-span-12 lg:col-span-8 flex flex-col gap-lg">
+<!-- Category Chips -->
+<div class="flex gap-sm overflow-x-auto pb-xs scrollbar-hide">
+<button class="px-md py-base bg-primary text-on-primary rounded-full font-label-md whitespace-nowrap shadow-md">All Items</button>
+<button class="px-md py-base bg-secondary-container text-on-secondary-container rounded-full font-label-md whitespace-nowrap hover:bg-secondary-container/80 transition-colors">Apparel</button>
+<button class="px-md py-base bg-secondary-container text-on-secondary-container rounded-full font-label-md whitespace-nowrap hover:bg-secondary-container/80 transition-colors">Footwear</button>
+<button class="px-md py-base bg-secondary-container text-on-secondary-container rounded-full font-label-md whitespace-nowrap hover:bg-secondary-container/80 transition-colors">Accessories</button>
+<button class="px-md py-base bg-secondary-container text-on-secondary-container rounded-full font-label-md whitespace-nowrap hover:bg-secondary-container/80 transition-colors">Home Goods</button>
+<button class="px-md py-base bg-secondary-container text-on-secondary-container rounded-full font-label-md whitespace-nowrap hover:bg-secondary-container/80 transition-colors">Limited Edition</button>
+</div>
+<!-- Bento Product Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-md overflow-y-auto pr-xs">
+<!-- Product Card 1 -->
+<div class="bg-surface rounded-xl border border-outline-variant hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col overflow-hidden">
+<div class="aspect-square bg-surface-variant relative">
+<img class="w-full h-full object-cover" data-alt="A premium minimalist white ceramic vase presented on a light gray marble surface. The lighting is soft and studio-quality, casting gentle shadows. The overall aesthetic is clean, modern, and high-end retail, featuring a color palette of off-whites, soft grays, and a touch of indigo in the shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD05OPIfqwvdkvuO8Up0pIA8tXij7im_iO9t_8s7Y94G4NVK3wYrHgtRveStHgSwteVcqnv-RsMm_JpZbgwGy4Q5jg2t5GgiY07jOiwoav276IwPgRaowu0DQofbgpi2ohjriimSfm9TdvycTXDCHjBAFxqy55keS-s4GfBnUQ6HxwT7CkJ2P1odCGjOHNwVILIWqsPiZmoIxjpUwC-2FS44QCHYQJDIZk6w8Dyz-CwmAclLvevIaLB8Q"/>
+<div class="absolute top-2 right-2 bg-primary/90 text-on-primary text-[10px] px-2 py-0.5 rounded-full font-bold">In Stock</div>
+</div>
+<div class="p-md flex flex-col justify-between flex-1">
+<h3 class="font-title-md text-on-background line-clamp-2">Minimalist Ceramic Vase</h3>
+<div class="mt-base flex items-center justify-between">
+<span class="text-primary font-bold text-body-lg">$45.00</span>
+<span class="text-on-surface-variant text-[10px]">SKU: VA-001</span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface rounded-xl border border-outline-variant hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col overflow-hidden">
+<div class="aspect-square bg-surface-variant relative">
+<img class="w-full h-full object-cover" data-alt="A pair of sleek, modern navy blue sneakers with white soles, professionally photographed on a crisp white background. The lighting highlights the texture of the fabric and the clean design. The style is athletic-luxe, fitting a premium retail point of sale interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQWJBmDDH_iJOLuzW-r7dyWaYnl8-UFCmXbpaw-62h3_sh1UcjVJreCF7wnZXOe3nv1Vz-6_zYiCe3G90MJRl_ULKoTFCbcQ4NASfWnAnthX17zaaCPC1cRqkZQcUksy9RviK3LJvy-Rnd6QqujRI-sh0H0nbpBhcCZykzuPkVoyjyOb6SsYcPcf5qQEImVHnrQAwiwuEi_WqLdJq4RG-0pZc3ogDN3a5bb8RPwXSfVWktaKNsSsmNKw"/>
+</div>
+<div class="p-md flex flex-col justify-between flex-1">
+<h3 class="font-title-md text-on-background line-clamp-2">Urban Tech Sneakers - Navy</h3>
+<div class="mt-base flex items-center justify-between">
+<span class="text-primary font-bold text-body-lg">$120.00</span>
+<span class="text-on-surface-variant text-[10px]">SKU: SN-922</span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface rounded-xl border border-outline-variant hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col overflow-hidden">
+<div class="aspect-square bg-surface-variant relative">
+<img class="w-full h-full object-cover" data-alt="An elegant, slim-profile premium leather wallet in deep mahogany brown. The wallet is slightly open to show its refined interior craftsmanship. It's set against a light birch wood background with clean, professional retail lighting, emphasizing the luxury feel of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcigTHHq-XewsLc-yBOpSSpvL7-I-hIE6kIy-MSbtqJUIP6vwRDBG0CjkxnkycdO1sEKqeYaMua1_JEX3Wm7e7U57ViIQDE0JiGmf3PYR5kqDDd3axnbWintk5W1l6WJMfjr9c1trsZ2LPbonbZ8yDoSEDiUcdt0YMncfouVQ_8l4053DDkwddYxOD9whi6UDmpsw-yhT2HmZOzDoahAyUrk7oTlhhCj0ZrEVRigSTBzCim1uFgwfXOw"/>
+</div>
+<div class="p-md flex flex-col justify-between flex-1">
+<h3 class="font-title-md text-on-background line-clamp-2">Slim Leather Wallet</h3>
+<div class="mt-base flex items-center justify-between">
+<span class="text-primary font-bold text-body-lg">$65.00</span>
+<span class="text-on-surface-variant text-[10px]">SKU: LW-551</span>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface rounded-xl border border-outline-variant hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col overflow-hidden">
+<div class="aspect-square bg-surface-variant relative">
+<img class="w-full h-full object-cover" data-alt="High-fidelity over-ear headphones in matte black and silver finishes. The product is shot from a three-quarters angle on a sleek light gray podium. The image has a professional tech-retail aesthetic, with subtle indigo accent lighting reflecting off the metallic parts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQhWw83CmXAmmAGEdmhIGWEcJMG_tVkEBCM0h4fRi_cZeX6DHmZwjb0Nnss_1DMm3OJ-hfnyOzqw7NEXn1sViEPkFkyrpVA14GIdu1nzXjPQy_O9cDvtgsRGVtxREpNPSsNm_fS_pSPgK2crffjKeElNKaHFoBXk-LQgnuabTcAHnM7QcY9ft-feYuB_KZOEGYSB4gJigmS-nvVzWDnzImawFXUIKLJfG-JNrs_0x32o8shvpNQtP7MQ"/>
+</div>
+<div class="p-md flex flex-col justify-between flex-1">
+<h3 class="font-title-md text-on-background line-clamp-2">Aero-Pulse Headphones</h3>
+<div class="mt-base flex items-center justify-between">
+<span class="text-primary font-bold text-body-lg">$299.00</span>
+<span class="text-on-surface-variant text-[10px]">SKU: HP-101</span>
+</div>
+</div>
+</div>
+<!-- Repeat Product Cards for visual weight -->
+<div class="bg-surface rounded-xl border border-outline-variant hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col overflow-hidden">
+<div class="aspect-square bg-surface-variant relative">
+<img class="w-full h-full object-cover" data-alt="A designer copper-toned desk lamp with a geometric base, illuminated to show a warm, cozy light. The background is a clean white office setup. The photography style is modern and minimalist, highlighting the product's architectural lines and high-quality materials." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr47oIi7pT1XEjdkt22SzgpHkOZtqq9gj4jO5-VgQLH6PwCyEbUAm95vVG4Gkgt0SBVwOBfPapb7WSUi5jdWsEKJDQXbztTMhyq09Q5pPB3PVDyr9V_-zMUB-LeuotApT8CDBnlMC9Ya43gjW12GFZBl0EWDPaPomsfllwdR5qQQUIsbH-brCNUC7SQ0S7Oq84ATlnFgVIu7686v60MXH8SgV9MvGueIf60yTlV0zdIBVdpi7WVowa8w"/>
+</div>
+<div class="p-md flex flex-col justify-between flex-1">
+<h3 class="font-title-md text-on-background line-clamp-2">Lumina Copper Lamp</h3>
+<div class="mt-base flex items-center justify-between">
+<span class="text-primary font-bold text-body-lg">$89.00</span>
+<span class="text-on-surface-variant text-[10px]">SKU: LP-882</span>
+</div>
+</div>
+</div>
+<div class="bg-surface rounded-xl border border-outline-variant hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col overflow-hidden">
+<div class="aspect-square bg-surface-variant relative">
+<img class="w-full h-full object-cover" data-alt="A set of handcrafted stoneware bowls in muted pastel tones of sage green and soft indigo. They are stacked neatly on a light ash wood shelf. The lighting is bright and airy, suggesting a boutique kitchenware shop environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3FkNx9hY3A8JrWFFPv4bZJkuiHuXMA2CH3CsasVOer_zjMsy49ayVo-dFvkv8Wzkp0kQ5DWvqFi9oQdM2-o6WctMNHQ4ahPDtLOw9hYotyqcDJwTLP_SVtSrdycHk4CL19MaLTsnb7y1cdJ_21Jzr9blbMHGQTujgFTl2TkySuXmfSmoSUsE1RjGEPvDvFzd6JVb_UAbvjLY8GyaGvFjvONV9Z-14504CzMkSCVxL3bmHVkOS3lbo_Q"/>
+</div>
+<div class="p-md flex flex-col justify-between flex-1">
+<h3 class="font-title-md text-on-background line-clamp-2">Handcrafted Stoneware Set</h3>
+<div class="mt-base flex items-center justify-between">
+<span class="text-primary font-bold text-body-lg">$72.00</span>
+<span class="text-on-surface-variant text-[10px]">SKU: SW-234</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Cart / Transaction Section (Right Column) -->
+<aside class="col-span-12 lg:col-span-4 flex flex-col bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<!-- Cart Header -->
+<div class="p-md bg-surface-container border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary">shopping_cart</span>
+<h2 class="font-title-md text-on-background">Current Order</h2>
+</div>
+<button class="text-error font-label-md flex items-center gap-xs hover:bg-error-container p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm">delete_sweep</span>
+                    Clear All
+                </button>
+</div>
+<!-- Cart Items List -->
+<div class="flex-1 overflow-y-auto p-md space-y-md">
+<!-- Cart Item 1 -->
+<div class="flex items-center gap-md group">
+<div class="w-16 h-16 rounded-lg bg-surface-variant flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A thumbnail of a minimalist white ceramic vase, matching the primary product catalog image for consistency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-WZ50UmSEjNDC4XSKoLx8NqPjL45hfRk4YQh8-drnkeWrUdqsvtuU_drssCL-gvzkYzHvvc0yPPvtgOMBibsCJftBfOLfyJcjShAu3jhYZenPnUPPM3Dry1uhYfFRxwiuPatKj36YKNClQyUbRnaeyVFdU24XwWxcW7paTkZ4MaH_KlwwxQJsTLg7PZa2eCfsCMNeRYWQzzma1fZinvslIFpYw-0OuoyUZMpq7reyz3y0jo9p3XpmeQ"/>
+</div>
+<div class="flex-1">
+<p class="font-body-lg font-bold text-on-background leading-tight">Minimalist Ceramic Vase</p>
+<p class="text-on-surface-variant text-[12px]">$45.00 x 1</p>
+</div>
+<div class="flex items-center gap-sm">
+<div class="flex items-center bg-surface-variant rounded-full px-2 py-1">
+<button class="w-6 h-6 flex items-center justify-center hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="w-6 text-center font-bold text-sm">1</span>
+<button class="w-6 h-6 flex items-center justify-center hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<span class="font-bold text-on-background">$45.00</span>
+</div>
+</div>
+<!-- Cart Item 2 -->
+<div class="flex items-center gap-md group">
+<div class="w-16 h-16 rounded-lg bg-surface-variant flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A thumbnail of urban tech sneakers in navy blue, matching the primary product catalog image for consistency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjGc40N6vT4T0yQ5KbBENJOjU3ddJgb_TNNM01pOl-7fvG6l8FaCa60tlq_rlDVa5o4TCkAkYpG2yWCA4dcpythKdFilaIISPfaq_6R_HnJSszPI4GBCHhlwxZo2s5iy5YpqsMkUwzWvMY5yLXW2o7n99RR_Bw5kiUqrD6UGkpFMN4SlCBG_QSA_2IL_cwzsDtUjUCbxk9ELloov68uOdi2MOncybt-SA5eY7dc4H1Xs69fPhCKmVzWw"/>
+</div>
+<div class="flex-1">
+<p class="font-body-lg font-bold text-on-background leading-tight">Urban Tech Sneakers - Navy</p>
+<p class="text-on-surface-variant text-[12px]">$120.00 x 2</p>
+</div>
+<div class="flex items-center gap-sm">
+<div class="flex items-center bg-surface-variant rounded-full px-2 py-1">
+<button class="w-6 h-6 flex items-center justify-center hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="w-6 text-center font-bold text-sm">2</span>
+<button class="w-6 h-6 flex items-center justify-center hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<span class="font-bold text-on-background">$240.00</span>
+</div>
+</div>
+</div>
+<!-- Transaction Summary -->
+<div class="p-lg bg-surface-container border-t border-outline-variant space-y-md">
+<div class="flex justify-between text-on-surface-variant">
+<span class="font-body-lg">Subtotal</span>
+<span class="font-body-lg">$285.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span class="font-body-lg">Tax (8%)</span>
+<span class="font-body-lg">$22.80</span>
+</div>
+<div class="flex justify-between items-end border-t border-outline-variant pt-md">
+<span class="font-title-md text-on-background">Total Amount</span>
+<span class="font-display-lg text-primary leading-none tracking-tight">$307.80</span>
+</div>
+<div class="grid grid-cols-2 gap-md pt-lg">
+<button class="flex flex-col items-center justify-center gap-xs py-lg bg-surface-variant text-on-surface-variant rounded-xl border border-outline-variant hover:bg-surface-container-highest transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl">payments</span>
+<span class="font-label-md">Cash</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-xs py-lg bg-primary text-on-primary rounded-xl border border-primary shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl">credit_card</span>
+<span class="font-label-md">Card Payment</span>
+</button>
+</div>
+<button class="w-full mt-lg py-md bg-secondary text-white rounded-xl font-bold flex items-center justify-center gap-base shadow-xl active:scale-95 transition-all">
+                    Complete Transaction
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</aside>
+</main>
+<!-- FAB for New Transaction (Mobile only fallback) -->
+<button class="fixed bottom-margin-mobile right-margin-mobile w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center lg:hidden z-50 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-2xl">point_of_sale</span>
+</button>
+<!-- BottomNavBar (Mobile Shell Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe border-t border-outline-variant bg-surface-container-low lg:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+<span class="font-label-md">POS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md">Products</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Sales</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction: Cart quantity update animation
+        const quantityButtons = document.querySelectorAll('button');
+        quantityButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.innerHTML.includes('add') || this.innerHTML.includes('remove')) {
+                    const parent = this.parentElement;
+                    const valueSpan = parent.querySelector('span');
+                    let val = parseInt(valueSpan.textContent);
+                    if(this.innerHTML.includes('add')) val++;
+                    else if(val > 1) val--;
+                    valueSpan.textContent = val;
+                }
+            });
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary');
+        });
+    </script>
+</body></html>

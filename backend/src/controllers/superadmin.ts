@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import { execSync } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
 import prisma from '../config/db';
+import { sendBackupEmail } from '../services/email';
 
 const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
 
@@ -63,10 +67,10 @@ export const listShops = async (req: Request, res: Response): Promise<void> => {
         take: limit,
         orderBy: { createdAt: 'desc' },
         include: {
-          _count: { select: { users: true, sales: true } },
+          _count: { select: { users: true, sales: true, branches: true } },
           users: {
             where: { role: 'ADMIN' },
-            select: { id: true, name: true, email: true, createdAt: true },
+            select: { id: true, name: true, email: true, createdAt: true, isActive: true },
             take: 1,
           },
           payments: { take: 1, orderBy: { createdAt: 'desc' }, select: { amount: true, paymentMethod: true, createdAt: true } },
@@ -78,6 +82,38 @@ export const listShops = async (req: Request, res: Response): Promise<void> => {
     res.json({ shops, total, page, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     console.error('List shops error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateShop = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = toString(req.params.id);
+    const { shopName, category } = req.body;
+
+    const shop = await prisma.shop.findUnique({ where: { id } });
+    if (!shop || shop.shopName === '__super_admin__') {
+      res.status(404).json({ error: 'Shop not found' });
+      return;
+    }
+
+    const updateData: Record<string, unknown> = {};
+    if (shopName !== undefined) updateData.shopName = shopName;
+    if (category !== undefined) updateData.category = category;
+
+    if (Object.keys(updateData).length === 0) {
+      res.status(400).json({ error: 'Nothing to update' });
+      return;
+    }
+
+    const updated = await prisma.shop.update({
+      where: { id },
+      data: updateData as any,
+    });
+
+    res.json({ success: true, shop: updated });
+  } catch (error) {
+    console.error('Update shop error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -341,5 +377,54 @@ export const extendSubscription = async (req: Request, res: Response): Promise<v
     res.json({ success: true, message: `Subscription extended by ${extraDays} days`, endsAt: newEnd });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const triggerBackup = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const cronKey = req.query.key as string;
+    const expectedKey = process.env.CRON_SECRET;
+    if (cronKey && expectedKey && cronKey !== expectedKey) {
+      res.status(403).json({ error: 'Invalid cron key' });
+      return;
+    }
+
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl) {
+      res.status(500).json({ error: 'DATABASE_URL not configured' });
+      return;
+    }
+
+    const backupDir = path.resolve(__dirname, '..', '..', 'backups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const filename = `backup_${ts}.sql`;
+    const filepath = path.join(backupDir, filename);
+
+    execSync(`pg_dump "${dbUrl}" --no-owner --no-acl -f "${filepath}"`, {
+      timeout: 300_000,
+    });
+
+    const sizeMb = (fs.statSync(filepath).size / 1024 / 1024).toFixed(2);
+
+    const cutoff = Date.now() - 14 * 24 * 60 * 60 * 1000;
+    let pruned = 0;
+    for (const file of fs.readdirSync(backupDir)) {
+      if (!file.startsWith('backup_') || !file.endsWith('.sql')) continue;
+      if (fs.statSync(path.join(backupDir, file)).mtimeMs < cutoff) {
+        fs.unlinkSync(path.join(backupDir, file));
+        pruned++;
+      }
+    }
+
+    await sendBackupEmail(filepath, filename);
+
+    res.json({ success: true, filename, sizeMb, pruned });
+  } catch (error) {
+    console.error('Backup error:', error);
+    res.status(500).json({ error: 'Backup failed' });
   }
 };

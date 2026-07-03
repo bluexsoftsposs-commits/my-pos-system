@@ -9,6 +9,7 @@ import '../views/shared/summary_stat.dart';
 import '../views/shared/payment_badge.dart';
 import '../views/shared/detail_row.dart';
 import '../services/receipt_service.dart';
+import '../core/currency_formatter.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -39,7 +40,7 @@ class _SalesScreenState extends State<SalesScreen> {
             children: [
               Expanded(child: SummaryStat(
                 label: 'Total Sales',
-                value: '\$${_formatTotal(saleProv.summary?['allTime']?['total'])}',
+                value: _formatTotal(saleProv.summary?['allTime']?['total']),
                 gradient: AppTheme.cardGradientPurple,
               )),
               const SizedBox(width: 12),
@@ -51,7 +52,7 @@ class _SalesScreenState extends State<SalesScreen> {
               const SizedBox(width: 12),
               Expanded(child: SummaryStat(
                 label: 'Today',
-                value: '\$${_formatTotal(saleProv.summary?['today']?['total'])}',
+                value: _formatTotal(saleProv.summary?['today']?['total']),
                 gradient: AppTheme.cardGradientBlue,
               )),
             ],
@@ -117,8 +118,8 @@ class _SalesScreenState extends State<SalesScreen> {
   }
 
   String _formatTotal(dynamic value) {
-    if (value == null) return '0.00';
-    return (value as num).toStringAsFixed(2);
+    if (value == null) return CurrencyFormatter.format(0);
+    return CurrencyFormatter.formatWithDecimals(value as num);
   }
 
   Widget _buildSaleCard(Sale sale) {
@@ -163,7 +164,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     Row(
                       children: [
                         Text(
-                          '\$${sale.total.toStringAsFixed(2)}',
+                          CurrencyFormatter.formatWithDecimals(sale.total),
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(width: 8),
@@ -317,7 +318,7 @@ class _SalesScreenState extends State<SalesScreen> {
                           Text('x${item.quantity}', style: TextStyle(color: Colors.grey[500])),
                           const SizedBox(width: 16),
                           Text(
-                            '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                            CurrencyFormatter.formatWithDecimals(item.price * item.quantity),
                             textAlign: TextAlign.right,
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
@@ -337,12 +338,12 @@ class _SalesScreenState extends State<SalesScreen> {
                   child: Column(
                     children: [
                       if (sale.tax > 0)
-                        DetailRow(label: 'Tax', value: '\$${sale.tax.toStringAsFixed(2)}'),
+                        DetailRow(label: 'Tax', value: CurrencyFormatter.formatWithDecimals(sale.tax)),
                       if (sale.discount > 0)
-                        DetailRow(label: 'Discount', value: '-\$${sale.discount.toStringAsFixed(2)}', valueColor: AppTheme.warning),
+                        DetailRow(label: 'Discount', value: '-${CurrencyFormatter.formatWithDecimals(sale.discount)}', valueColor: AppTheme.warning),
                       DetailRow(
                         label: 'Total',
-                        value: '\$${sale.total.toStringAsFixed(2)}',
+                        value: CurrencyFormatter.formatWithDecimals(sale.total),
                         isBold: true,
                         valueColor: AppTheme.success,
                       ),

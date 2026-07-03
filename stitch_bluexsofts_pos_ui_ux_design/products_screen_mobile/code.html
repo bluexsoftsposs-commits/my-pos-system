@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>BluexSofts POS - Products</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#131313",
+                    "surface-container": "#201f1f",
+                    "secondary-fixed-dim": "#4bddb7",
+                    "tertiary-fixed": "#ffdea7",
+                    "outline-variant": "#474554",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#313030",
+                    "surface-tint": "#c6bfff",
+                    "on-primary": "#2900a0",
+                    "on-primary-fixed": "#160066",
+                    "on-secondary": "#00382b",
+                    "tertiary-fixed-dim": "#f0bf63",
+                    "surface-variant": "#353534",
+                    "on-tertiary-container": "#fff6ee",
+                    "tertiary": "#f0bf63",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#004233",
+                    "on-primary-fixed-variant": "#4029ba",
+                    "primary": "#c6bfff",
+                    "secondary-fixed": "#6dfad2",
+                    "primary-fixed": "#e4dfff",
+                    "surface-dim": "#131313",
+                    "on-background": "#e5e2e1",
+                    "secondary-container": "#02b894",
+                    "on-tertiary-fixed": "#271900",
+                    "on-tertiary-fixed-variant": "#5e4200",
+                    "on-tertiary": "#412d00",
+                    "inverse-primary": "#5847d2",
+                    "on-primary-container": "#faf6ff",
+                    "on-surface-variant": "#c8c4d7",
+                    "secondary": "#4bddb7",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-highest": "#353534",
+                    "outline": "#928ea0",
+                    "surface": "#131313",
+                    "primary-fixed-dim": "#c6bfff",
+                    "on-secondary-fixed-variant": "#005140",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-container-low": "#1c1b1b",
+                    "tertiary-container": "#926b15",
+                    "on-error": "#690005",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-secondary-fixed": "#002018",
+                    "surface-bright": "#393939",
+                    "primary-container": "#6c5ce7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "margin-desktop": "40px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "margin-mobile": "16px",
+                    "xl": "32px",
+                    "base": "8px",
+                    "gutter": "20px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "title-md": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "body-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .swipe-container {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card:active .swipe-container {
+            transform: translateX(-80px);
+        }
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #474554;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopNavBar - Fixed Mobile Implementation -->
+<header class="sticky top-0 z-40 bg-background/80 backdrop-blur-md flex justify-between items-center w-full px-margin-mobile py-base border-none">
+<h1 class="lg:hidden font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Products</h1>
+<div class="flex items-center gap-2">
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a professional store manager with a friendly expression. The image is stylized with a deep, moody aesthetic, using dark backgrounds and soft indigo rim lighting to match the BluexSofts POS brand colors. High contrast and clean composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClBdl3Y2Is1A7LZdp1RwU-v6zB28BOTnPQ0dnOCb9ykN0K0Pv9hpyJBVwnp6ty88fZlw2ToSkj0cO7zSCm1LGHh4iTwUBHph97U6fnE5oFNENHjbK0BHjFsdu07XMjUDAlCzXfTAWoMQarFJR0hRDPe4Ea2FqKHCCWaunBrN8lDOXjKm7KeEyHCKWNKkIQolCurklXGkQG05I8iwMlAHcnB42EgdZryzRQYkHRCVqEQiuD47aRagIu8Q"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile pb-24">
+<!-- Search & Filter Bar -->
+<div class="mt-4 mb-6 sticky top-[60px] z-30 bg-background pt-2 pb-4">
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="w-full h-[48px] pl-12 pr-4 rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary-container text-body-lg placeholder-outline-variant transition-all" placeholder="Search inventory..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+</div>
+<!-- Product List -->
+<div class="space-y-sm">
+<!-- Product Item Template -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low group product-card">
+<!-- Swipe Actions Background -->
+<div class="absolute inset-0 flex justify-end items-center bg-error-container/20 px-4 gap-4">
+<div class="flex flex-col items-center justify-center min-w-[44px]">
+<span class="material-symbols-outlined text-primary" data-icon="edit">edit</span>
+</div>
+<div class="flex flex-col items-center justify-center min-w-[44px]">
+<span class="material-symbols-outlined text-error" data-icon="delete">delete</span>
+</div>
+</div>
+<!-- Main Item Surface -->
+<div class="swipe-container relative bg-surface-container-low p-md flex items-center gap-md border-b border-outline-variant/30">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional product shot of a sleek, minimalist mechanical keyboard against a dark, moody background. Subtle indigo lighting highlights the metallic edges and high-quality keycaps. The visual style is premium and clean, aligned with a modern retail tech brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ1hsF8TIvxSV51TwUv-yhQIWC6wpF2kVzwAtu3wnFM-nYefpwzMswEFKli5SMVgQM4LHwlDOSNOpWlCK3HjJXahAI776ZeDLfrQWdEkQ-wIkRAZycfIPTmO3O0kNYEMDJ7uY_958B7tvQDRWT2TFV4j_U09TtTzlUvdHO-UptnlUMeTnRuhIl9yKm6ThbZD1yo39B3ThAtMSImFhZnGqDQnjrfdpMOQWmTcGv5OC_H7a4pjYOMwewxw"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-title-md text-on-surface truncate">Custom Mechanical Keyboard</h3>
+<div class="flex items-center justify-between mt-1">
+<span class="text-primary font-bold text-body-lg">$129.00</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="inventory_2">inventory_2</span>
+<span class="text-body-sm text-on-surface-variant">42 units</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low group product-card">
+<div class="absolute inset-0 flex justify-end items-center bg-error-container/20 px-4 gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="edit">edit</span>
+<span class="material-symbols-outlined text-error" data-icon="delete">delete</span>
+</div>
+<div class="swipe-container relative bg-surface-container-low p-md flex items-center gap-md border-b border-outline-variant/30">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Studio photography of a premium noise-canceling headphone in matte black. The lighting is focused and cinematic, creating soft highlights on the curves. Dark indigo shadows provide depth and a high-end electronic retail feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4UuP0jIdTx7ZrKz_2ts54No6w1eGiGJtSc0aaXgZdlXUiPWTMD87SSevWwWq1i212DEAlAPRiM-5XFBZhibIJzsU3yPM-edLuJsd2IEC2a3wVQBwrt4FvLWQs2Aj-vRICLoCREi1xk3xzH90pOeEl-kDf38wB2b5T3Zp_Drwcvd7VeUljVdUtR2B-2qZxEqQtnF4Xt_90ds4Lzj9mhLKrrQvI-OEWIKbZGP9VY0MMYFKBcFyIFqmCIA"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-title-md text-on-surface truncate">Acoustic Pro Headphones</h3>
+<div class="flex items-center justify-between mt-1">
+<span class="text-primary font-bold text-body-lg">$349.50</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="inventory_2">inventory_2</span>
+<span class="text-body-sm text-on-surface-variant">12 units</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Item 3 - Low Stock Warning -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low group product-card">
+<div class="swipe-container relative bg-surface-container-low p-md flex items-center gap-md border-b border-outline-variant/30">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Minimalist design of a smart desk lamp with adjustable arm. High-tech aesthetic with brushed metal finish. The scene is dimly lit with a single source of cool indigo light, emphasizing clean lines and modern form factor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXHv6yDeUru4gsbxZIwUpZZPAX8HPsCzEiNNbM8sksA78-k_ykszNKHyntrx7H8hBGIhMpsVgyAHdsY0z1B6yCCjQg50C9fqUadz_oTZAmvVF8AkP1EDdS2184IDekb_Eb8Z5BdTrPFWHre9w0j4zkzptk8zSXHDkbJ67UhfhNGWd5Pq5MaCu7HecYe071fbBHvrU3gBHO7NM9oP7L6_rWL7LbILg23OBY-eoSrKFsR4jKTem8lsuoFw"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-title-md text-on-surface truncate">Smart Ambient Light</h3>
+<div class="flex items-center justify-between mt-1">
+<span class="text-primary font-bold text-body-lg">$89.00</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-error text-[16px]" data-icon="warning">warning</span>
+<span class="text-body-sm text-error">3 units left</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low group product-card">
+<div class="swipe-container relative bg-surface-container-low p-md flex items-center gap-md border-b border-outline-variant/30">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a sleek wireless charging pad with a smartphone resting on top. The composition uses a shallow depth of field, with soft purple and indigo ambient lights reflecting off the glass surface. Ultra-modern tech retail style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsrACdjT0uHiTz70aNzWF_SvR-s4DSx861R0vbjVcKlKEa9nQqA-YVPFK_MpfWNlzktdCuR5LWEORviHXCvVnim3JNCrK4MlFwDgSWY06qZpH5SmDOXZ-c9MROi-AcdchrH2UnkKF9xmf1O4FVx1nYtUQW6d5GlQ7_OPBYLCgfYcC2OVis-l5IEPd4jEbdGKiSeYOPM9wG27mZ4Iy4FN_DK6fnwrMv9qa_T712--IZ-3QzDbiaEP01iA"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-title-md text-on-surface truncate">Ultra-Fast Wireless Dock</h3>
+<div class="flex items-center justify-between mt-1">
+<span class="text-primary font-bold text-body-lg">$45.00</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="inventory_2">inventory_2</span>
+<span class="text-body-sm text-on-surface-variant">105 units</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low group product-card">
+<div class="swipe-container relative bg-surface-container-low p-md flex items-center gap-md border-b border-outline-variant/30">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Professional camera lens detail focusing on the glass elements. Dramatic side lighting against a pitch black background. Touches of vibrant violet light catch the lens coating, creating a sophisticated and expensive product look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL7_D2Un9wvURLokGNGnTvk2AuzkcV1gWkzAkh8r5qFJ0qURjC8ZkMaFMoXpa_POiL_aQNDd_x0Q34pntyXwp70UR_-GyZrlJruamRMZiThQe2eSkIlw7c6tY2Nwcwyej8VYXD2ufx7JdNet1FxBtXqkcC_W5Nnb7Q0KOhj5Z-KSlwYEkqXYoy8_8FqgTr3aVv_vtQOE57z1vTGf9oNZJ5unp3Dc0RnA_4v50qVqr4G_sE8qthYPtA2Q"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-title-md text-on-surface truncate">Macro Lens Pro 50mm</h3>
+<div class="flex items-center justify-between mt-1">
+<span class="text-primary font-bold text-body-lg">$1,200.00</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="inventory_2">inventory_2</span>
+<span class="text-body-sm text-on-surface-variant">5 units</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-20 right-6 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform hover:bg-primary">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe border-t border-outline-variant bg-surface-container-low shadow-lg lg:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="point_of_sale">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-md text-label-md">Sales</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for product list
+        document.querySelectorAll('.product-card').forEach(card => {
+            let startX;
+            const container = card.querySelector('.swipe-container');
+
+            card.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+            });
+
+            card.addEventListener('touchmove', e => {
+                const currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+                if (diff > 20 && diff < 100) {
+                    container.style.transform = `translateX(-${diff}px)`;
+                }
+            });
+
+            card.addEventListener('touchend', e => {
+                const currentX = e.changedTouches[0].clientX;
+                const diff = startX - currentX;
+                if (diff > 50) {
+                    container.style.transform = 'translateX(-80px)';
+                } else {
+                    container.style.transform = 'translateX(0)';
+                }
+            });
+            
+            // Close swipe when clicking elsewhere
+            document.body.addEventListener('touchstart', e => {
+                if (!card.contains(e.target)) {
+                    container.style.transform = 'translateX(0)';
+                }
+            });
+        });
+    </script>
+</body></html>

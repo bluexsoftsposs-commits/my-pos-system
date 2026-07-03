@@ -3,6 +3,7 @@ backend/node_modules/
 backend/.env
 backend/dist/
 backend/build/
+backend/backups/
 
 
 # Flutter/Dart

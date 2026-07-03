@@ -10,9 +10,14 @@ import {
   createAdmin,
   toggleAdminStatus,
   extendSubscription,
+  updateShop,
+  triggerBackup,
 } from '../controllers/superadmin';
 
 const router = Router();
+
+// Cron-triggered backup (authenticated via CRON_SECRET query param, no JWT needed)
+router.get('/backup', triggerBackup);
 
 router.use(authenticate);
 router.use(requireSuperAdmin);
@@ -20,6 +25,7 @@ router.use(requireSuperAdmin);
 router.get('/stats', getDashboardStats);
 router.get('/shops', listShops);
 router.get('/users', listUsers);
+router.put('/shops/:id', updateShop);
 router.put('/shops/:id/toggle', toggleShopStatus);
 router.put('/shops/:id/extend', extendSubscription);
 router.delete('/users/:id', deleteUser);

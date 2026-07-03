@@ -4,6 +4,7 @@ import '../providers/cart_provider.dart';
 import '../providers/sale_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/ledger_provider.dart';
 import '../models/product.dart';
 import '../models/sale.dart';
 import '../views/shared/summary_row.dart';
@@ -41,6 +42,28 @@ class _CartScreenState extends State<CartScreen> {
     final cart = context.read<CartProvider>();
     final saleProv = context.read<SaleProvider>();
     final payload = cart.toCheckoutPayload();
+
+    if (cart.paymentMethod == 'CREDIT') {
+      if (cart.creditCustomerName.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Customer name required for credit sale'), backgroundColor: AppTheme.error),
+        );
+        return;
+      }
+      final ledgerProv = context.read<LedgerProvider>();
+      final customer = await ledgerProv.findOrCreateCustomer(
+        cart.creditCustomerName,
+        phone: cart.creditCustomerPhone,
+      );
+      if (customer == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to create customer'), backgroundColor: AppTheme.error),
+        );
+        return;
+      }
+      cart.setCustomerId(customer.id);
+      payload['customerId'] = customer.id;
+    }
     final sale = await saleProv.createSale(payload);
     if (!mounted) return;
     if (sale != null) {
@@ -288,7 +311,7 @@ class _CartScreenState extends State<CartScreen> {
                 const SizedBox(height: 4),
                 Wrap(
                   spacing: 8,
-                  children: ['CASH', 'CARD', 'MOBILE'].map((method) {
+                  children: ['CASH', 'CARD', 'MOBILE', 'CREDIT'].map((method) {
                     final selected = cart.paymentMethod == method;
                     return ChoiceChip(
                       label: Text(method),
@@ -299,6 +322,25 @@ class _CartScreenState extends State<CartScreen> {
                     );
                   }).toList(),
                 ),
+                if (cart.paymentMethod == 'CREDIT') ...[
+                  const SizedBox(height: 12),
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Customer Name',
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                    onChanged: cart.setCreditCustomerName,
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Phone (optional)',
+                      prefixIcon: Icon(Icons.phone),
+                    ),
+                    keyboardType: TextInputType.phone,
+                    onChanged: cart.setCreditCustomerPhone,
+                  ),
+                ],
                 const SizedBox(height: 12),
                 TextField(
                   decoration: const InputDecoration(

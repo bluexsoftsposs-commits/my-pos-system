@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Products | BluexSofts POS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#131313",
+                    "surface-container": "#201f1f",
+                    "secondary-fixed-dim": "#4bddb7",
+                    "tertiary-fixed": "#ffdea7",
+                    "outline-variant": "#474554",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#313030",
+                    "surface-tint": "#c6bfff",
+                    "on-primary": "#2900a0",
+                    "on-primary-fixed": "#160066",
+                    "on-secondary": "#00382b",
+                    "tertiary-fixed-dim": "#f0bf63",
+                    "surface-variant": "#353534",
+                    "on-tertiary-container": "#fff6ee",
+                    "tertiary": "#f0bf63",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#004233",
+                    "on-primary-fixed-variant": "#4029ba",
+                    "primary": "#c6bfff",
+                    "secondary-fixed": "#6dfad2",
+                    "primary-fixed": "#e4dfff",
+                    "surface-dim": "#131313",
+                    "on-background": "#e5e2e1",
+                    "secondary-container": "#02b894",
+                    "on-tertiary-fixed": "#271900",
+                    "on-tertiary-fixed-variant": "#5e4200",
+                    "on-tertiary": "#412d00",
+                    "inverse-primary": "#5847d2",
+                    "on-primary-container": "#faf6ff",
+                    "on-surface-variant": "#c8c4d7",
+                    "secondary": "#4bddb7",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-highest": "#353534",
+                    "outline": "#928ea0",
+                    "surface": "#131313",
+                    "primary-fixed-dim": "#c6bfff",
+                    "on-secondary-fixed-variant": "#005140",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-container-low": "#1c1b1b",
+                    "tertiary-container": "#926b15",
+                    "on-error": "#690005",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-secondary-fixed": "#002018",
+                    "surface-bright": "#393939",
+                    "primary-container": "#6c5ce7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "16px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "margin-desktop": "40px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "margin-mobile": "16px",
+                    "xl": "32px",
+                    "base": "8px",
+                    "gutter": "20px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "title-md": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "body-sm": ["Be Vietnam Pro"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #131313; }
+        ::-webkit-scrollbar-thumb { background: #474554; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #928ea0; }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .glass-card { backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg overflow-x-hidden">
+<!-- SideNavBar (Desktop Only) -->
+<aside class="fixed left-0 top-0 h-full border-r border-outline-variant w-[280px] h-full hidden lg:flex flex-col bg-surface-container transition-all duration-300 z-50">
+<div class="p-lg">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">BluexSofts POS</h1>
+<p class="text-on-surface-variant font-label-md">Modern Retail Solutions</p>
+</div>
+<nav class="flex-1 px-md space-y-base mt-lg">
+<!-- Home -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-body-lg">Home</span>
+</a>
+<!-- POS -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-body-lg">POS</span>
+</a>
+<!-- Products (Active) -->
+<a class="flex items-center gap-md p-md rounded-xl text-primary font-bold border-r-4 border-primary bg-surface-variant/50 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-body-lg">Products</span>
+</a>
+<!-- Sales -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-lg">Sales</span>
+</a>
+<!-- Users -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-lg">Users</span>
+</a>
+<!-- Invoices -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-lg">Invoices</span>
+</a>
+<!-- Plans -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">subscriptions</span>
+<span class="font-body-lg">Plans</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-lg">Settings</span>
+</a>
+</nav>
+<div class="p-lg border-t border-outline-variant">
+<button class="w-full bg-primary-container text-on-primary-container font-bold py-md px-lg rounded-2xl flex items-center justify-center gap-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined">add</span>
+                New Transaction
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-[280px] min-h-screen flex flex-col pb-24 lg:pb-lg">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile lg:px-margin-desktop py-base bg-background/80 dark:bg-background/80 backdrop-blur-md transition-all duration-200">
+<div class="flex items-center gap-md flex-1">
+<h1 class="lg:hidden font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">BluexSofts POS</h1>
+<div class="hidden md:flex items-center bg-surface-container-high rounded-full px-lg py-sm w-full max-w-md gap-md border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface w-full font-body-sm" placeholder="Search products, SKUs, categories..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hover:bg-surface-container-high rounded-full p-2 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</div>
+<div class="hover:bg-surface-container-high rounded-full p-2 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">storefront</span>
+</div>
+<div class="flex items-center gap-sm ml-md bg-surface-container-low px-sm py-xs rounded-full border border-outline-variant/20 cursor-pointer">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a retail manager with a friendly expression, set against a blurred office background with warm lighting, maintaining the premium BluexSofts POS visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL29weZvvUmzx5YEChKyHzMaYjzSdBlNPHm8dt_tGmcaU6eOulguLGzep93DSSdzxDwfo321a_o5arINrEbg2Hr-DgABSSgFh3ndb4HpXrnaB7JfuCAsOmcM3URVzjwQuP6GcsluiPNCWkx1YnndM0IaZgf2MNpJl17Kg85FPDbynchy30xBfZXJrjUk3lACxjKVX3xz14SegIYc9HQVvIWuTsIpKUEIYnMKwOeL8FOqww09Kx9nWTbQ"/>
+<span class="hidden md:inline font-title-md text-on-surface">Profile</span>
+</div>
+</div>
+</header>
+<!-- Product Actions & Filters -->
+<section class="px-margin-mobile lg:px-margin-desktop py-lg space-y-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-lg">
+<div class="space-y-xs">
+<h2 class="font-headline-lg text-on-surface">Product Inventory</h2>
+<p class="text-on-surface-variant font-body-sm">Manage and monitor your retail stock efficiently.</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex bg-surface-container rounded-xl p-xs border border-outline-variant">
+<button class="p-sm bg-primary-container text-on-primary-container rounded-lg flex items-center">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:bg-surface-variant rounded-lg flex items-center">
+<span class="material-symbols-outlined">list</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary font-bold px-lg py-md rounded-xl flex items-center gap-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add_circle</span>
+                        Add Product
+                    </button>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-sm">
+<button class="px-lg py-sm rounded-full bg-primary text-on-primary font-label-md">All Products</button>
+<button class="px-lg py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-variant transition-colors">Electronics</button>
+<button class="px-lg py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-variant transition-colors">Apparel</button>
+<button class="px-lg py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-variant transition-colors">Home & Living</button>
+<button class="px-lg py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-variant transition-colors">Groceries</button>
+<button class="px-lg py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-variant transition-colors">Accessories</button>
+<div class="h-6 w-px bg-outline-variant mx-xs"></div>
+<button class="flex items-center gap-xs px-lg py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    More Filters
+                </button>
+</div>
+<!-- Product Grid -->
+<div class="product-grid mt-lg">
+<!-- Product Card 1 -->
+<div class="bg-surface-container-low rounded-2xl p-md flex flex-col gap-md glass-card group transition-all duration-300 hover:scale-[1.02]">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A high-end smartphone with a sleek, minimalist design, shown in a professional studio setup with soft neon accents of purple and blue, reflecting the modern BluexSofts POS dark theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIyUgZZ4P3aS71u4lm0dQ3LKpqRmLuHwCo9oejrqy_BRNA0MczreBbto_pI4FwoPZw4dNiOAPj3gGqmP7hVIUcEvHF-byQhTqPFcLfB-DxNB2iqLxWMqS_Jm_lhqo5b8GOGWnWCLepKDxXit8v6-ZlhbWsYiLLaYi13BVabAigi2j_q_IWzaGgYGBjGZoOuPt8gijgbDhRtz6233gklplI9Z7r1o9zN1EIqekArXi8nQtH2trgUFosng"/>
+<span class="absolute top-sm right-sm bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-md">In Stock</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-outline font-label-md uppercase tracking-wider">SKU: PHN-552-BLK</p>
+<h3 class="font-title-md text-on-surface truncate">Hyperion X1 Pro</h3>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-primary font-bold text-headline-lg-mobile">$999.00</span>
+<span class="text-on-surface-variant font-body-sm">Qty: 24</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-sm mt-auto flex items-center justify-between">
+<span class="text-tertiary font-label-md">Electronics</span>
+<button class="text-primary hover:underline font-label-md flex items-center gap-xs">
+                            Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Product Card 2 (Out of Stock) -->
+<div class="bg-surface-container-low rounded-2xl p-md flex flex-col gap-md glass-card group transition-all duration-300 hover:scale-[1.02]">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover grayscale opacity-50 transition-transform duration-500 group-hover:scale-110" data-alt="A pair of premium noise-cancelling headphones featuring a matte black finish and metallic hinges, shot against a dark background with dramatic rim lighting to emphasize its high-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBERSSKsoCQbDL23I8Xw4MeNYjjk4lYAEXeS_XR4q6simv7b2nqxcki8RsgCWoIT2KRwNKJM6XNo1JfJBiQ8sOoRC82OY6vwnNUrz0BSzgnsK6q8deQGDYEf4Z12tbznPZYP2J086kwZyJGaIWs9djbTjRhViD19hoghrxzUb1TPwNjlm4XevgfpdK7qXhrgeTZYfIu1vNy3smj8r60GYJVqHGbozB-YX5-Fh2mcBaKF3HxPgNfFhhGnQ"/>
+<span class="absolute top-sm right-sm bg-error-container text-on-error-container px-sm py-1 rounded-full font-label-md">Out of Stock</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-outline font-label-md uppercase tracking-wider">SKU: AUD-902-WH</p>
+<h3 class="font-title-md text-on-surface truncate">Aura Noise Cancelling Headphones</h3>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-primary font-bold text-headline-lg-mobile">$249.50</span>
+<span class="text-error font-bold font-body-sm">Qty: 0</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-sm mt-auto flex items-center justify-between">
+<span class="text-tertiary font-label-md">Audio</span>
+<button class="text-primary hover:underline font-label-md flex items-center gap-xs">
+                            Restock <span class="material-symbols-outlined text-[16px]">inventory</span>
+</button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-low rounded-2xl p-md flex flex-col gap-md glass-card group transition-all duration-300 hover:scale-[1.02]">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A minimalist designer wristwatch with a leather strap and a clean circular face, captured in high-detail with sharp focus and subtle shadows on a dark slate surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf4neM8g3UzW7NIBC4AK1qWOJHFR9b--cA3B7WbUCv_Z6Q9-5bCGojkhALNbKyjS26Go4itePFcbICFRqVoaDour6MNQ0-Gzik6VyKLGbEaTOwF6i29ogS85pYFuFKC_5apoT_r5bjSIAAVQx55fi3TWegDMoomgSzEmqyfZUMsI1aPzHAXjlvszSE_wSdqn6a5qS_DgiCkiHcsx2TPY1ulHo_3wLroFD7H9vREDWLFXJhCsWCbILVYw"/>
+<span class="absolute top-sm right-sm bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-md">In Stock</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-outline font-label-md uppercase tracking-wider">SKU: WTC-110-SL</p>
+<h3 class="font-title-md text-on-surface truncate">Chronos Minimalist Watch</h3>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-primary font-bold text-headline-lg-mobile">$120.00</span>
+<span class="text-on-surface-variant font-body-sm">Qty: 12</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-sm mt-auto flex items-center justify-between">
+<span class="text-tertiary font-label-md">Accessories</span>
+<button class="text-primary hover:underline font-label-md flex items-center gap-xs">
+                            Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface-container-low rounded-2xl p-md flex flex-col gap-md glass-card group transition-all duration-300 hover:scale-[1.02]">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A stylish organic cotton hoodie in a neutral grey tone, presented in a clean, flat-lay photography style with architectural lighting that creates depth and texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwzIOEzNIp18qp4DxUDQ6MIq1anlJ2JtTejgaG32kjFvp2FTRZ_qQrUGXQyaMDwN2yvlNBMaPwKNNJnzYl9f2eRs-wpGnroXnofOzWG-B0FwjwnmvEbK99evcNfp4lksSn_Vp0sqdMPA_Cx0cZTdaEsAzIxYIB-15GKozsTJauVXlRQ1sqy_uQcBYduzMyAAeaolkbWDDRwZMHg12OXXXjzSWXgINlgtXcHyJgSpwX18PmM2ZYhnKCHw"/>
+<span class="absolute top-sm right-sm bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-md">In Stock</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-outline font-label-md uppercase tracking-wider">SKU: CLO-443-GRY</p>
+<h3 class="font-title-md text-on-surface truncate">Essential Eco Hoodie</h3>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-primary font-bold text-headline-lg-mobile">$65.00</span>
+<span class="text-on-surface-variant font-body-sm">Qty: 50+</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-sm mt-auto flex items-center justify-between">
+<span class="text-tertiary font-label-md">Apparel</span>
+<button class="text-primary hover:underline font-label-md flex items-center gap-xs">
+                            Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="bg-surface-container-low rounded-2xl p-md flex flex-col gap-md glass-card group transition-all duration-300 hover:scale-[1.02]">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A contemporary mechanical keyboard with customizable RGB lighting glow, showing deep purple and indigo hues that match the POS brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEV9UDoHuRVAsNVXGX6QKLx03CxS9nTuiz9cg_oZ0WGaTEFQXmcrZtOXj_jGgT3e1sMYYj62p2LXtVhGL5j4qqgHuvid6rUz9AY-thzon-Y8kC6UhFyjumBx5k65ditBOjB-KTVVyv9eUWyEi2o-ZAB-uPn-CwEmgOVhZFDOUXDqrL-1nU7htSpqdCzXprcwdh3DknoT_xItpNciE3qdhZIG0kpU_pVEZhDHLaw0DYK6uEu9G-3xuy7Q"/>
+<span class="absolute top-sm right-sm bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-md">In Stock</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-outline font-label-md uppercase tracking-wider">SKU: KB-882-RGB</p>
+<h3 class="font-title-md text-on-surface truncate">Vortex Mechanical Keyboard</h3>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-primary font-bold text-headline-lg-mobile">$159.99</span>
+<span class="text-on-surface-variant font-body-sm">Qty: 8</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-sm mt-auto flex items-center justify-between">
+<span class="text-tertiary font-label-md">Electronics</span>
+<button class="text-primary hover:underline font-label-md flex items-center gap-xs">
+                            Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="bg-surface-container-low rounded-2xl p-md flex flex-col gap-md glass-card group transition-all duration-300 hover:scale-[1.02]">
+<div class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A professional-grade matte black thermos with a sleek, aerodynamic shape, displayed in a minimalist kitchen setting with modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBshNDZ2k8QgIpTXH_WQWCEardEE0Sd5rNP5KxKdjlxuoHisJL0lN5JfESeSbfP4kCvEZx8jwKQMfm6YyMCCB0cfRv95XG2aDwoN-JEWNTAhEdFeEpmJn8pTfv8ScHIkFEpOSit8Cyjh-35c3TQEGjmo1Vwbs8aIbWPws5A-Nw7agcLrhP1Bc5hKYESNOEY6aNVHhYb513pzzIRickFYnzEpIAxP3sE_Y8TO4OyuNN013Vo2QZJnVfw2g"/>
+<span class="absolute top-sm right-sm bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-md">In Stock</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-outline font-label-md uppercase tracking-wider">SKU: KIT-104-BLK</p>
+<h3 class="font-title-md text-on-surface truncate">Stealth Insulated Flask</h3>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-primary font-bold text-headline-lg-mobile">$45.00</span>
+<span class="text-on-surface-variant font-body-sm">Qty: 32</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-sm mt-auto flex items-center justify-between">
+<span class="text-tertiary font-label-md">Home & Living</span>
+<button class="text-primary hover:underline font-label-md flex items-center gap-xs">
+                            Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe border-t border-outline-variant bg-surface-container-low lg:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md">POS</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md">Products</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<!-- FAB for New Product (Mobile Focus) -->
+<button class="lg:hidden fixed bottom-24 right-6 bg-primary text-on-primary w-14 h-14 rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined">add</span>
+</button>
+<script>
+        // Micro-interaction for filter chips
+        const filterChips = document.querySelectorAll('button.rounded-full');
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                filterChips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-on-primary');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                chip.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                chip.classList.add('bg-primary', 'text-on-primary');
+            });
+        });
+
+        // Search highlight effect
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput.closest('div');
+        searchInput.addEventListener('focus', () => {
+            searchContainer.classList.add('border-primary');
+            searchContainer.classList.remove('border-outline-variant/30');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchContainer.classList.remove('border-primary');
+            searchContainer.classList.add('border-outline-variant/30');
+        });
+    </script>
+</body></html>

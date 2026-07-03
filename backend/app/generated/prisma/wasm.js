@@ -125,10 +125,21 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.ShopScalarFieldEnum = {
   id: 'id',
   shopName: 'shopName',
+  category: 'category',
   subscriptionPlan: 'subscriptionPlan',
   subscriptionStatus: 'subscriptionStatus',
   subscriptionEndsAt: 'subscriptionEndsAt',
   isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BranchScalarFieldEnum = {
+  id: 'id',
+  shopId: 'shopId',
+  name: 'name',
+  address: 'address',
+  phone: 'phone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -189,6 +200,7 @@ exports.Prisma.SaleScalarFieldEnum = {
   id: 'id',
   shopId: 'shopId',
   userId: 'userId',
+  customerId: 'customerId',
   total: 'total',
   subtotal: 'subtotal',
   tax: 'tax',
@@ -223,6 +235,29 @@ exports.Prisma.SaleItemScalarFieldEnum = {
   subtotal: 'subtotal'
 };
 
+exports.Prisma.CustomerScalarFieldEnum = {
+  id: 'id',
+  shopId: 'shopId',
+  name: 'name',
+  phone: 'phone',
+  totalOwed: 'totalOwed',
+  totalPaid: 'totalPaid',
+  lastPaymentAt: 'lastPaymentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LedgerEntryScalarFieldEnum = {
+  id: 'id',
+  shopId: 'shopId',
+  customerId: 'customerId',
+  type: 'type',
+  amount: 'amount',
+  saleId: 'saleId',
+  note: 'note',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -241,13 +276,16 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Shop: 'Shop',
+  Branch: 'Branch',
   Payment: 'Payment',
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
   Product: 'Product',
   Sale: 'Sale',
   Invoice: 'Invoice',
-  SaleItem: 'SaleItem'
+  SaleItem: 'SaleItem',
+  Customer: 'Customer',
+  LedgerEntry: 'LedgerEntry'
 };
 
 /**

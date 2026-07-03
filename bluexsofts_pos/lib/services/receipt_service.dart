@@ -6,9 +6,12 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../models/sale.dart';
+import '../core/currency_formatter.dart';
 
 class ReceiptService {
-  static Future<Uint8List> generateReceipt(Sale sale, {String? shopName}) async {
+  static const _defaultCustomer = 'Walking Customer';
+
+  static Future<Uint8List> generateReceipt(Sale sale, {String? shopName, String? customerName}) async {
     final pdf = pw.Document();
 
     final fontData = await _loadFont();
@@ -60,6 +63,14 @@ class ReceiptService {
                   pw.Text(sale.paymentMethod, style: pw.TextStyle(font: font, fontSize: 10)),
                 ],
               ),
+              if (customerName != null && customerName != _defaultCustomer)
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('Customer', style: pw.TextStyle(font: font, fontSize: 10, color: PdfColors.grey)),
+                    pw.Text(customerName, style: pw.TextStyle(font: font, fontSize: 10)),
+                  ],
+                ),
               if (sale.notes.isNotEmpty)
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -96,10 +107,10 @@ class ReceiptService {
                     pw.SizedBox(width: 8),
                     pw.Text('${item.quantity}', style: pw.TextStyle(font: font, fontSize: 9)),
                     pw.SizedBox(width: 8),
-                    pw.Text('\$${item.price.toStringAsFixed(2)}', style: pw.TextStyle(font: font, fontSize: 9)),
+                    pw.Text(CurrencyFormatter.formatWithDecimals(item.price), style: pw.TextStyle(font: font, fontSize: 9)),
                     pw.SizedBox(width: 8),
                     pw.Text(
-                      '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                      CurrencyFormatter.formatWithDecimals(item.price * item.quantity),
                       style: pw.TextStyle(font: font, fontSize: 9, fontWeight: pw.FontWeight.bold),
                     ),
                   ],
@@ -107,17 +118,17 @@ class ReceiptService {
               )),
               pw.Divider(),
               pw.SizedBox(height: 4),
-              _buildTotalRow(font, 'Subtotal', '\$${sale.subtotal.toStringAsFixed(2)}'),
+              _buildTotalRow(font, 'Subtotal', CurrencyFormatter.formatWithDecimals(sale.subtotal)),
               if (sale.tax > 0)
-                _buildTotalRow(font, 'Tax', '\$${sale.tax.toStringAsFixed(2)}'),
+                _buildTotalRow(font, 'Tax', CurrencyFormatter.formatWithDecimals(sale.tax)),
               if (sale.discount > 0)
-                _buildTotalRow(font, 'Discount', '-\$${sale.discount.toStringAsFixed(2)}'),
+                _buildTotalRow(font, 'Discount', '-${CurrencyFormatter.formatWithDecimals(sale.discount)}'),
               pw.SizedBox(height: 4),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Text('TOTAL', style: pw.TextStyle(font: font, fontSize: 14, fontWeight: pw.FontWeight.bold)),
-                  pw.Text('\$${sale.total.toStringAsFixed(2)}', style: pw.TextStyle(font: font, fontSize: 14, fontWeight: pw.FontWeight.bold)),
+                  pw.Text(CurrencyFormatter.formatWithDecimals(sale.total), style: pw.TextStyle(font: font, fontSize: 14, fontWeight: pw.FontWeight.bold)),
                 ],
               ),
               pw.SizedBox(height: 16),
@@ -154,9 +165,9 @@ class ReceiptService {
     }
   }
 
-  static Future<void> printReceipt(Sale sale, {String? shopName}) async {
+  static Future<void> printReceipt(Sale sale, {String? shopName, String? customerName}) async {
     try {
-      final pdfData = await generateReceipt(sale, shopName: shopName);
+      final pdfData = await generateReceipt(sale, shopName: shopName, customerName: customerName);
       await Printing.layoutPdf(
         onLayout: (_) => pdfData,
         name: 'receipt_${sale.id.substring(0, 8)}',
@@ -166,9 +177,9 @@ class ReceiptService {
     }
   }
 
-  static Future<void> shareReceipt(Sale sale, {String? shopName}) async {
+  static Future<void> shareReceipt(Sale sale, {String? shopName, String? customerName}) async {
     try {
-      final pdfData = await generateReceipt(sale, shopName: shopName);
+      final pdfData = await generateReceipt(sale, shopName: shopName, customerName: customerName);
       await Printing.sharePdf(
         bytes: pdfData,
         filename: 'receipt_${sale.id.substring(0, 8)}.pdf',

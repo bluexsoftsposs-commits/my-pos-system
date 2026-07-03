@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BluexSofts POS - Merchant Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Tokens -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "background": "#131313",
+                "surface-container": "#201f1f",
+                "secondary-fixed-dim": "#4bddb7",
+                "tertiary-fixed": "#ffdea7",
+                "outline-variant": "#474554",
+                "error-container": "#93000a",
+                "inverse-on-surface": "#313030",
+                "surface-tint": "#c6bfff",
+                "on-primary": "#2900a0",
+                "on-primary-fixed": "#160066",
+                "on-secondary": "#00382b",
+                "tertiary-fixed-dim": "#f0bf63",
+                "surface-variant": "#353534",
+                "on-tertiary-container": "#fff6ee",
+                "tertiary": "#f0bf63",
+                "error": "#ffb4ab",
+                "on-secondary-container": "#004233",
+                "on-primary-fixed-variant": "#4029ba",
+                "primary": "#c6bfff",
+                "secondary-fixed": "#6dfad2",
+                "primary-fixed": "#e4dfff",
+                "surface-dim": "#131313",
+                "on-background": "#e5e2e1",
+                "secondary-container": "#02b894",
+                "on-tertiary-fixed": "#271900",
+                "on-tertiary-fixed-variant": "#5e4200",
+                "on-tertiary": "#412d00",
+                "inverse-primary": "#5847d2",
+                "on-primary-container": "#faf6ff",
+                "on-surface-variant": "#c8c4d7",
+                "secondary": "#4bddb7",
+                "on-error-container": "#ffdad6",
+                "surface-container-highest": "#353534",
+                "outline": "#928ea0",
+                "surface": "#131313",
+                "primary-fixed-dim": "#c6bfff",
+                "on-secondary-fixed-variant": "#005140",
+                "inverse-surface": "#e5e2e1",
+                "surface-container-high": "#2a2a2a",
+                "surface-container-low": "#1c1b1b",
+                "tertiary-container": "#926b15",
+                "on-error": "#690005",
+                "on-surface": "#e5e2e1",
+                "surface-container-lowest": "#0e0e0e",
+                "on-secondary-fixed": "#002018",
+                "surface-bright": "#393939",
+                "primary-container": "#6c5ce7"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "12px",
+                "margin-desktop": "40px",
+                "md": "16px",
+                "xs": "4px",
+                "margin-mobile": "16px",
+                "xl": "32px",
+                "base": "8px",
+                "gutter": "20px",
+                "lg": "24px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "title-md": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "body-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(32, 31, 31, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .active-glow {
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24">
+<!-- Background Shader Layer -->
+<div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+
+</div>
+<!-- TopNavBar (Simplified Mobile) -->
+<nav class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile py-base bg-background/80 backdrop-blur-md">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">BluexSofts POS</h1>
+<div class="flex items-center gap-xs">
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant ml-2">
+<img class="w-full h-full object-cover" data-alt="A professional high-contrast portrait of a diverse retail store manager in a minimalist dark studio setting. The lighting is dramatic and moody, featuring sharp rim lights in deep violet and indigo. The aesthetic is ultra-modern and corporate, matching a high-end retail software brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVuGglXt8gR1CgrA9sZl8C_eKnma1NWd0cz8KCUvjIYJJY5ag8w7R780aHLUEVWPw_k6_4NQChc2PPyLa0IBfpXImxXd7-3kaEDdbqx0XBaOXnZ9odpeFCdmbV0PYoJkviBsQzfhgC7AuO2HxNJQIOPqOd5YbSAKMINQzJD5cEFghjMtTCWAdgCYsSIGUa6ORv6tTmsRAeT7RpUhB0RKmO4cKDmvlIkMvhSzVSTN3hLrvbg80sSwecjA"/>
+</div>
+</div>
+</nav>
+<main class="px-margin-mobile pt-lg">
+<!-- Welcome Greeting -->
+<header class="mb-lg">
+<p class="font-body-sm text-on-surface-variant">Good morning, Store #024</p>
+<h2 class="font-title-md text-title-md text-on-surface">Dashboard Overview</h2>
+</header>
+<!-- Stat Cards 2x2 Grid -->
+<section class="grid grid-cols-2 gap-md mb-xl">
+<!-- Sales -->
+<div class="glass-card p-md rounded-xl">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-primary text-sm">payments</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Total Sales</span>
+</div>
+<p class="font-title-md text-title-md text-on-surface">$12,480</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-secondary text-xs">trending_up</span>
+<span class="text-[10px] text-secondary font-bold">+12.5%</span>
+</div>
+</div>
+<!-- Orders -->
+<div class="glass-card p-md rounded-xl">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-primary text-sm">inventory_2</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Orders</span>
+</div>
+<p class="font-title-md text-title-md text-on-surface">342</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-secondary text-xs">trending_up</span>
+<span class="text-[10px] text-secondary font-bold">+5.2%</span>
+</div>
+</div>
+<!-- Customers -->
+<div class="glass-card p-md rounded-xl">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-primary text-sm">group</span>
+<span class="font-label-md text-label-md text-on-surface-variant">New Users</span>
+</div>
+<p class="font-title-md text-title-md text-on-surface">89</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-error text-xs">trending_down</span>
+<span class="text-[10px] text-error font-bold">-2.1%</span>
+</div>
+</div>
+<!-- Avg Value -->
+<div class="glass-card p-md rounded-xl">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-primary text-sm">point_of_sale</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Avg. Ticket</span>
+</div>
+<p class="font-title-md text-title-md text-on-surface">$36.50</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-secondary text-xs">trending_up</span>
+<span class="text-[10px] text-secondary font-bold">+8.4%</span>
+</div>
+</div>
+</section>
+<!-- Main Analytics Chart Area -->
+<section class="glass-card p-md rounded-xl mb-xl">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Weekly Revenue</h3>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_horiz</span>
+</div>
+<!-- Simplified Mobile Line Chart (Animated SVG) -->
+<div class="w-full h-48 flex items-end justify-between px-2 overflow-hidden relative">
+
+</div>
+<div class="flex justify-between mt-sm text-[10px] font-label-md text-on-surface-variant">
+<span>MON</span>
+<span>TUE</span>
+<span>WED</span>
+<span>THU</span>
+<span>FRI</span>
+<span>SAT</span>
+<span>SUN</span>
+</div>
+</section>
+<!-- Recent Transactions Vertical List -->
+<section class="mb-lg">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Recent Sales</h3>
+<button class="text-primary font-label-md text-label-md uppercase tracking-wider">View All</button>
+</div>
+<div class="space-y-sm">
+<!-- Transaction Item 1 -->
+<div class="glass-card p-sm rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male customer in a futuristic retail environment. He has short hair and is wearing a dark, textured tech-wear jacket. The background has soft bokeh with warm orange and deep indigo lights, creating a high-end luxury feel. The photography is clean, sharp, and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqdmv7Q4sJXXFaddW2neCJ9QdAL2o2HaWbwmFNswPQxqHDNSLoynGiAV9CfYTJFaGmIY_P9YYxOy4Gz_uFVI0jgq4pWvfinhx8pFZgc1cgcDtkfxgMJ_bhLs0sas21SdJuKpIOPHWZeYUwM9sQUpZUaoGLIRmmeqnWmFXPaM76-3kEMYs6ZX4xbMv9OduzTOB93ispPDqVBg08b1zCtYrnCSfqrmCjotb-_PuMl9qqgKY7Q4DdSPX7hg"/>
+</div>
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Alex Thompson</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2 mins ago • Card</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-lg text-body-lg font-bold text-on-surface">$124.00</p>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary border border-secondary/30">Completed</span>
+</div>
+</div>
+<!-- Transaction Item 2 -->
+<div class="glass-card p-sm rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a female professional with elegant lighting, set against a dark, minimalist background. The color palette consists of deep violets and cool teals. She is looking at the camera with a confident expression. The image is rendered in high resolution with a focus on clean skin textures and cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHP2eeV9g6i8ojhS9q7HuIymg3Fs7PqJTrb-Zhz6woaOhkCJP5XbJZHmi0tlC8NIrs915D7UJNfZkeQ8STlVZU2kYluHVNNuJDFhXdnpn2HA6TjsyTrtNo6exxLn0UuJRoPI75mQk-OQMin6i_mcV3Bn96Pli_ZImsoMG7XDApFYhgA3SdBeNJTZPlZ5XP236v9AEC-QI80yhfZnmq7LkyOFBJ9hj65KlOVIFochQ9C7jXRVweYnhuEw"/>
+</div>
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Sarah Jenkins</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">15 mins ago • Cash</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-lg text-body-lg font-bold text-on-surface">$42.50</p>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary border border-secondary/30">Completed</span>
+</div>
+</div>
+<!-- Transaction Item 3 -->
+<div class="glass-card p-sm rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A side profile of a customer wearing modern lifestyle apparel. The lighting is dramatic, highlighting the contours of the face with a blue and violet glow. The background is a soft-focus retail space with glowing digital displays. High-quality commercial photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPsnC8Fn2OabiKHvAnkPjLrK28sLLVW65MHiRHQWQv0I3S-9u_NDUML5qkjjxciYrszFIU3jqjFfaOrd_l1eQDZa-3oNo0lrST8tAYfgkihT9dn79VoixR8TsExuNTalw13x0kmSj_igS6nTAJffbFsDnoAksalpDu5fkISBuNX-x0oiEcGw5-VXWoRo_dtiHVBmExuglIg7MyojBmMbOh6kTjGNGRQLxRUGHCrKLVC8INebVbDY8ksg"/>
+</div>
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Marcus Chen</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">45 mins ago • Card</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-lg text-body-lg font-bold text-on-surface">$210.15</p>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-tertiary-container/20 text-tertiary border border-tertiary/30">Pending</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed right-6 bottom-20 w-16 h-16 rounded-full bg-primary-container text-on-primary-container shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform active-glow">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe border-t border-outline-variant bg-surface-container-low/95 backdrop-blur-lg lg:hidden">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and effects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.background = 'rgba(108, 92, 231, 0.1)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.background = 'rgba(32, 31, 31, 0.6)';
+            });
+        });
+
+        // Simple observer for appearing cards
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.classList.add('transition-all', 'duration-500', 'opacity-0', 'translate-y-4');
+            observer.observe(card);
+        });
+    </script>
+</body></html>

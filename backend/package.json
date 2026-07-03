@@ -9,6 +9,8 @@
     "start": "node dist/index.js",
     "db:migrate": "npx prisma migrate dev --name init",
     "db:seed": "ts-node prisma/seed.ts",
+    "db:backup": "ts-node scripts/backup-db.ts",
+    "db:restore": "ts-node scripts/restore-db.ts",
     "db:studio": "npx prisma studio"
   },
   "dependencies": {

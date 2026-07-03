@@ -8,6 +8,7 @@ import invoiceRoutes from './routes/invoice';
 import userRoutes from './routes/user';
 import paymentRoutes from './routes/payment';
 import superAdminRoutes from './routes/superadmin';
+import ledgerRoutes from './routes/ledger';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,6 +41,7 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/superadmin', superAdminRoutes);
+app.use('/api/ledger', ledgerRoutes);
 
 // 404 handler
 app.use((_req, res) => {
@@ -52,10 +54,30 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
+import prisma from './config/db';
+
+const server = app.listen(PORT, () => {
   console.log(`\n🚀 BluexSofts POS Server running on port ${PORT}`);
   console.log(`📡 API: http://localhost:${PORT}/api`);
   console.log(`❤️  Health: http://localhost:${PORT}/health\n`);
 });
+
+// Graceful shutdown: disconnect Prisma pool on server stop
+async function shutdown(signal: string) {
+  console.log(`\n${signal} received — shutting down gracefully...`);
+  server.close(async () => {
+    await prisma.$disconnect();
+    console.log('Prisma disconnected. Goodbye.');
+    process.exit(0);
+  });
+  // Force exit after 10s if graceful shutdown hangs
+  setTimeout(() => {
+    console.error('Forced exit after timeout.');
+    process.exit(1);
+  }, 10000);
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
 
 export default app;

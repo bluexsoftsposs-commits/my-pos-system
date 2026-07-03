@@ -35,6 +35,10 @@ export const getSales = async (req: Request, res: Response): Promise<void> => {
 export const getSalesSummary = async (req: Request, res: Response): Promise<void> => {
   try {
     const shopId = req.shopId as string;
+    if (!shopId) {
+      res.status(400).json({ error: 'Missing shopId' });
+      return;
+    }
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const sevenDaysAgo = new Date();
@@ -58,14 +62,15 @@ export const getSalesSummary = async (req: Request, res: Response): Promise<void
         take: 5,
       }),
       prisma.$queryRawUnsafe<Array<{ date: string; total: number }>>(
-        `SELECT DATE("createdAt") as date, SUM(total) as total FROM "Sale" WHERE "shopId" = $1 AND "status" = 'COMPLETED' AND "createdAt" >= $2 GROUP BY DATE("createdAt") ORDER BY date ASC`,
-        shopId, sevenDaysAgo
+        `SELECT DATE("createdAt") as date, SUM(total) as total FROM "Sale" WHERE "shopId" = $1 AND "status" = 'COMPLETED' AND "createdAt" >= $2::timestamp GROUP BY DATE("createdAt") ORDER BY date ASC`,
+        shopId, sevenDaysAgo.toISOString()
       ),
     ]);
     const dailyMap: Record<string, number> = {};
     if (dailySales) {
       for (const row of dailySales) {
-        const d = new Date(row.date).toISOString().split('T')[0];
+        const raw = row.date;
+        const d = typeof raw === 'string' ? raw.split('T')[0] : new Date(raw as Date).toISOString().split('T')[0];
         dailyMap[d] = Number(row.total);
       }
     }
@@ -75,6 +80,10 @@ export const getSalesSummary = async (req: Request, res: Response): Promise<void
       dailySales: dailyMap,
     });
   } catch (error) {
+    console.error('=== getSalesSummary ERROR ===');
+    console.error('Message:', (error as any)?.message);
+    console.error('Stack:', (error as any)?.stack);
+    console.error('Full error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -105,7 +114,7 @@ async function generateInvoiceNumber(): Promise<string> {
 // POST /api/sales
 export const createSale = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { items, paymentMethod, notes, tax, discount } = req.body;
+    const { items, paymentMethod, notes, tax, discount, customerId } = req.body;
     const shopId = req.shopId as string;
     const userId = (req as any).user?.userId;
 
@@ -145,6 +154,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
         data: {
           shopId,
           userId,
+          customerId: customerId || null,
           subtotal,
           tax: taxAmount,
           discount: discountAmount,
@@ -183,6 +193,26 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
           paymentMethod: paymentMethod || 'CASH',
         },
       });
+
+      // If credit sale, create ledger entry and update customer
+      if (customerId) {
+        await tx.ledgerEntry.create({
+          data: {
+            shopId,
+            customerId,
+            type: 'DEBIT',
+            amount: total,
+            saleId: sale.id,
+            note: notes || '',
+          },
+        });
+        await tx.customer.update({
+          where: { id: customerId },
+          data: {
+            totalOwed: { increment: total },
+          },
+        });
+      }
 
       return sale.id;
     }, { timeout: 60000, maxWait: 60000 });

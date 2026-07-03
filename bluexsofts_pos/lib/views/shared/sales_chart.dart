@@ -9,147 +9,128 @@ class SalesChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (dailySales.isEmpty) {
-      return Container(
-        decoration: BoxDecoration(
-          color: AppTheme.darkCard,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4)),
-          ],
-        ),
-        child: const Padding(
-          padding: EdgeInsets.all(24),
-          child: Center(
-            child: Text(
-              'No sales data for chart',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
+      return const SizedBox(
+        height: 180,
+        child: Center(
+          child: Text('No sales data for chart', style: TextStyle(color: Colors.grey)),
         ),
       );
     }
 
     final entries = dailySales.entries.toList();
     final maxVal = dailySales.values.reduce((a, b) => a > b ? a : b);
+    final minVal = dailySales.values.reduce((a, b) => a < b ? a : b);
+    final range = maxVal - minVal;
+    final adjustedMax = maxVal + range * 0.2;
+    final adjustedMin = ((minVal - range * 0.1).clamp(0, double.infinity)).toDouble();
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.darkCard,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4)),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 4,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.accentGradient,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'Sales Trend (7 days)',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+    final spots = List.generate(entries.length, (i) {
+      return FlSpot(i.toDouble(), entries[i].value);
+    });
+
+    return ClipRect(
+      child: LineChart(
+        LineChartData(
+          minY: adjustedMin,
+          maxY: adjustedMax,
+          clipData: const FlClipData.all(),
+          lineTouchData: LineTouchData(
+            enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (_) => AppTheme.darkSurface,
+              getTooltipItems: (touchedSpots) {
+                return touchedSpots.map((spot) {
+                  final idx = spot.spotIndex;
+                  return LineTooltipItem(
+                    '${entries[idx].key}\nRs ${spot.y.toStringAsFixed(2)}',
+                    const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                  );
+                }).toList();
+              },
             ),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 180,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: maxVal * 1.2,
-                  barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => AppTheme.darkSurface,
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        return BarTooltipItem(
-                          '${entries[groupIndex].key}\n\$${rod.toY.toStringAsFixed(2)}',
-                          const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final idx = value.toInt();
-                          if (idx >= 0 && idx < entries.length) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                entries[idx].key.substring(5), // show MM-DD
-                                style: const TextStyle(fontSize: 10, color: Colors.grey),
-                              ),
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                        reservedSize: 24,
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 28,
+                interval: entries.length > 8 ? (entries.length / 4).ceilToDouble() : 1,
+                getTitlesWidget: (value, meta) {
+                  final idx = value.toInt();
+                  if (idx >= 0 && idx < entries.length) {
+                    final key = entries[idx].key;
+                    final label = key.length == 10 ? key.substring(5) : key;
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        label,
+                        style: const TextStyle(fontSize: 10, color: Colors.grey),
                       ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 44,
-                        getTitlesWidget: (value, meta) {
-                          return Text(
-                            '\$${value.toInt()}',
-                            style: const TextStyle(fontSize: 9, color: Colors.grey),
-                          );
-                        },
-                      ),
-                    ),
-                    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval: maxVal > 0 ? maxVal / 4 : 1,
-                    getDrawingHorizontalLine: (value) => FlLine(
-                      color: Colors.white.withOpacity(0.05),
-                      strokeWidth: 1,
-                    ),
-                  ),
-                  barGroups: List.generate(entries.length, (i) {
-                    return BarChartGroupData(
-                      x: i,
-                      barRods: [
-                        BarChartRodData(
-                          toY: entries[i].value,
-                          gradient: AppTheme.accentGradient,
-                          width: 18,
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
-                        ),
-                      ],
                     );
-                  }).toList(),
+                  }
+                  return const SizedBox();
+                },
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 40,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    'Rs ${value.toInt()}',
+                    style: const TextStyle(fontSize: 9, color: Colors.grey),
+                  );
+                },
+              ),
+            ),
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          ),
+          borderData: FlBorderData(show: false),
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            horizontalInterval: range > 0 ? range / 4 : adjustedMax / 4,
+            getDrawingHorizontalLine: (value) => FlLine(
+              color: Colors.white.withValues(alpha: 0.05),
+              strokeWidth: 1,
+            ),
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: spots,
+              isCurved: true,
+              curveSmoothness: 0.3,
+              color: const Color(0xFF6C5CE7),
+              barWidth: 3,
+              isStrokeCapRound: true,
+              dotData: FlDotData(
+                show: spots.length <= 14,
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 3,
+                    color: const Color(0xFF6C5CE7),
+                    strokeWidth: 0,
+                  );
+                },
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF6C5CE7).withValues(alpha: 0.30),
+                    const Color(0xFF6C5CE7).withValues(alpha: 0.0),
+                  ],
                 ),
               ),
             ),
           ],
         ),
+        duration: const Duration(milliseconds: 300),
       ),
     );
   }

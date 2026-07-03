@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BluexSofts POS - Sale Terminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#131313",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed-dim": "#4bddb7",
+                        "tertiary-fixed": "#ffdea7",
+                        "outline-variant": "#474554",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#313030",
+                        "surface-tint": "#c6bfff",
+                        "on-primary": "#2900a0",
+                        "on-primary-fixed": "#160066",
+                        "on-secondary": "#00382b",
+                        "tertiary-fixed-dim": "#f0bf63",
+                        "surface-variant": "#353534",
+                        "on-tertiary-container": "#fff6ee",
+                        "tertiary": "#f0bf63",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#004233",
+                        "on-primary-fixed-variant": "#4029ba",
+                        "primary": "#c6bfff",
+                        "secondary-fixed": "#6dfad2",
+                        "primary-fixed": "#e4dfff",
+                        "surface-dim": "#131313",
+                        "on-background": "#e5e2e1",
+                        "secondary-container": "#02b894",
+                        "on-tertiary-fixed": "#271900",
+                        "on-tertiary-fixed-variant": "#5e4200",
+                        "on-tertiary": "#412d00",
+                        "inverse-primary": "#5847d2",
+                        "on-primary-container": "#faf6ff",
+                        "on-surface-variant": "#c8c4d7",
+                        "secondary": "#4bddb7",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353534",
+                        "outline": "#928ea0",
+                        "surface": "#131313",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-secondary-fixed-variant": "#005140",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#926b15",
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-fixed": "#002018",
+                        "surface-bright": "#393939",
+                        "primary-container": "#6c5ce7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "margin-desktop": "40px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "8px",
+                        "gutter": "20px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "title-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #131313; color: #e5e2e1; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #474554; border-radius: 10px; }
+        .product-card:hover .product-img { transform: scale(1.05); }
+        .glass-effect { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="overflow-hidden h-screen select-none">
+<!-- SideNavBar (Desktop Anchor) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface-container border-r border-outline-variant hidden lg:flex flex-col z-50">
+<div class="p-lg">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">BluexSofts POS</h1>
+<p class="text-on-surface-variant font-label-md text-label-md mt-1">Modern Retail Solutions</p>
+</div>
+<nav class="flex-1 px-md mt-md space-y-base overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-body-lg text-body-lg">Home</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-variant transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-body-lg text-body-lg">POS</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-lg text-body-lg">Products</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-lg text-body-lg">Sales</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-lg text-body-lg">Users</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-lg text-body-lg">Invoices</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">subscriptions</span>
+<span class="font-body-lg text-body-lg">Plans</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+</nav>
+<div class="p-lg border-t border-outline-variant">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">
+                    M
+                </div>
+<div>
+<p class="font-title-md text-title-md text-on-surface truncate">Merchant Profile</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Store #402</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-[280px] h-screen flex flex-col relative">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile lg:px-margin-desktop py-base bg-background/80 backdrop-blur-md">
+<div class="flex items-center gap-xl w-full max-w-2xl">
+<div class="lg:hidden font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">BluexSofts</div>
+<div class="relative flex-1 hidden md:block">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-full py-3 pl-12 pr-4 text-body-lg focus:ring-2 focus:ring-primary text-on-surface transition-all" placeholder="Search products, SKUs, or categories..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-title-md flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+<span class="hidden sm:inline">New Transaction</span>
+</button>
+<div class="flex items-center gap-xs">
+<button class="hover:bg-surface-container-high rounded-full p-2 text-on-surface-variant transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:bg-surface-container-high rounded-full p-2 text-on-surface-variant transition-all">
+<span class="material-symbols-outlined">storefront</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant mx-2 hidden sm:block"></div>
+<div class="hidden sm:flex items-center gap-md hover:bg-surface-container-high rounded-full pr-4 pl-1 py-1 transition-all cursor-pointer">
+<img class="w-8 h-8 rounded-full border border-primary" data-alt="A professional headshot of a retail manager wearing a dark uniform, soft studio lighting with a neutral gray background, modern professional aesthetic, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByc_whGJ5-CS163P9kOoTDXNh0PUWHScUDkiiRfESKUguFzAaAd5PTaFHKjJW39q96FaGm_Cl5QoA8xrE8X7GO2sO6qG9cQgUv6aM1wq17e87y2TRxJp2akeFBV4m4ZWaZaprjG7qRwVIMUr7ChWUNKi1eL8BuzlJsMfHyPq2_Gm9N3mm5qr5N-BlErLzZ18Reir32mkwInA5SYspxJWyPCYEPzA2WcSDsJc9ATOXDkoV3SNgXojYlSw"/>
+<span class="font-title-md text-title-md text-on-surface">Profile</span>
+</div>
+</div>
+</header>
+<!-- POS Canvas -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Product Grid Section -->
+<section class="flex-1 flex flex-col p-lg lg:p-margin-desktop overflow-hidden">
+<!-- Filters -->
+<div class="flex items-center gap-sm mb-lg overflow-x-auto pb-2 no-scrollbar">
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary font-bold whitespace-nowrap active:scale-95 transition-transform">All Items</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant whitespace-nowrap active:scale-95 transition-transform">Snacks</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant whitespace-nowrap active:scale-95 transition-transform">Drinks</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant whitespace-nowrap active:scale-95 transition-transform">Bakery</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant whitespace-nowrap active:scale-95 transition-transform">Electronics</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant whitespace-nowrap active:scale-95 transition-transform">Fresh Produce</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant whitespace-nowrap active:scale-95 transition-transform">Dairy</button>
+</div>
+<!-- Grid -->
+<div class="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-md content-start">
+<!-- Product Card 1 -->
+<div class="product-card group bg-surface-container p-sm rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer flex flex-col gap-sm">
+<div class="relative aspect-square overflow-hidden rounded-lg bg-surface-container-high">
+<img class="product-img w-full h-full object-cover transition-transform duration-500" data-alt="Close-up macro photography of a premium glazed artisan croissant on a dark slate background, warm ambient lighting, high contrast, commercial food photography style, deep shadows and golden highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUzZz-caoW6LaxUVwG_InC8mKqPgB9J4jDdlMkdNpmbPK-T5bNQV4FLLCLhkqD-SKQXJJwNqRK25lt9Oq8Tvc_FwdhlnTlkcnqmhGoTTT5oPK2oHTlOlGcqZfBWuGgzigtZEHjYryn5qZB7iijqN63sEdCxkGduxEhEVHpskFqMN7GNUR9nuEODi1S_Xti_YuRKUkCzqUWrTIa8Mic6z87RpAmahJoojLdEmC8lci7XaKo2jXb6OtSBg"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-background/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary tracking-widest uppercase">12 in stock</div>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface truncate">Artisan Croissant</h3>
+<div class="flex justify-between items-end mt-1">
+<span class="font-display-lg text-primary text-[20px]">$4.50</span>
+<span class="text-on-surface-variant text-label-md">Pastry</span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="product-card group bg-surface-container p-sm rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer flex flex-col gap-sm">
+<div class="relative aspect-square overflow-hidden rounded-lg bg-surface-container-high">
+<img class="product-img w-full h-full object-cover transition-transform duration-500" data-alt="A sleek, minimalist glass bottle of artisanal cold brew coffee on a dark wooden surface. Soft teal lighting accents the condensation on the glass. Moody, high-end commercial product photography with deep rich tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3oqLBhUPEXca7gt6E3fL9PXa2hWuNgUEFowe6P_wYKuV8sakVI13BxSbUTGR70KEqjmzA_IDfe-e0FlnXXgXQv9pIv9p1xsI7QwWljlCBuKPNZjswoDkHoPLJigrP28wZfZwGtzxDKaWxu2e55tt13iq391fZF4p8H6-Rh-1HrNNHFHD6HLNwcDRAfJJ5fU4bOaM4L-3O_Czk4UCG9BGM8uJyFU8TPlBtS6o2880toQ-iG5cKQkZH1A"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-background/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary tracking-widest uppercase">45 in stock</div>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface truncate">Cold Brew Coffee</h3>
+<div class="flex justify-between items-end mt-1">
+<span class="font-display-lg text-primary text-[20px]">$5.25</span>
+<span class="text-on-surface-variant text-label-md">Drinks</span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="product-card group bg-surface-container p-sm rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer flex flex-col gap-sm">
+<div class="relative aspect-square overflow-hidden rounded-lg bg-surface-container-high">
+<img class="product-img w-full h-full object-cover transition-transform duration-500" data-alt="A stack of dark chocolate chip sea salt cookies on a rustic black metal tray. Cinematic lighting from the side highlighting the texture and melting chocolate. Minimalist dark aesthetic, warm and inviting atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ-w7HJ1tslE9DgjDSzPue_bJ1TQcOT6vvWaIEZIS7bsTvLJaZlagvjh6TbhVAPRHkDxUBXbPthVRtowjzs0VmKFNSk2aBblE-ubwsytMAUz9G_yr8BK1k_197tF2YgN5HhrxTEW_mraBVPgeLYRPRddeZUIrXzBqki8m4PHtPrOmoxQyOn65tU9YPMTTWwjq8A7cq2zdXq2NVEMFCQ3DIlLc3l6V8HsnMtK8DdBVjN4H4avEKu8IVkQ"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-error-container text-on-error-container rounded-full text-[10px] font-bold tracking-widest uppercase">2 left</div>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface truncate">Sea Salt Cookie</h3>
+<div class="flex justify-between items-end mt-1">
+<span class="font-display-lg text-primary text-[20px]">$3.75</span>
+<span class="text-on-surface-variant text-label-md">Bakery</span>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="product-card group bg-surface-container p-sm rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer flex flex-col gap-sm">
+<div class="relative aspect-square overflow-hidden rounded-lg bg-surface-container-high">
+<img class="product-img w-full h-full object-cover transition-transform duration-500" data-alt="A minimalist bowl of fresh organic blueberries on a black ceramic surface. High contrast lighting with vibrant blue pops against a dark, moody background. Professional food styling, sharp focus, clean composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC08FYfIPlcw8YfPLsrECD0Qd_7pBOIejNVpzks2ZCeijbWLWaSWw8-BB2cBjo5SXVLQ3OLIXyeZtV_-93Yk0nRRitIwNexnjl2XMwPJoVQJyChp5_vef4Z9i3SZ6z7vXRc4PCH1-WkPPvg_MflQHIbpHaIgOnXQIHjZCrrEHOFnOzTFxPgMrsYay-mc6Pw6w7Inyp4rUxlQr04qXYpDOSpS6jDjkxg73VX16dMn7UegdzQ22Yka9c75Q"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-background/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary tracking-widest uppercase">18 in stock</div>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface truncate">Organic Berries</h3>
+<div class="flex justify-between items-end mt-1">
+<span class="font-display-lg text-primary text-[20px]">$6.00</span>
+<span class="text-on-surface-variant text-label-md">Fresh</span>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="product-card group bg-surface-container p-sm rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer flex flex-col gap-sm">
+<div class="relative aspect-square overflow-hidden rounded-lg bg-surface-container-high">
+<img class="product-img w-full h-full object-cover transition-transform duration-500" data-alt="A modern, high-tech handheld digital scanner in a minimalist retail environment. Dark gray matte finish, subtle indigo LED highlights, professional tech product photography, clean lines, futuristic retail aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNcsXZplYalEBXYRxKGMiSaFfWeaRprzbvxQd3TOyAWpHG8HJGNzTQPSDcAVNwyoojh2XWwAvjvJkkOW2iMND3_LXWMv_N5LwjcSVhdg1Hp23jELH37UuPt2PQoOsHBdsno56SlzjM0PceyZVxyLBBFl9l3rSaUdcWDMOicnr4Y1GSGKGTf6RnYpLSV0B0AwaEOap7nB-83IrL9sIPbog6snqv-Xp3YI0R5m6hach6Czup4axao_kkSQ"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-background/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary tracking-widest uppercase">8 in stock</div>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface truncate">Smart Scanner</h3>
+<div class="flex justify-between items-end mt-1">
+<span class="font-display-lg text-primary text-[20px]">$129.00</span>
+<span class="text-on-surface-variant text-label-md">Tech</span>
+</div>
+</div>
+</div>
+<!-- More products can be repeated or added here -->
+</div>
+</section>
+<!-- Current Sale Cart Panel -->
+<aside class="w-[420px] bg-surface-container-low border-l border-outline-variant flex flex-col">
+<div class="p-lg border-b border-outline-variant">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Current Sale</h2>
+<button class="text-error font-label-md hover:bg-error-container/20 px-3 py-1 rounded-full transition-all">Clear All</button>
+</div>
+<div class="flex items-center gap-2 mt-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span class="font-body-sm text-body-sm">Walking Customer</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-primary">edit</span>
+</div>
+</div>
+<!-- Line Items -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-lg space-y-lg">
+<!-- Item 1 -->
+<div class="flex items-start gap-md animate-in slide-in-from-right duration-300">
+<div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Macro photo of artisan croissant, high contrast, dark theme food photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_Qx5wANorP46HibOBHqZtQuISbu9HBXWfP4JCO656iDsh5QO930Wc7AWOisrCON1tkMXKV0fogETOgyQTBRvpMs3BSy1aUX-MzWOYPxkTAgJl6Qix4Y1ND4oauSGRrXieEj1vfBis5OR4Ny6e3CfwJaPMBapE6-7Ek4TwQAwxhVj-e_iumvyPCrPrhSPNzqGx9jUskqKj8yeJAMDaNIA5yG2eJCppgzwt0_kUGEsTR5c0ve1irQmwOw"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-title-md text-on-surface truncate">Artisan Croissant</h4>
+<span class="font-body-lg text-on-surface">$4.50</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-0.5">Unit: $4.50</p>
+<div class="flex items-center justify-between mt-sm">
+<div class="flex items-center bg-surface-container rounded-full border border-outline-variant">
+<button class="p-1 px-3 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="px-2 font-bold">1</span>
+<button class="p-1 px-3 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-start gap-md animate-in slide-in-from-right duration-300 delay-75">
+<div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Sleek glass cold brew coffee bottle, professional moody lighting, dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD8cmJjBi8Gbh5ruWAdscmfIOcYR1hF0dCQm3liHhrqJC1P84pi3DT0DQ4O-xgPzTv8rknpfBmX_jeSrzq9W18sRm2Tt8d70nZZEVe7i92kRNnc_yqBcEyzTCC67dr-_KjrvZbKwqFmwSCGZieNsUPNUbyjtTOUiMYcs1kNlUhZG9DFSPhqNRMHmisTzW5k0qavCSdHf3Iy7GTCH7QkfwDxSSU-kMBkSf1A9m8V4zeZSEH6lcF9s4puA"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-title-md text-on-surface truncate">Cold Brew Coffee</h4>
+<span class="font-body-lg text-on-surface">$10.50</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-0.5">Unit: $5.25</p>
+<div class="flex items-center justify-between mt-sm">
+<div class="flex items-center bg-surface-container rounded-full border border-outline-variant">
+<button class="p-1 px-3 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="px-2 font-bold">2</span>
+<button class="p-1 px-3 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Summary -->
+<div class="p-lg bg-surface-container space-y-md border-t border-outline-variant">
+<div class="space-y-sm">
+<div class="flex justify-between text-body-lg text-on-surface-variant">
+<span>Subtotal</span>
+<span>$15.00</span>
+</div>
+<div class="flex justify-between text-body-lg text-on-surface-variant">
+<span>Tax (8%)</span>
+<span>$1.20</span>
+</div>
+<div class="flex justify-between text-body-lg text-on-tertiary">
+<span>Discount</span>
+<span class="flex items-center gap-1 cursor-pointer hover:underline">-$0.00 <span class="material-symbols-outlined text-[14px]">edit</span></span>
+</div>
+</div>
+<div class="pt-md border-t border-outline-variant/50">
+<div class="flex justify-between items-end mb-xl">
+<span class="font-title-md text-on-surface">Total Amount</span>
+<span class="font-display-lg text-primary text-[32px]">$16.20</span>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container py-5 rounded-xl font-headline-lg text-title-md flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all hover:brightness-110">
+<span class="material-symbols-outlined">payments</span>
+                            Proceed to Payment
+                        </button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- FAB for Quick Actions (Mobile/Tablet context but useful for POS) -->
+<button class="fixed bottom-24 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center lg:hidden hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-[32px]">qr_code_scanner</span>
+</button>
+<!-- Success Modal Shadow (Hidden by default) -->
+<div class="fixed inset-0 bg-background/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" id="modal-backdrop">
+<div class="bg-surface-container max-w-md w-full mx-margin-mobile p-xl rounded-2xl shadow-2xl scale-90 transition-transform duration-300 border border-outline-variant text-center">
+<div class="w-20 h-20 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center mx-auto mb-lg">
+<span class="material-symbols-outlined text-[48px]">check_circle</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-sm">Sale Successful</h2>
+<p class="text-on-surface-variant mb-xl">Transaction #TXN-94021 has been processed. Would you like to print the receipt?</p>
+<div class="grid grid-cols-2 gap-md">
+<button class="py-3 px-6 rounded-xl border border-outline text-on-surface font-bold hover:bg-surface-variant">Cancel</button>
+<button class="py-3 px-6 rounded-xl bg-primary text-on-primary font-bold hover:brightness-110">Print Receipt</button>
+</div>
+</div>
+</div>
+<script>
+        // Simple Interaction logic
+        const paymentBtn = document.querySelector('button:contains("Proceed to Payment")');
+        // Because textContent match isn't standard in JS query selector like this:
+        document.querySelectorAll('button').forEach(btn => {
+            if(btn.textContent.includes('Proceed to Payment')) {
+                btn.onclick = () => {
+                    const backdrop = document.getElementById('modal-backdrop');
+                    backdrop.classList.remove('hidden');
+                    setTimeout(() => {
+                        backdrop.classList.remove('opacity-0');
+                        backdrop.querySelector('div').classList.remove('scale-90');
+                        backdrop.querySelector('div').classList.add('scale-100');
+                    }, 10);
+                }
+            }
+        });
+
+        document.getElementById('modal-backdrop').onclick = function(e) {
+            if(e.target === this) {
+                this.classList.add('opacity-0');
+                this.querySelector('div').classList.remove('scale-100');
+                this.querySelector('div').classList.add('scale-90');
+                setTimeout(() => this.classList.add('hidden'), 300);
+            }
+        }
+    </script>
+</body></html>

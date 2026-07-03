@@ -1,4 +1,9 @@
 import nodemailer from 'nodemailer';
+import * as fs from 'fs';
+import * as zlib from 'zlib';
+import { promisify } from 'util';
+
+const gzip = promisify(zlib.gzip);
 
 console.log('[Email] SMTP_USER:', process.env.SMTP_USER ? process.env.SMTP_USER.substring(0, 5) + '...' : 'NOT SET');
 console.log('[Email] SMTP_PASS:', process.env.SMTP_PASS ? '*** set (' + process.env.SMTP_PASS.length + ' chars) ***' : 'NOT SET');
@@ -79,5 +84,78 @@ export async function sendPasswordResetEmail(email: string, token: string): Prom
     console.error('[Email] Failed to send password reset:', error.message);
     console.error('[Email] Full error:', error);
     throw error;
+  }
+}
+
+export async function sendBackupEmail(filepath: string, filename: string): Promise<void> {
+  const recipient = process.env.BACKUP_EMAIL_TO || process.env.SMTP_USER || '';
+  if (!recipient) {
+    console.error('[BackupEmail] No recipient configured (BACKUP_EMAIL_TO or SMTP_USER)');
+    return;
+  }
+
+  let rawBuffer: Buffer;
+  try {
+    rawBuffer = fs.readFileSync(filepath);
+  } catch {
+    console.error(`[BackupEmail] File not found: ${filepath}`);
+    return;
+  }
+
+  const rawSizeMb = (rawBuffer.length / 1024 / 1024).toFixed(2);
+  const compressed = await gzip(rawBuffer);
+  const compressedSizeMb = (compressed.length / 1024 / 1024).toFixed(2);
+  const ratio = rawBuffer.length > 0 ? ((1 - compressed.length / rawBuffer.length) * 100).toFixed(0) : '0';
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const gzFilename = filename.replace(/\.sql$/, '') + '.sql.gz';
+
+  if (compressed.length < 20 * 1024 * 1024) {
+    console.log(`[BackupEmail] Sending compressed backup (${rawSizeMb} MB → ${compressedSizeMb} MB, ${ratio}% reduction) to ${recipient}...`);
+    try {
+      const info = await transporter.sendMail({
+        from: `"BluexSofts POS" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        to: recipient,
+        subject: `BluexSofts POS - Daily Backup - ${dateStr} - Success`,
+        text: [
+          `Database backup completed successfully.`,
+          ``,
+          `File: ${gzFilename}`,
+          `Raw size: ${rawSizeMb} MB`,
+          `Compressed size: ${compressedSizeMb} MB (${ratio}% reduction)`,
+          `Date: ${dateStr}`,
+          ``,
+          `Uncompress locally with: gunzip ${gzFilename}`,
+          `Then restore with: npm run db:restore ${filename}`,
+        ].join('\n'),
+        attachments: [{ filename: gzFilename, content: compressed }],
+      });
+      console.log(`[BackupEmail] Sent successfully: ${info.messageId}`);
+    } catch (error: any) {
+      console.error('[BackupEmail] Failed to send:', error.message);
+    }
+  } else {
+    console.log(`[BackupEmail] Compressed backup still too large (${compressedSizeMb} MB) — sending warning.`);
+    try {
+      const info = await transporter.sendMail({
+        from: `"BluexSofts POS" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        to: recipient,
+        subject: `BluexSofts POS - Daily Backup - ${dateStr} - Oversized`,
+        text: [
+          `WARNING: Backup completed but compressed file (${compressedSizeMb} MB) still exceeds 20MB email limit.`,
+          ``,
+          `Raw file: ${filename} (${rawSizeMb} MB)`,
+          `Compressed: ${gzFilename} (${compressedSizeMb} MB, ${ratio}% reduction)`,
+          `Date: ${dateStr}`,
+          ``,
+          `The backup file was saved locally on Render's disk but could not be emailed.`,
+          `Manually retrieve it before the next deploy wipes it.`,
+          ``,
+          `To download: use Render Shell or SFTP to fetch: backups/${filename}`,
+        ].join('\n'),
+      });
+      console.log(`[BackupEmail] Warning sent: ${info.messageId}`);
+    } catch (error: any) {
+      console.error('[BackupEmail] Failed to send warning:', error.message);
+    }
   }
 }

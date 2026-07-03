@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>BluexSofts POS - Staff Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .swipe-container {
+            overflow-x: hidden;
+            position: relative;
+        }
+        .swipe-content {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toggle-checkbox:checked + .toggle-slot {
+            background-color: #6c5ce7;
+        }
+        .toggle-checkbox:checked + .toggle-slot > .toggle-dot {
+            transform: translateX(1.25rem);
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            scrollbar-width: none;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#131313",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed-dim": "#4bddb7",
+                        "tertiary-fixed": "#ffdea7",
+                        "outline-variant": "#474554",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#313030",
+                        "surface-tint": "#c6bfff",
+                        "on-primary": "#2900a0",
+                        "on-primary-fixed": "#160066",
+                        "on-secondary": "#00382b",
+                        "tertiary-fixed-dim": "#f0bf63",
+                        "surface-variant": "#353534",
+                        "on-tertiary-container": "#fff6ee",
+                        "tertiary": "#f0bf63",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#004233",
+                        "on-primary-fixed-variant": "#4029ba",
+                        "primary": "#c6bfff",
+                        "secondary-fixed": "#6dfad2",
+                        "primary-fixed": "#e4dfff",
+                        "surface-dim": "#131313",
+                        "on-background": "#e5e2e1",
+                        "secondary-container": "#02b894",
+                        "on-tertiary-fixed": "#271900",
+                        "on-tertiary-fixed-variant": "#5e4200",
+                        "on-tertiary": "#412d00",
+                        "inverse-primary": "#5847d2",
+                        "on-primary-container": "#faf6ff",
+                        "on-surface-variant": "#c8c4d7",
+                        "secondary": "#4bddb7",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353534",
+                        "outline": "#928ea0",
+                        "surface": "#131313",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-secondary-fixed-variant": "#005140",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#926b15",
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-fixed": "#002018",
+                        "surface-bright": "#393939",
+                        "primary-container": "#6c5ce7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "margin-desktop": "40px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "8px",
+                        "gutter": "20px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "title-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-lg overflow-x-hidden min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile py-base bg-background/80 backdrop-blur-md">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Users</h1>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all duration-200">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a retail business manager in a dark-themed high-tech office. The lighting is moody with subtle indigo highlights reflecting the brand's primary color. The person has a friendly but authoritative expression, styled with modern minimalism consistent with high-end POS software interfaces." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV9xw2eda6W5zbmQjPg41KbKX04cKfm3cwAokJJznBnwhFo6r8rmItte0aZU5aTbxtC8-H4790U96nx4ZJd1Nm_XqSF5hH0r6RnvFnxTkmOfVbS6m5ophsUlWYORmklZ22O_oA_FcycVBX6VgA-wrAXOtZsrjfGuJSoXS57aAS7ANq00_xtYgdvzgyzx61DOXkZohgAI0YY5ZDaS5W9p9lP5PNj08k0SEJaP66eOuo9cYkhvXQnpNV5w"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<main class="px-margin-mobile mt-4 space-y-4">
+<!-- Summary Section -->
+<div class="flex items-end justify-between mb-6">
+<div>
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider mb-1">Active Staff</p>
+<p class="font-headline-lg text-headline-lg text-on-surface">12 <span class="text-on-surface-variant font-title-md">/ 14</span></p>
+</div>
+<div class="flex -space-x-3">
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small circular avatar of a young cashier smiling warmly, shot in a high-key lighting environment with soft purple ambient glows. Modern digital photography style, sharp focus on the face with a clean dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2zE2vUYtZ-xlpo5aunFSMpCb5aWEuKffFkgkotQU3pR6GzPvT8TKKQOCyZ7ion9vhsg6niTYg9e4hdzHByL6gYvuBZWaVC-fVKvYH6nrooOrBINNWZ7EiGHcueSid6D_eSgXq90WVvvqB0OYWpHDvTmfxS-GfwLb43z_ggAD5EB2AadG4SFhOpWE1MLhWA9rvlfFFqJqEcOJ6o7DIyo5LwcI8trxyECPW-lEtZX5Jph6717DS8mo9YQ"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small circular avatar of an experienced store manager wearing a professional dark polo shirt. Studio lighting with primary indigo accents on the side. Minimalist and corporate retail aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ2wKx0oe1IF1O-FlnWfM3-A4B0UOS_HPjevoMP2_HKIEJRsE3nBsVNoUfNlg5BWhFL9xmTN446pLK6QIPikyMDjNEap8FymRIFnWepPBfmC2JZvWorRWXuqcKOtGvrRjZpXKzKbruGnEdDbcLGyopj020ql5EPugK5VDskjaJ8D0BnDBDW7_C1yS4Sa6RPIqaCowTPtnITrKyb0Cguz-lw8fHo1BnUzY2elBoHF-vCzXXfq0YadVEOQ"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-variant flex items-center justify-center bg-primary-container">
+<span class="text-[10px] font-bold text-on-primary-container">+10</span>
+</div>
+</div>
+</div>
+<!-- Staff List -->
+<div class="space-y-3">
+<!-- User Card 1 (Admin) -->
+<div class="swipe-container group relative rounded-xl overflow-hidden bg-surface-container-low">
+<!-- Action Buttons (Hidden behind swipe) -->
+<div class="absolute inset-0 flex justify-end">
+<button class="bg-primary flex items-center justify-center w-20 h-full text-on-primary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="bg-error-container flex items-center justify-center w-20 h-full text-on-error-container">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- Card Content -->
+<div class="swipe-content relative flex items-center justify-between p-md bg-surface-container hover:bg-surface-container-high transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A vibrant, professional portrait of a tech-savvy female administrator in a modern retail setting. The image uses a dark color palette with sophisticated purple and teal rim lighting. Her expression is confident and helpful, perfectly suited for a high-end staff management interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUE75iIbTUsvTNx_OdmxbF42HysDmSyonrlAiZ4O64iy8O_EHpEh5spP6zef5Z6KLpS4koIfpYHYHsFe6S_EwIfEMGtrrXOKW1MP1s83BeWehi8Zf0_f0bDoRnnspPdaKV24P-MTcD38KHYMtbE_Uay2h6arkqZFdPpdz133T9xc73XwuXDdR-yWZwEYvZd4Z0dQDFn413vj_9VVG2AcUDH454AwxXHmmhrwUWEMiLn3cqHqclgPUBdw"/>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface">Alex Rivera</h3>
+<div class="flex items-center gap-2">
+<span class="bg-primary-container/20 text-primary px-2 py-0.5 rounded text-[10px] font-bold uppercase">Admin</span>
+<span class="text-on-surface-variant text-body-sm">ID: #BS-001</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-slot w-11 h-6 bg-surface-variant rounded-full p-1 transition-colors">
+<div class="toggle-dot w-4 h-4 bg-white rounded-full transition-transform"></div>
+</div>
+</label>
+<span class="text-secondary text-label-md">Online</span>
+</div>
+</div>
+</div>
+<!-- User Card 2 (Cashier) -->
+<div class="swipe-container group relative rounded-xl overflow-hidden bg-surface-container-low">
+<div class="absolute inset-0 flex justify-end">
+<button class="bg-primary flex items-center justify-center w-20 h-full text-on-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="bg-error-container flex items-center justify-center w-20 h-full text-on-error-container"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="swipe-content relative flex items-center justify-between p-md bg-surface-container hover:bg-surface-container-high transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A focused portrait of a male cashier in his mid-20s, looking professional and ready for service. The aesthetic is clean and modern, featuring deep contrast and soft neon accents typical of premium dark-mode retail applications. High-resolution digital photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM1MSGjLSd3-Vr4dAO8QxidKq8J5XSBPn2ldLekm6RD8lJug3WY2BLZCQPBa4sYm5XRNng2th-d8ngIdyawT2IkI6UZIMJ4vkpz5QFDB_wZvKuKN5yfmJRpK8b59OyPt3gohEIVRj-mUMl7o3sWy-hxdgAl3flJDSYXpsmrNXNx4a-FldwjwzI3l-prPbk-WcRP8i9TLZow5j1oOypC5AaJk_Ddv5vf2XQzkRDiuvH4vENKAYAb8UL8A"/>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface">Jordan Smith</h3>
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase">Cashier</span>
+<span class="text-on-surface-variant text-body-sm">ID: #BS-104</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-slot w-11 h-6 bg-surface-variant rounded-full p-1 transition-colors">
+<div class="toggle-dot w-4 h-4 bg-white rounded-full transition-transform"></div>
+</div>
+</label>
+<span class="text-secondary text-label-md">Online</span>
+</div>
+</div>
+</div>
+<!-- User Card 3 (Cashier - Inactive) -->
+<div class="swipe-container group relative rounded-xl overflow-hidden bg-surface-container-low">
+<div class="absolute inset-0 flex justify-end">
+<button class="bg-primary flex items-center justify-center w-20 h-full text-on-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="bg-error-container flex items-center justify-center w-20 h-full text-on-error-container"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="swipe-content relative flex items-center justify-between p-md bg-surface-container hover:bg-surface-container-high transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-4 opacity-60">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-outline-variant grayscale">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male retail worker with a neutral expression, styled for a minimalist digital employee record. The lighting is dimmed and cool-toned, suggesting an inactive or offline status. Part of a cohesive dark-themed staff management UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjFfM0L4vdc4mTFvdG52JpH0PKOs48_7IQlOBLGDauFHbf6CMYeWYhqRSwwENrQkeL2S5JdwN2EVStH5Rjz5WBedwqKPDwEI32dQa-anDq6msEV7p6prMxa1iYkv1ghJaVUWEWmHCBOcO3UPzWJdQDpMGqVsC5AnK27tH-Ex3HRwmU3ITIBC-flOW6xbWldJov1IRZJZZk0TbjUwOLDF6emiYrqJvsJYK0naNxM9CBqglxKgQ_E8XeuA"/>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface">Casey Chen</h3>
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase">Cashier</span>
+<span class="text-on-surface-variant text-body-sm">ID: #BS-109</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-slot w-11 h-6 bg-surface-variant rounded-full p-1 transition-colors">
+<div class="toggle-dot w-4 h-4 bg-white rounded-full transition-transform"></div>
+</div>
+</label>
+<span class="text-on-surface-variant text-label-md">Offline</span>
+</div>
+</div>
+</div>
+<!-- User Card 4 (Cashier) -->
+<div class="swipe-container group relative rounded-xl overflow-hidden bg-surface-container-low">
+<div class="absolute inset-0 flex justify-end">
+<button class="bg-primary flex items-center justify-center w-20 h-full text-on-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="bg-error-container flex items-center justify-center w-20 h-full text-on-error-container"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="swipe-content relative flex items-center justify-between p-md bg-surface-container hover:bg-surface-container-high transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A high-quality portrait of a smiling female employee in a modern shop environment. The lighting is warm yet crisp, highlighting vibrant colors against a sleek dark background. Designed for a touch-friendly mobile interface for managing retail teams." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGbnA4kgvE7RjcnNpCFUyCSF7Hm5YRuQC-7dbyxHh6SvJakatXK-R9onYrhY9NJsJL6IB5tGuNZ408tvmj14STMyg3fwYQWNGEPL7Uv-jenb6HIL2zN42_UI50LOMPoNnx9McxljS4KXczsReygvin3AXtEVj6uMOt1ubDHFaxq960fvGq0qaK-LrmQeenRvdPN8ikI2OhRQNvc40Iv-20SqND1G-nTs-DXakoFKPVymJ2KXyXiBIMNQ"/>
+</div>
+<div>
+<h3 class="font-title-md text-on-surface">Taylor Kim</h3>
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase">Cashier</span>
+<span class="text-on-surface-variant text-body-sm">ID: #BS-112</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-slot w-11 h-6 bg-surface-variant rounded-full p-1 transition-colors">
+<div class="toggle-dot w-4 h-4 bg-white rounded-full transition-transform"></div>
+</div>
+</label>
+<span class="text-secondary text-label-md">Online</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for Add User -->
+<button class="fixed right-margin-mobile bottom-24 w-14 h-14 rounded-full bg-primary-container text-on-primary-container shadow-lg flex items-center justify-center active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe border-t border-outline-variant bg-surface-container-low lg:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md text-label-md">POS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</div>
+</nav>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const containers = document.querySelectorAll('.swipe-container');
+            
+            containers.forEach(container => {
+                const content = container.querySelector('.swipe-content');
+                let startX = 0;
+                let currentTranslate = 0;
+                let isDragging = false;
+                const threshold = -80; // Distance to snap open actions
+
+                container.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    content.style.transition = 'none';
+                });
+
+                container.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const diff = e.touches[0].clientX - startX;
+                    // Only allow swiping left
+                    if (diff < 0) {
+                        currentTranslate = Math.max(diff, -160);
+                        content.style.transform = `translateX(${currentTranslate}px)`;
+                    } else if (diff > 0 && currentTranslate < 0) {
+                        // Allow swiping back to close
+                        currentTranslate = Math.min(0, currentTranslate + diff);
+                        content.style.transform = `translateX(${currentTranslate}px)`;
+                    }
+                });
+
+                container.addEventListener('touchend', () => {
+                    isDragging = false;
+                    content.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    
+                    if (currentTranslate < threshold) {
+                        currentTranslate = -160; // Show both buttons
+                    } else {
+                        currentTranslate = 0;
+                    }
+                    content.style.transform = `translateX(${currentTranslate}px)`;
+                });
+            });
+
+            // Toggle logic for visual state
+            const toggles = document.querySelectorAll('.toggle-checkbox');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', (e) => {
+                    const card = e.target.closest('.swipe-content');
+                    const statusText = card.querySelector('.text-label-md');
+                    const profileArea = card.querySelector('.flex.items-center.gap-4');
+                    
+                    if (e.target.checked) {
+                        statusText.innerText = 'Online';
+                        statusText.className = 'text-secondary text-label-md';
+                        profileArea.classList.remove('opacity-60');
+                        profileArea.querySelector('img').classList.remove('grayscale');
+                    } else {
+                        statusText.innerText = 'Offline';
+                        statusText.className = 'text-on-surface-variant text-label-md';
+                        profileArea.classList.add('opacity-60');
+                        profileArea.querySelector('img').classList.add('grayscale');
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

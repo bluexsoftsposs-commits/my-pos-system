@@ -8,12 +8,20 @@ class CartProvider with ChangeNotifier {
   double _discount = 0.0;
   String _paymentMethod = 'CASH';
   String _notes = '';
+  String _customerName = 'Walking Customer';
+  String? _customerId;
+  String _creditCustomerName = '';
+  String _creditCustomerPhone = '';
 
   List<CartItem> get items => List.unmodifiable(_items);
   double get taxRate => _taxRate;
   double get discount => _discount;
   String get paymentMethod => _paymentMethod;
   String get notes => _notes;
+  String get customerName => _customerName;
+  String? get customerId => _customerId;
+  String get creditCustomerName => _creditCustomerName;
+  String get creditCustomerPhone => _creditCustomerPhone;
   int get itemCount => _items.fold(0, (sum, item) => sum + item.quantity);
 
   double get subtotal =>
@@ -89,11 +97,35 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setCustomerName(String name) {
+    _customerName = name.isEmpty ? 'Walking Customer' : name;
+    notifyListeners();
+  }
+
+  void setCustomerId(String? id) {
+    _customerId = id;
+    notifyListeners();
+  }
+
+  void setCreditCustomerName(String name) {
+    _creditCustomerName = name;
+    notifyListeners();
+  }
+
+  void setCreditCustomerPhone(String phone) {
+    _creditCustomerPhone = phone;
+    notifyListeners();
+  }
+
   void clearCart() {
     _items.clear();
     _discount = 0.0;
     _notes = '';
     _paymentMethod = 'CASH';
+    _customerName = 'Walking Customer';
+    _customerId = null;
+    _creditCustomerName = '';
+    _creditCustomerPhone = '';
     notifyListeners();
   }
 
@@ -107,5 +139,7 @@ class CartProvider with ChangeNotifier {
     'tax': taxAmount,
     'discount': _discount,
     'notes': _notes,
+    'customerName': _customerName,
+    if (_customerId != null) 'customerId': _customerId,
   };
 }

@@ -6,7 +6,16 @@ import '../../core/theme.dart';
 
 class ProductForm extends StatefulWidget {
   final Product? product;
-  const ProductForm({super.key, this.product});
+  final String? initialBarcode;
+  final String? initialName;
+  final String? initialImageUrl;
+  const ProductForm({
+    super.key,
+    this.product,
+    this.initialBarcode,
+    this.initialName,
+    this.initialImageUrl,
+  });
 
   @override
   State<ProductForm> createState() => _ProductFormState();
@@ -19,7 +28,7 @@ class _ProductFormState extends State<ProductForm> {
   late final TextEditingController _priceCtrl;
   late final TextEditingController _stockCtrl;
   late final TextEditingController _skuCtrl;
-  late final TextEditingController _categoryCtrl;
+  String _selectedCategory = 'General';
   late final TextEditingController _barcodeCtrl;
 
   bool get isEditing => widget.product != null;
@@ -28,13 +37,13 @@ class _ProductFormState extends State<ProductForm> {
   void initState() {
     super.initState();
     final p = widget.product;
-    _nameCtrl = TextEditingController(text: p?.name ?? '');
+    _nameCtrl = TextEditingController(text: p?.name ?? widget.initialName ?? '');
     _descCtrl = TextEditingController(text: p?.description ?? '');
     _priceCtrl = TextEditingController(text: p?.price.toString() ?? '');
     _stockCtrl = TextEditingController(text: p?.stock.toString() ?? '0');
     _skuCtrl = TextEditingController(text: p?.sku ?? '');
-    _categoryCtrl = TextEditingController(text: p?.category ?? 'General');
-    _barcodeCtrl = TextEditingController(text: p?.barcode ?? '');
+    _selectedCategory = p?.category ?? 'General';
+    _barcodeCtrl = TextEditingController(text: p?.barcode ?? widget.initialBarcode ?? '');
   }
 
   @override
@@ -44,9 +53,37 @@ class _ProductFormState extends State<ProductForm> {
     _priceCtrl.dispose();
     _stockCtrl.dispose();
     _skuCtrl.dispose();
-    _categoryCtrl.dispose();
     _barcodeCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _showNewCategoryDialog() async {
+    final ctrl = TextEditingController();
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('New Category'),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: 'Enter category name'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(ctrl.text.trim()),
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+    if (result != null && result.isNotEmpty) {
+      setState(() => _selectedCategory = result);
+    }
+    ctrl.dispose();
   }
 
   Future<void> _submit() async {
@@ -57,7 +94,7 @@ class _ProductFormState extends State<ProductForm> {
       'price': double.parse(_priceCtrl.text.trim()),
       'stock': int.parse(_stockCtrl.text.trim()),
       'sku': _skuCtrl.text.trim(),
-      'category': _categoryCtrl.text.trim(),
+      'category': _selectedCategory,
       'barcode': _barcodeCtrl.text.trim().isNotEmpty ? _barcodeCtrl.text.trim() : null,
     };
 
@@ -130,6 +167,18 @@ class _ProductFormState extends State<ProductForm> {
                 ],
               ),
               const SizedBox(height: 16),
+              if (widget.initialImageUrl != null && !isEditing)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    widget.initialImageUrl!,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  ),
+                ),
+              if (widget.initialImageUrl != null && !isEditing) const SizedBox(height: 12),
               TextFormField(
                 controller: _nameCtrl,
                 decoration: const InputDecoration(
@@ -155,7 +204,7 @@ class _ProductFormState extends State<ProductForm> {
                       controller: _priceCtrl,
                       decoration: const InputDecoration(
                         labelText: 'Price',
-                        prefixText: '\$ ',
+                        prefixText: 'Rs ',
                         prefixIcon: Icon(Icons.attach_money),
                       ),
                       keyboardType: TextInputType.number,
@@ -190,12 +239,38 @@ class _ProductFormState extends State<ProductForm> {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: TextFormField(
-                      controller: _categoryCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'Category',
-                        prefixIcon: Icon(Icons.category),
-                      ),
+                    child: Consumer<ProductProvider>(
+                      builder: (context, prov, _) {
+                        final cats = prov.categories.where((c) => c != 'All').toList();
+                        return DropdownButtonFormField<String>(
+                          isExpanded: true,
+                          value: cats.contains(_selectedCategory) ? _selectedCategory : null,
+                          decoration: const InputDecoration(
+                            labelText: 'Category',
+                            prefixIcon: Icon(Icons.category),
+                          ),
+                          items: [
+                            ...cats.map((c) => DropdownMenuItem(value: c, child: Text(c))),
+                            const DropdownMenuItem(
+                              value: '__new__',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add, size: 16),
+                                  SizedBox(width: 6),
+                                  Text('Add New…'),
+                                ],
+                              ),
+                            ),
+                          ],
+                          onChanged: (val) {
+                            if (val == '__new__') {
+                              _showNewCategoryDialog();
+                            } else if (val != null) {
+                              setState(() => _selectedCategory = val);
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
                 ],

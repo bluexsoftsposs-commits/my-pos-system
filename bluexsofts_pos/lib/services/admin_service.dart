@@ -64,4 +64,12 @@ class AdminService {
     final response = await ApiClient.put('/superadmin/users/$userId/toggle', {});
     return ApiClient.parseResponse(response)['success'] == true;
   }
+
+  Future<bool> updateShop(String shopId, {String? shopName, String? category}) async {
+    final body = <String, dynamic>{};
+    if (shopName != null) body['shopName'] = shopName;
+    if (category != null) body['category'] = category;
+    final response = await ApiClient.put('/superadmin/shops/$shopId', body);
+    return ApiClient.parseResponse(response)['success'] == true;
+  }
 }
