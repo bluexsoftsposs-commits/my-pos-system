@@ -1,5 +1,12 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
+import cloudinary from 'cloudinary';
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Helper function to ensure single string
 const toString = (value: any): string => {
@@ -68,9 +75,32 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
+    const shopId = req.shopId as string;
+
+    // Enforce product limit from subscription plan
+    const subscription = await prisma.shopSubscription.findFirst({
+      where: { shopId, status: 'active' },
+      include: { plan: { select: { name: true, productsLimit: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (subscription) {
+      const limit = subscription.plan.productsLimit;
+      const existingCount = await prisma.product.count({
+        where: { shopId, isActive: true },
+      });
+
+      if (existingCount >= limit) {
+        res.status(403).json({
+          error: `Product limit reached. Your ${subscription.plan.name} plan allows ${limit} products. You have ${existingCount}/${limit}.`,
+        });
+        return;
+      }
+    }
+
     const product = await prisma.product.create({
       data: {
-        shopId: req.shopId as string,
+        shopId,
         name,
         description: description || '',
         price: parseFloat(price),
@@ -171,7 +201,7 @@ export const getCategories = async (req: Request, res: Response): Promise<void> 
 // GET /api/products/barcode/:barcode
 export const getProductByBarcode = async (req: Request, res: Response): Promise<void> => {
   try {
-    const barcode = req.params.barcode;
+    const barcode = toString(req.params.barcode);
     console.log('BARCODE LOOKUP - received:', JSON.stringify(barcode));
 
     if (!barcode) {
@@ -196,5 +226,37 @@ export const getProductByBarcode = async (req: Request, res: Response): Promise<
   } catch (error) {
     console.error('Get product by barcode error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// POST /api/products/upload-image
+export const uploadImage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'No image file provided' });
+      return;
+    }
+
+    const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+      res.status(500).json({ error: 'Cloudinary not configured on server' });
+      return;
+    }
+
+    const result = await new Promise<any>((resolve, reject) => {
+      const stream = cloudinary.v2.uploader.upload_stream(
+        { folder: 'bluexsofts/products', resource_type: 'image' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        },
+      );
+      stream.end(req.file!.buffer);
+    });
+
+    res.json({ imageUrl: result.secure_url });
+  } catch (error) {
+    console.error('Upload image error:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
   }
 };

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../core/theme.dart';
 import '../services/user_service.dart';
+import '../services/plan_service.dart';
+import 'plans_screen.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -20,11 +22,34 @@ class _UsersScreenState extends State<UsersScreen> {
   int _currentPage = 1;
   static const int _pageSize = 5;
   final _userService = UserService();
+  final _planService = PlanService();
+  int _usersUsed = 0;
+  int _usersLimit = 0;
+  String _planName = '';
 
   @override
   void initState() {
     super.initState();
     _loadUsers();
+    _loadPlanUsage();
+  }
+
+  Future<void> _loadPlanUsage() async {
+    try {
+      final auth = context.read<AuthProvider>();
+      final shopId = auth.shop?.id;
+      if (shopId == null) return;
+      final data = await _planService.getSubscription(shopId);
+      if (!mounted) return;
+      final usage = data?['usage'] as Map<String, dynamic>?;
+      final sub = data?['subscription'] as Map<String, dynamic>?;
+      final plan = sub?['plan'] as Map<String, dynamic>?;
+      setState(() {
+        _usersUsed = usage?['salesPointsUsed'] as int? ?? 0;
+        _usersLimit = usage?['salesPointsLimit'] as int? ?? 0;
+        _planName = plan?['name'] as String? ?? '';
+      });
+    } catch (_) {}
   }
 
   Future<void> _loadUsers() async {
@@ -35,6 +60,8 @@ class _UsersScreenState extends State<UsersScreen> {
     } catch (_) {}
     setState(() => _loading = false);
   }
+
+  bool get _isAtLimit => _usersLimit > 0 && _usersUsed >= _usersLimit;
 
   List<dynamic> get _filteredUsers => _users;
 
@@ -58,6 +85,10 @@ class _UsersScreenState extends State<UsersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(auth),
+                if (_usersLimit > 0) ...[
+                  const SizedBox(height: AppTheme.spaceMd),
+                  _buildSalesPointBanner(),
+                ],
                 const SizedBox(height: AppTheme.spaceLg),
                 _buildStatsRow(users.length, activeCount),
                 const SizedBox(height: AppTheme.spaceLg),
@@ -87,6 +118,10 @@ class _UsersScreenState extends State<UsersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(auth),
+                if (_usersLimit > 0) ...[
+                  const SizedBox(height: AppTheme.spaceMd),
+                  _buildSalesPointBanner(),
+                ],
                 const SizedBox(height: AppTheme.spaceLg),
                 _buildStatsRow(users.length, activeCount),
                 const SizedBox(height: AppTheme.spaceLg),
@@ -109,10 +144,10 @@ class _UsersScreenState extends State<UsersScreen> {
       ),
       floatingActionButton: auth.isAdmin
           ? FloatingActionButton.extended(
-              onPressed: _showCreateUserDialog,
+              onPressed: _isAtLimit ? null : _showCreateUserDialog,
               icon: const Icon(Icons.person_add),
               label: const Text('Add Staff'),
-              backgroundColor: AppTheme.accent,
+              backgroundColor: _isAtLimit ? Colors.grey : AppTheme.accent,
             )
           : null,
     );
@@ -835,6 +870,86 @@ class _UsersScreenState extends State<UsersScreen> {
               },
               child: const Text('Add User'),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSalesPointBanner() {
+    final pct = _usersLimit > 0 ? (_usersUsed / _usersLimit).clamp(0.0, 1.0) : 0.0;
+    Color barColor;
+    if (pct >= 0.9) {
+      barColor = AppTheme.error;
+    } else if (pct >= 0.7) {
+      barColor = AppTheme.warning;
+    } else {
+      barColor = AppTheme.success;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceMd),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppTheme.darkSurface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _isAtLimit
+                ? AppTheme.error.withValues(alpha: 0.3)
+                : AppTheme.darkBorder.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  _isAtLimit ? Icons.lock : Icons.people,
+                  size: 16,
+                  color: _isAtLimit ? AppTheme.error : Colors.grey[400],
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    'Sales Points ($_planName)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey[500],
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                Text(
+                  '$_usersUsed / $_usersLimit',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey[400]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: pct,
+                minHeight: 6,
+                backgroundColor: Colors.white.withValues(alpha: 0.08),
+                valueColor: AlwaysStoppedAnimation(barColor),
+              ),
+            ),
+            if (_isAtLimit) ...[
+              const SizedBox(height: 6),
+              InkWell(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PlansScreen()),
+                ),
+                child: Text(
+                  '🔒 You\'ve reached your sales point limit. Upgrade to add more.',
+                  style: TextStyle(fontSize: 11, color: AppTheme.error, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
           ],
         ),
       ),

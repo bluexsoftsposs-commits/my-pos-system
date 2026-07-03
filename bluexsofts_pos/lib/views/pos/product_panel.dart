@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/product.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/sale_provider.dart';
 import '../../core/theme.dart';
 import '../../core/currency_formatter.dart';
-import '../shared/product_card.dart';
 import '../pos/cart_panel.dart';
 import '../pos/checkout_panel.dart';
 import '../../screens/barcode_scanner_screen.dart';
@@ -53,7 +53,9 @@ class _ProductPanelState extends State<ProductPanel> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: isDesktop ? _buildDesktopLayout(productProv, cart) : _buildMobileLayout(productProv, cart),
+      body: isDesktop
+          ? _buildDesktopLayout(productProv, cart)
+          : _buildMobileLayout(productProv, cart),
       floatingActionButton: !isDesktop
           ? FloatingActionButton(
               backgroundColor: AppTheme.primary,
@@ -162,8 +164,9 @@ class _ProductPanelState extends State<ProductPanel> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            _buildChip('All Items', productProv.selectedCategory == null, () => productProv.setCategory('')),
-            ...productProv.categories.map((cat) {
+            _buildChip('All Items', productProv.selectedCategory == null || productProv.selectedCategory == 'All',
+                () => productProv.setCategory('All')),
+            ...productProv.categories.where((c) => c != 'All').map((cat) {
               final selected = productProv.selectedCategory == cat;
               return Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -180,10 +183,11 @@ class _ProductPanelState extends State<ProductPanel> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
           color: selected ? AppTheme.primary : AppTheme.darkCard,
           borderRadius: BorderRadius.circular(999),
+          border: selected ? null : Border.all(color: AppTheme.darkBorder.withOpacity(0.3)),
         ),
         child: Text(
           label,
@@ -199,6 +203,7 @@ class _ProductPanelState extends State<ProductPanel> {
   }
 
   Widget _buildProductGrid(ProductProvider productProv, CartProvider cart) {
+    final products = productProv.products;
     return LayoutBuilder(
       builder: (context, constraints) {
         final crossAxisCount = constraints.maxWidth > 1200 ? 4 : constraints.maxWidth > 800 ? 3 : 2;
@@ -207,19 +212,160 @@ class _ProductPanelState extends State<ProductPanel> {
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
-            childAspectRatio: 0.75,
+            childAspectRatio: 0.85,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           ),
-          itemCount: productProv.products.length,
+          itemCount: products.length,
           itemBuilder: (context, index) {
-            return ProductCard(
-              product: productProv.products[index],
-              cart: cart,
-            );
+            return _buildPOSProductCard(products[index], cart);
           },
         );
       },
+    );
+  }
+
+  Widget _buildPOSProductCard(Product product, CartProvider cart) {
+    final isOut = product.stock <= 0;
+    final isLow = product.stock > 0 && product.stock <= 5;
+    final stockColor = isOut ? AppTheme.error : (isLow ? AppTheme.warning : AppTheme.success);
+    final stockLabel = isOut ? 'Out of Stock' : (isLow ? 'Low Stock' : '${product.stock} in stock');
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {
+          if (!isOut) {
+            cart.addProduct(product);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text('${product.name} added to cart')),
+                  ],
+                ),
+                backgroundColor: AppTheme.success,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                margin: const EdgeInsets.all(16),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppTheme.darkSurface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppTheme.darkBorder.withOpacity(0.3)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (product.imageUrl != null && product.imageUrl!.isNotEmpty)
+                        Image.network(product.imageUrl!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _productImagePlaceholder())
+                      else
+                        _productImagePlaceholder(),
+                      Positioned(
+                        top: 6,
+                        right: 6,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: isOut ? stockColor.withOpacity(0.9) : Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 5,
+                                height: 5,
+                                decoration: BoxDecoration(
+                                  color: stockColor,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                stockLabel,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.white),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            CurrencyFormatter.format(product.price),
+                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppTheme.primary),
+                          ),
+                          Text(
+                            product.category,
+                            style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _productImagePlaceholder() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF2D1B69), Color(0xFF6C5CE7)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Icon(Icons.inventory_2, size: 32, color: Colors.white.withOpacity(0.3)),
+      ),
     );
   }
 
@@ -228,7 +374,7 @@ class _ProductPanelState extends State<ProductPanel> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
         color: AppTheme.darkSurface,
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
+        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
       ),
       child: Row(
         children: [

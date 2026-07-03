@@ -72,4 +72,51 @@ class AdminService {
     final response = await ApiClient.put('/superadmin/shops/$shopId', body);
     return ApiClient.parseResponse(response)['success'] == true;
   }
+
+  // ── Plan Management ────────────────────────────────────────────
+
+  Future<List<dynamic>?> getPlansList() async {
+    final response = await ApiClient.get('/plans');
+    final result = ApiClient.parseResponse(response);
+    return result['success'] ? result['data'] as List<dynamic> : null;
+  }
+
+  Future<Map<String, dynamic>?> createPlan(Map<String, dynamic> planData) async {
+    final response = await ApiClient.post('/superadmin/plans', planData);
+    final result = ApiClient.parseResponse(response);
+    return result['success'] ? result['data'] : null;
+  }
+
+  Future<bool> updatePlan(String planId, Map<String, dynamic> planData) async {
+    final response = await ApiClient.put('/superadmin/plans/$planId', planData);
+    return ApiClient.parseResponse(response)['success'] == true;
+  }
+
+  Future<bool> deactivatePlan(String planId) async {
+    final response = await ApiClient.delete('/superadmin/plans/$planId');
+    return ApiClient.parseResponse(response)['success'] == true;
+  }
+
+  Future<Map<String, dynamic>?> getShopsSubscriptions({int page = 1, int limit = 5, String search = ''}) async {
+    String url = '/superadmin/shops-subscriptions?page=$page&limit=$limit';
+    if (search.isNotEmpty) url += '&search=${Uri.encodeComponent(search)}';
+    final response = await ApiClient.get(url);
+    final result = ApiClient.parseResponse(response);
+    return result['success'] ? result['data'] : null;
+  }
+
+  Future<bool> changeShopSubscription(String shopId, String planId) async {
+    final response = await ApiClient.put('/superadmin/shops/$shopId/subscription', {'planId': planId});
+    return ApiClient.parseResponse(response)['success'] == true;
+  }
+
+  Future<bool> deleteShop(String shopId) async {
+    final response = await ApiClient.delete('/superadmin/shops/$shopId');
+    return ApiClient.parseResponse(response)['success'] == true;
+  }
+
+  Future<bool> deleteAdmin(String userId) async {
+    final response = await ApiClient.delete('/superadmin/admins/$userId');
+    return ApiClient.parseResponse(response)['success'] == true;
+  }
 }

@@ -1,172 +1,102 @@
-/// <reference types="node" />
 import { PrismaClient } from '../app/generated/prisma';
-import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+const plans = [
+  // ── Lite ──────────────────────────────────────────
+  { name: 'Lite', billingCycle: 'MONTHLY', price: 1999, setupFee: 20999, originalSetupFee: 29999, salesPointsLimit: 1, productsLimit: 1000, fbrConnect: false, techSupport: true, onlineStore: false, updates: true },
+  { name: 'Lite', billingCycle: 'ANNUAL', price: 19999, setupFee: 10499, originalSetupFee: 14999, salesPointsLimit: 1, productsLimit: 1000, fbrConnect: false, techSupport: true, onlineStore: false, updates: true },
+  { name: 'Lite', billingCycle: 'ONETIME', price: 29999, setupFee: 20999, originalSetupFee: 29999, salesPointsLimit: 1, productsLimit: 1000, fbrConnect: false, techSupport: true, onlineStore: false, updates: true },
+  // ── Plus ──────────────────────────────────────────
+  { name: 'Plus', billingCycle: 'MONTHLY', price: 3999, setupFee: 13999, originalSetupFee: 19999, salesPointsLimit: 1, productsLimit: 2000, fbrConnect: true, techSupport: true, onlineStore: false, updates: true },
+  { name: 'Plus', billingCycle: 'ANNUAL', price: 39999, setupFee: 6999, originalSetupFee: 9999, salesPointsLimit: 1, productsLimit: 2000, fbrConnect: true, techSupport: true, onlineStore: false, updates: true },
+  { name: 'Plus', billingCycle: 'ONETIME', price: 39999, setupFee: 13999, originalSetupFee: 19999, salesPointsLimit: 1, productsLimit: 2000, fbrConnect: true, techSupport: true, onlineStore: false, updates: true },
+  // ── Pro ───────────────────────────────────────────
+  { name: 'Pro', billingCycle: 'MONTHLY', price: 6999, setupFee: 13999, originalSetupFee: 19999, salesPointsLimit: 1, productsLimit: 3000, fbrConnect: true, techSupport: true, onlineStore: true, updates: true },
+  { name: 'Pro', billingCycle: 'ANNUAL', price: 69999, setupFee: 13999, originalSetupFee: 19999, salesPointsLimit: 1, productsLimit: 3000, fbrConnect: true, techSupport: true, onlineStore: true, updates: true },
+  { name: 'Pro', billingCycle: 'ONETIME', price: 49999, setupFee: 13999, originalSetupFee: 19999, salesPointsLimit: 1, productsLimit: 3000, fbrConnect: true, techSupport: true, onlineStore: true, updates: true },
+];
+
 async function main() {
-  console.log('🌱 Seeding database...');
-
- 
-  const shop = await prisma.shop.upsert({
-    where: { shopName: 'BluexSofts Demo Shop' },
-    update: {},
-    create: {
-      shopName: 'BluexSofts Demo Shop',
-      subscriptionPlan: 'NONE',
-      subscriptionStatus: 'NONE',
-    },
-  });
-
-  console.log('✅ Shop created:', shop.shopName);
-
- 
-  const adminHash = await bcrypt.hash('admin123', 12);
-  const admin = await prisma.user.upsert({
-    where: { shopId_email: { shopId: shop.id, email: 'admin@demo.com' } },
-    update: {},
-    create: {
-      shopId: shop.id,
-      name: 'Admin User',
-      email: 'admin@demo.com',
-      passwordHash: adminHash,
-      role: 'ADMIN',
-    },
-  });
-
-  console.log(' Admin created:', admin.email);
-
- 
-  const cashierHash = await bcrypt.hash('cashier123', 12);
-  const cashier = await prisma.user.upsert({
-    where: { shopId_email: { shopId: shop.id, email: 'cashier@demo.com' } },
-    update: {},
-    create: {
-      shopId: shop.id,
-      name: 'John Cashier',
-      email: 'cashier@demo.com',
-      passwordHash: cashierHash,
-      role: 'CASHIER',
-    },
-  });
-
-  console.log(' Cashier created:', cashier.email);
-
- 
-  const superShop = await prisma.shop.upsert({
-    where: { shopName: '__super_admin__' },
-    update: {},
-    create: {
-      shopName: '__super_admin__',
-      subscriptionPlan: 'PREMIUM',
-      subscriptionStatus: 'ACTIVE',
-    },
-  });
-
-  const superHash = await bcrypt.hash('super123', 12);
-  await prisma.user.upsert({
-    where: { shopId_email: { shopId: superShop.id, email: 'super@admin.com' } },
-    update: {},
-    create: {
-      shopId: superShop.id,
-      name: 'Super Admin',
-      email: 'super@admin.com',
-      passwordHash: superHash,
-      role: 'SUPER_ADMIN',
-    },
-  });
-
-  console.log(' Super Admin created: super@admin.com / super123');
-
-  // Create Super Admin with new credentials (superadmin@pos.com / superadmin123)
-  const superHash2 = await bcrypt.hash('superadmin123', 12);
-  await prisma.user.upsert({
-    where: { shopId_email: { shopId: superShop.id, email: 'superadmin@pos.com' } },
-    update: {},
-    create: {
-      shopId: superShop.id,
-      name: 'Super Admin',
-      email: 'superadmin@pos.com',
-      passwordHash: superHash2,
-      role: 'SUPER_ADMIN',
-    },
-  });
-
-  console.log('✅ Super Admin created: superadmin@pos.com / superadmin123');
-
-  // Create Demo Products
-  const products = [
-    {
-      name: 'Premium Basmati Rice 5kg',
-      description: 'Aged extra-long grain basmati rice, perfect for biryani and pulao.',
-      price: 1850,
-      stock: 50,
-      category: 'Groceries',
-      sku: 'GRC-001',
-    },
-    {
-      name: 'Fresh Chicken Breast 1kg',
-      description: 'Hormone-free, farm-fresh chicken breast cuts.',
-      price: 920,
-      stock: 30,
-      category: 'Meat & Poultry',
-      sku: 'MTP-001',
-    },
-    {
-      name: 'Shan Biryani Masala 60g',
-      description: 'Authentic blend of spices for delicious homemade biryani.',
-      price: 145,
-      stock: 120,
-      category: 'Spices & Condiments',
-      sku: 'SPC-001',
-    },
-    {
-      name: 'Nestle Fruita Vitals Chaunsa Mango Juice 1L',
-      description: '100% pure chaunsa mango juice with no added preservatives.',
-      price: 310,
-      stock: 80,
-      category: 'Beverages',
-      sku: 'BEV-001',
-    },
-    {
-      name: 'Dawn Bread Large White',
-      description: 'Soft and fluffy large white bread loaf, baked fresh daily.',
-      price: 180,
-      stock: 40,
-      category: 'Bakery',
-      sku: 'BAK-001',
-    },
-  ];
-
-  for (const product of products) {
-    await prisma.product.upsert({
-      where: {
-        id: `seed-${product.sku}`,
-      },
-      update: {},
-      create: {
-        id: `seed-${product.sku}`,
-        shopId: shop.id,
-        ...product,
-      },
+  console.log('Seeding plans...');
+  for (const p of plans) {
+    await prisma.plan.upsert({
+      where: { name_billingCycle: { name: p.name, billingCycle: p.billingCycle } },
+      update: p,
+      create: p,
     });
+    console.log(`  ✓ ${p.name} ${p.billingCycle} — PKR ${p.price.toLocaleString()}`);
+  }
+  console.log('Seed complete.');
+
+  console.log('\nAssigning default subscriptions to shops without one...');
+  const proMonthly = await prisma.plan.findFirst({
+    where: { name: 'Pro', billingCycle: 'MONTHLY', isActive: true },
+  });
+  if (!proMonthly) {
+    console.log('  ✗ Pro MONTHLY plan not found — skipping subscription seeding');
+    return;
   }
 
-  console.log(` ${products.length} PKR demo products seeded`);
-  console.log('\n Database seeded successfully!');
-  console.log('\n Demo Credentials:');
-  console.log('   Shop Name: BluexSofts Demo Shop (NONE plan - buy a plan first!)');
-  console.log('   Admin: admin@demo.com / admin123');
-  console.log('   Cashier: cashier@demo.com / cashier123');
-  console.log('   Super Admin: super@admin.com / super123');
-  console.log('   Super Admin (new): superadmin@pos.com / superadmin123\n');
+  // Ensure all shops have slugs
+  const allShops = await prisma.shop.findMany({
+    where: { shopName: { not: '__super_admin__' } },
+  });
+  for (const shop of allShops) {
+    if (!shop.slug) {
+      let slug = shop.shopName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+      const existing = await prisma.shop.findUnique({ where: { slug } });
+      if (existing) slug += `-${shop.id.substring(0, 6)}`;
+      await prisma.shop.update({ where: { id: shop.id }, data: { slug } });
+    }
+  }
+
+  const shops = await prisma.shop.findMany({
+    where: {
+      shopName: { not: '__super_admin__' },
+      subscriptions: { none: {} },
+    },
+  });
+
+  if (shops.length === 0) {
+    console.log('  All shops already have a subscription.');
+    return;
+  }
+
+  const endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  let count = 0;
+  for (const shop of shops) {
+    await prisma.shopSubscription.create({
+      data: {
+        shopId: shop.id,
+        planId: proMonthly.id,
+        status: 'active',
+        endDate,
+      },
+    });
+    // Keep legacy Shop fields in sync
+    await prisma.shop.update({
+      where: { id: shop.id },
+      data: {
+        subscriptionPlan: 'Pro',
+        subscriptionStatus: 'ACTIVE',
+        subscriptionEndsAt: endDate,
+      },
+    });
+    console.log(`  ✓ ${shop.shopName} → Pro MONTHLY (expires ${endDate.toISOString().split('T')[0]})`);
+    count++;
+  }
+  console.log(`Assigned ${count} shop(s).`);
 }
 
 main()
   .catch((e) => {
-    console.error('Seed error:', e);
+    console.error('Seed failed:', e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => prisma.$disconnect());

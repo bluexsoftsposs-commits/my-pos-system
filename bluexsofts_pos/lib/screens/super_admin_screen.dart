@@ -6,6 +6,7 @@ import '../core/theme.dart';
 import '../views/shared/stat_card.dart';
 import '../core/currency_formatter.dart';
 import 'login_screen.dart';
+import 'admin/plans_management_screen.dart';
 
 IconData _categoryIcon(String cat) {
   switch (cat) {
@@ -20,7 +21,7 @@ IconData _categoryIcon(String cat) {
 }
 
 const _categories = ['Grocery', 'Electronics', 'Restaurant', 'Pharmacy', 'Clothing', 'General', 'Other'];
-const _plans = ['NONE', 'BASIC', 'STANDARD', 'PREMIUM'];
+const _plans = ['NONE', 'Lite', 'Plus', 'Pro', 'BASIC', 'STANDARD', 'PREMIUM'];
 const _extendOptions = [30, 60, 90];
 
 class SuperAdminScreen extends StatefulWidget {
@@ -103,6 +104,20 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
           ],
         ),
         actions: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.darkCard,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.subscriptions, size: 20),
+              tooltip: 'Manage Plans & Subscriptions',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PlansManagementScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
           Container(
             decoration: BoxDecoration(
               color: AppTheme.darkCard,
@@ -306,7 +321,144 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
             ),
           );
         }),
+        if (_buildAdminSummary().isNotEmpty) ...[
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: AppTheme.accentGradient,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Admins Summary',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ..._buildAdminSummary(),
+        ],
       ],
+    );
+  }
+
+  List<Widget> _buildAdminSummary() {
+    final adminMap = <String, Map<String, dynamic>>{};
+    for (final s in _shops) {
+      if (s is! Map<String, dynamic>) continue;
+      final users = s['users'] as List? ?? [];
+      if (users.isEmpty) continue;
+      final admin = users.first as Map<String, dynamic>;
+      final email = admin['email'] as String? ?? '';
+      final name = admin['name'] as String? ?? 'Unknown';
+      if (email.isEmpty) continue;
+
+      if (!adminMap.containsKey(email)) {
+        adminMap[email] = {
+          'name': name,
+          'email': email,
+          'shopCount': 0,
+          'totalUsers': 0,
+          'totalSales': 0,
+          'totalRevenue': 0.0,
+          'shops': <String>[],
+        };
+      }
+      final entry = adminMap[email]!;
+      entry['shopCount'] = (entry['shopCount'] as int) + 1;
+      entry['totalUsers'] = (entry['totalUsers'] as int) + ((s['_count'] is Map ? (s['_count'] as Map)['users'] as int? ?? 0 : 0));
+      entry['totalSales'] = (entry['totalSales'] as int) + ((s['_count'] is Map ? (s['_count'] as Map)['sales'] as int? ?? 0 : 0));
+      entry['totalRevenue'] = (entry['totalRevenue'] as num) + (s['totalRevenue'] as num? ?? 0);
+      (entry['shops'] as List<String>).add(s['shopName'] as String? ?? '');
+    }
+
+    return adminMap.entries.map((e) {
+      final a = e.value;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF201F1F),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      gradient: AppTheme.accentGradient,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${a['name']}'.substring(0, 1).toUpperCase(),
+                        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${a['name']}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                        Text('${a['email']}', style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  _summaryStat('${a['shopCount']}', 'Shops'),
+                  _summaryStat('${a['totalUsers']}', 'Users'),
+                  _summaryStat('${a['totalSales']}', 'Sales'),
+                  if ((a['totalRevenue'] as num) > 0)
+                    _summaryStat(CurrencyFormatter.format(a['totalRevenue'] as num), 'Revenue'),
+                ],
+              ),
+              if ((a['shops'] as List).isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: (a['shops'] as List<String>).map((s) => Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(s, style: const TextStyle(fontSize: 11, color: Color(0xFFC6BFFF))),
+                  )).toList(),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  Widget _summaryStat(String value, String label) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+          Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF9E9E9E))),
+        ],
+      ),
     );
   }
 
@@ -410,6 +562,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                             }
                           }
                         },
+                        onDelete: () => _confirmDeleteShop(item),
                       );
                     }).toList();
 
@@ -437,18 +590,35 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
     );
   }
 
+  String _shopPlanName(Map<String, dynamic> shop) {
+    final subs = shop['subscriptions'] as List? ?? [];
+    if (subs.isNotEmpty) {
+      final sub = subs.first as Map<String, dynamic>;
+      final subPlan = sub['plan'] as Map<String, dynamic>?;
+      if (subPlan != null && subPlan['name'] != null) {
+        final bc = subPlan['billingCycle'] as String? ?? '';
+        return bc.isNotEmpty ? '${subPlan['name']} ($bc)' : '${subPlan['name']}';
+      }
+    }
+    return shop['subscriptionPlan'] as String? ?? 'No Plan';
+  }
+
   Widget _buildShopCard({
     required Map<String, dynamic> shop,
     required VoidCallback onToggle,
     required VoidCallback onExtend,
+    required VoidCallback onDelete,
   }) {
-    final plan = shop['subscriptionPlan'] as String? ?? 'No Plan';
+    final plan = _shopPlanName(shop);
     final status = shop['subscriptionStatus'] as String? ?? '';
     final shopName = shop['shopName'] as String? ?? 'Unnamed Shop';
     final category = shop['category'] as String? ?? 'General';
     final isActive = shop['isActive'] as bool? ?? true;
     final salesCount = shop['_count'] is Map ? (shop['_count'] as Map)['sales'] as int? ?? 0 : 0;
     final branchCount = shop['_count'] is Map ? (shop['_count'] as Map)['branches'] as int? ?? 0 : 0;
+    final totalRevenue = shop['totalRevenue'] as num? ?? 0;
+    final usersList = shop['users'] as List? ?? [];
+    final adminUser = usersList.isNotEmpty ? usersList.first as Map<String, dynamic> : null;
 
     Color statusColor;
     switch (status) {
@@ -521,6 +691,22 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
+                            if (adminUser != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.person, size: 12, color: const Color(0xFF6C5CE7)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Managed by ${adminUser['name'] ?? 'Unknown'}',
+                                      style: const TextStyle(fontSize: 11, color: Color(0xFF6C5CE7)),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -576,7 +762,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              isExpired ? 'LAST SETTLEMENT' : 'MONTHLY REVENUE',
+                              isExpired ? 'LAST SETTLEMENT' : 'REVENUE',
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
@@ -586,8 +772,8 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              '$salesCount',
-                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white),
+                              totalRevenue > 0 ? CurrencyFormatter.format(totalRevenue) : '--',
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: totalRevenue > 0 ? Colors.white : const Color(0xFF9E9E9E)),
                             ),
                           ],
                         ),
@@ -595,9 +781,15 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                     ),
                   ),
                   const SizedBox(height: 12),
-                  suspended ? _buildSuspendedActions(onToggle, shop)
-                      : isExpired ? _buildExpiredActions(onExtend, onToggle, shop)
-                      : _buildActiveActions(onToggle, onExtend, shop),
+                  suspended
+                      ? _buildSuspendedActions(onToggle, onDelete, shop)
+                      : isExpired
+                          ? _buildExpiredActions(onExtend, onToggle, onDelete, shop)
+                          : _buildActiveActions(onToggle, onExtend, onDelete, shop),
+                  if (usersList.length > 1) ...[
+                    const SizedBox(height: 8),
+                    _buildExpandableUsers(shop, usersList),
+                  ],
                 ],
               ),
             ),
@@ -607,7 +799,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildActiveActions(VoidCallback onToggle, VoidCallback onExtend, Map<String, dynamic> shop) {
+  Widget _buildActiveActions(VoidCallback onToggle, VoidCallback onExtend, VoidCallback onDelete, Map<String, dynamic> shop) {
     return Row(
       children: [
         Expanded(child: _actionBtn(label: 'View', icon: Icons.visibility_outlined, onTap: () => _showShopDetails(shop))),
@@ -622,11 +814,20 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
             onTap: onToggle,
           ),
         ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _actionBtn(
+            label: 'Delete',
+            icon: Icons.delete_forever,
+            color: const Color(0xFFD63031),
+            onTap: onDelete,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildSuspendedActions(VoidCallback onToggle, Map<String, dynamic> shop) {
+  Widget _buildSuspendedActions(VoidCallback onToggle, VoidCallback onDelete, Map<String, dynamic> shop) {
     return Row(
       children: [
         Expanded(child: _actionBtn(label: 'View', icon: Icons.visibility_outlined, onTap: () => _showShopDetails(shop))),
@@ -641,11 +842,20 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
             onTap: onToggle,
           ),
         ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _actionBtn(
+            label: 'Delete',
+            icon: Icons.delete_forever,
+            color: const Color(0xFFD63031),
+            onTap: onDelete,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildExpiredActions(VoidCallback onExtend, VoidCallback onToggle, Map<String, dynamic> shop) {
+  Widget _buildExpiredActions(VoidCallback onExtend, VoidCallback onToggle, VoidCallback onDelete, Map<String, dynamic> shop) {
     return Row(
       children: [
         Expanded(child: _actionBtn(label: 'View', icon: Icons.visibility_outlined, onTap: () => _showShopDetails(shop))),
@@ -667,7 +877,85 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
             onTap: onToggle,
           ),
         ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _actionBtn(
+            label: 'Delete',
+            icon: Icons.delete_forever,
+            color: const Color(0xFFD63031),
+            onTap: onDelete,
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildExpandableUsers(Map<String, dynamic> shop, List<dynamic> usersList) {
+    final usersCount = shop['_count'] is Map ? (shop['_count'] as Map)['users'] as int? ?? 0 : 0;
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A2E).withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF6C5CE7).withOpacity(0.15)),
+      ),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        childrenPadding: EdgeInsets.zero,
+        leading: Icon(Icons.people, size: 18, color: const Color(0xFF6C5CE7)),
+        title: Text(
+          '$usersCount User${usersCount == 1 ? '' : 's'}',
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.white),
+        ),
+        children: usersList.map<Widget>((u) {
+          if (u is! Map<String, dynamic>) return const SizedBox.shrink();
+          final uname = u['name'] as String? ?? 'Unknown';
+          final uemail = u['email'] as String? ?? '';
+          final urole = u['role'] as String? ?? '';
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  width: 28, height: 28,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6C5CE7).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Center(
+                    child: Text(
+                      uname.substring(0, 1).toUpperCase(),
+                      style: const TextStyle(color: Color(0xFF6C5CE7), fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(uname, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white)),
+                      Text(uemail, style: const TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: urole == 'ADMIN'
+                        ? const Color(0xFF6C5CE7).withOpacity(0.15)
+                        : const Color(0xFF00B894).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    urole,
+                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: urole == 'ADMIN' ? const Color(0xFF6C5CE7) : const Color(0xFF00B894)),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -704,13 +992,19 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
 
   void _showShopDetails(Map<String, dynamic> shop) {
     final shopName = shop['shopName'] as String? ?? 'Shop';
-    final plan = shop['subscriptionPlan'] as String? ?? 'NONE';
+    final subs = shop['subscriptions'] as List? ?? [];
+    final activeSub = subs.isNotEmpty ? subs.first as Map<String, dynamic> : null;
+    final subPlan = activeSub?['plan'] as Map<String, dynamic>?;
+    final planName = subPlan?['name'] as String? ?? shop['subscriptionPlan'] as String? ?? 'NONE';
+    final billingCycle = subPlan?['billingCycle'] as String? ?? '';
+    final planLabel = billingCycle.isNotEmpty ? '$planName ($billingCycle)' : planName;
     final status = shop['subscriptionStatus'] as String? ?? 'NONE';
     final category = shop['category'] as String? ?? 'General';
     final isActive = shop['isActive'] as bool? ?? true;
     final usersCount = shop['_count'] is Map ? (shop['_count'] as Map)['users'] as int? ?? 0 : 0;
     final salesCount = shop['_count'] is Map ? (shop['_count'] as Map)['sales'] as int? ?? 0 : 0;
     final branchCount = shop['_count'] is Map ? (shop['_count'] as Map)['branches'] as int? ?? 0 : 0;
+    final totalRevenue = shop['totalRevenue'] as num? ?? 0;
     final endsAtStr = shop['subscriptionEndsAt'] as String?;
     final daysRemaining = endsAtStr != null && endsAtStr.isNotEmpty
         ? '${(DateTime.parse(endsAtStr).difference(DateTime.now()).inDays).clamp(0, 99999)} days'
@@ -736,16 +1030,17 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _sectionHeader('Subscription'),
-              _detailRow('Plan', plan),
+              _detailRow('Plan', planLabel),
               _detailRow('Status', status),
               _detailRow('Category', category),
               _detailRow('Active', isActive ? 'Yes' : 'No'),
               _detailRow('Days Remaining', daysRemaining),
               const Divider(color: Color(0xFF474554)),
               _sectionHeader('Activity'),
-              _detailRow('Total Sales', '$salesCount'),
-              _detailRow('Total Users', '$usersCount'),
-              _detailRow('Branches', '$branchCount'),
+              _detailRowWithIcon(Icons.trending_up, 'Total Sales', '$salesCount'),
+              _detailRowWithIcon(Icons.people, 'Total Users', '$usersCount'),
+              _detailRowWithIcon(Icons.business, 'Branches', '$branchCount'),
+              if (totalRevenue > 0) _detailRowWithIcon(Icons.attach_money, 'Revenue', CurrencyFormatter.format(totalRevenue)),
               if (adminList.isNotEmpty) ...[
                 const Divider(color: Color(0xFF474554)),
                 _sectionHeader('Admin'),
@@ -824,6 +1119,27 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
       child: Row(
         children: [
           SizedBox(width: 120, child: Text(label, style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13))),
+          Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13))),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRowWithIcon(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 140,
+            child: Row(
+              children: [
+                Icon(icon, size: 16, color: const Color(0xFF9E9E9E)),
+                const SizedBox(width: 6),
+                Flexible(child: Text(label, style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13))),
+              ],
+            ),
+          ),
           Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13))),
         ],
       ),
@@ -1003,6 +1319,17 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                     final dateStr = admin['createdAt'] as String? ?? '';
                     final date = dateStr.isNotEmpty ? dateStr.split('T')[0] : '';
 
+                    // Find all shops managed by this admin
+                    final adminShopsForUser = adminShops
+                        .where((s) {
+                          final users = s['users'] as List? ?? [];
+                          return users.any((u) => u is Map<String, dynamic> && u['email'] == admin['email']);
+                        })
+                        .map((s) => s['shopName'] as String? ?? '')
+                        .where((n) => n.isNotEmpty)
+                        .toList();
+                    final adminEmail = admin['email'] as String? ?? '';
+
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Container(
@@ -1016,43 +1343,46 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 48,
-                                    height: 48,
-                                    decoration: BoxDecoration(
-                                      gradient: AppTheme.accentGradient,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '${admin['name'] ?? '?'}'.substring(0, 1).toUpperCase(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                              GestureDetector(
+                                onTap: () => _showAdminDetails(adminEmail, adminShops),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        gradient: AppTheme.accentGradient,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${admin['name'] ?? '?'}'.substring(0, 1).toUpperCase(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 14),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${admin['name'] ?? 'Unknown'}',
-                                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white),
-                                        ),
-                                        Text(
-                                          '${admin['email'] ?? ''}',
-                                          style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
-                                        ),
-                                      ],
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${admin['name'] ?? 'Unknown'}',
+                                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white),
+                                          ),
+                                          Text(
+                                            '${adminEmail}',
+                                            style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Row(
@@ -1066,6 +1396,39 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                                   _chip(Icons.people, '$usersCount users'),
                                   const SizedBox(width: 8),
                                   _chip(Icons.calendar_today, date),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  if (adminShopsForUser.length > 1)
+                                    _chip(Icons.business, '${adminShopsForUser.length} shops'),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () => _confirmDeleteAdmin(admin, adminShopsForUser),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFD63031).withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.delete_outline, size: 14, color: const Color(0xFFD63031)),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            'Deactivate',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                              color: const Color(0xFFD63031),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -1093,6 +1456,111 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
           Icon(icon, size: 14, color: const Color(0xFF6C5CE7)),
           const SizedBox(width: 6),
           Text(text, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Colors.white)),
+        ],
+      ),
+    );
+  }
+
+  void _showAdminDetails(String adminEmail, List<Map<String, dynamic>> adminShops) {
+    final admin = adminShops
+        .expand((s) => (s['users'] as List? ?? []).cast<Map<String, dynamic>>())
+        .firstWhere((u) => u['email'] == adminEmail, orElse: () => <String, dynamic>{});
+    final name = admin['name'] as String? ?? 'Admin';
+    final shopsManaged = adminShops
+        .where((s) {
+          final users = s['users'] as List? ?? [];
+          return users.any((u) => u is Map<String, dynamic> && u['email'] == adminEmail);
+        })
+        .toList();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF201F1F),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(
+                gradient: AppTheme.accentGradient,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(name.substring(0, 1).toUpperCase(),
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(child: Text(name, style: const TextStyle(fontSize: 18))),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(adminEmail,
+                    style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13)),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  _chip(Icons.store, '${shopsManaged.length} Shop${shopsManaged.length == 1 ? '' : 's'}'),
+                  const SizedBox(width: 8),
+                  _chip(Icons.people, '${adminShops.fold(0, (sum, s) => sum + ((s['_count'] is Map ? (s['_count'] as Map)['users'] as int? ?? 0 : 0)))} users'),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Divider(color: Color(0xFF474554)),
+              const SizedBox(height: 4),
+              Text('Shops Managed', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 0.5, color: const Color(0xFF6C5CE7))),
+              const SizedBox(height: 8),
+              ...shopsManaged.map((s) => Container(
+                margin: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A2E).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFF6C5CE7).withOpacity(0.12)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32, height: 32,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6C5CE7).withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.store, size: 16, color: Color(0xFF6C5CE7)),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(s['shopName'] as String? ?? '',
+                              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.white)),
+                          Text('${s['_count'] is Map ? (s['_count'] as Map)['sales'] as int? ?? 0 : 0} sales',
+                              style: const TextStyle(fontSize: 11, color: Color(0xFF9E9E9E))),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      s['subscriptionPlan'] as String? ?? '',
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF6C5CE7), fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              )),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Close')),
         ],
       ),
     );
@@ -1218,6 +1686,106 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
               }
             },
             child: const Text('Create Admin'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteShop(Map<String, dynamic> shop) {
+    final shopName = shop['shopName'] as String? ?? 'this shop';
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF201F1F),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber, color: Color(0xFFD63031)),
+            const SizedBox(width: 8),
+            const Text('Delete Shop', style: TextStyle(fontSize: 18)),
+          ],
+        ),
+        content: Text(
+          'Are you sure you want to permanently delete "$shopName" and all its data (users, sales, products, etc.)? This cannot be undone.',
+          style: const TextStyle(color: Color(0xFFE0E0E0)),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFD63031)),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              final id = shop['id'] as String?;
+              if (id == null) return;
+              try {
+                final success = await _adminService.deleteShop(id);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? 'Shop permanently deleted' : 'Failed to delete shop'),
+                    backgroundColor: success ? const Color(0xFF00B894) : const Color(0xFFD63031),
+                  ),
+                );
+                if (success) _loadData();
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error: $e'), backgroundColor: const Color(0xFFD63031)),
+                );
+              }
+            },
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteAdmin(Map<String, dynamic> admin, List<String> managedShops) {
+    final name = admin['name'] as String? ?? 'Unknown';
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF201F1F),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber, color: Color(0xFFD63031)),
+            const SizedBox(width: 8),
+            const Text('Deactivate Admin', style: TextStyle(fontSize: 18)),
+          ],
+        ),
+        content: Text(
+          'Are you sure you want to deactivate "$name"? Their ${managedShops.length} shop(s) will also be deactivated. This can be reversed later by reactivating.',
+          style: const TextStyle(color: Color(0xFFE0E0E0)),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFD63031)),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              final id = admin['id'] as String?;
+              if (id == null) return;
+              try {
+                final success = await _adminService.deleteAdmin(id);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? 'Admin deactivated' : 'Failed to deactivate admin'),
+                    backgroundColor: success ? const Color(0xFF00B894) : const Color(0xFFD63031),
+                  ),
+                );
+                if (success) _loadData();
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error: $e'), backgroundColor: const Color(0xFFD63031)),
+                );
+              }
+            },
+            child: const Text('Deactivate Admin'),
           ),
         ],
       ),

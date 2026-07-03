@@ -10,7 +10,8 @@ class ProductService {
   Future<Map<String, dynamic>?> createProduct(Map<String, dynamic> data) async {
     final response = await ApiClient.post('/products', data);
     final result = ApiClient.parseResponse(response);
-    return result['success'] ? result['data'] : null;
+    if (result['success']) return result['data'];
+    throw Exception(result['error'] ?? 'Failed to create product');
   }
 
   Future<Map<String, dynamic>?> updateProduct(String id, Map<String, dynamic> data) async {

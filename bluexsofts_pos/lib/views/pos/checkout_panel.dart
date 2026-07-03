@@ -6,7 +6,6 @@ import '../../providers/product_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/ledger_provider.dart';
 import '../../models/sale.dart';
-import '../shared/summary_row.dart';
 import '../../core/theme.dart';
 import '../../core/currency_formatter.dart';
 import '../../services/receipt_service.dart';
@@ -96,7 +95,6 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
           margin: const EdgeInsets.all(16),
         ),
       );
-      // Auto-show print dialog
       final auth = context.read<AuthProvider>();
       _showPrintDialog(sale, auth.shop?.shopName, customerName: customerName);
     } else {
@@ -237,9 +235,9 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                 ),
                 child: Column(
                   children: [
-                    SummaryRow(label: 'Items', value: '${cart.itemCount}'),
+                    _summaryRow('Items', '${cart.itemCount}'),
                     const SizedBox(height: 4),
-                    SummaryRow(label: 'Subtotal', value: CurrencyFormatter.format(cart.subtotal)),
+                    _summaryRow('Subtotal', CurrencyFormatter.format(cart.subtotal)),
                   ],
                 ),
               ),
@@ -264,10 +262,11 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                   final val = double.parse(rate.replaceAll('%', '')) / 100;
                   final selected = cart.taxRate == val;
                   return ChoiceChip(
-                    label: Text(rate),
+                    label: Text(rate, style: TextStyle(color: selected ? Colors.white : Colors.grey[400])),
                     selected: selected,
-                    selectedColor: AppTheme.accent,
+                    selectedColor: AppTheme.primary,
                     backgroundColor: AppTheme.darkCard,
+                    side: BorderSide(color: selected ? AppTheme.primary : AppTheme.darkBorder.withOpacity(0.3)),
                     onSelected: (_) => cart.setTaxRate(val),
                   );
                 }).toList(),
@@ -280,10 +279,11 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                 children: ['CASH', 'CARD', 'MOBILE', 'CREDIT'].map((method) {
                   final selected = cart.paymentMethod == method;
                   return ChoiceChip(
-                    label: Text(method),
+                    label: Text(method, style: TextStyle(color: selected ? Colors.white : Colors.grey[400])),
                     selected: selected,
-                    selectedColor: AppTheme.accent,
+                    selectedColor: AppTheme.primary,
                     backgroundColor: AppTheme.darkCard,
+                    side: BorderSide(color: selected ? AppTheme.primary : AppTheme.darkBorder.withOpacity(0.3)),
                     onSelected: (_) => cart.setPaymentMethod(method),
                   );
                 }).toList(),
@@ -328,14 +328,17 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                 child: Column(
                   children: [
                     if (cart.taxAmount > 0)
-                      SummaryRow(label: 'Tax (${(cart.taxRate * 100).toStringAsFixed(0)}%)', value: CurrencyFormatter.format(cart.taxAmount)),
+                      _summaryRow('Tax (${(cart.taxRate * 100).toStringAsFixed(0)}%)', CurrencyFormatter.format(cart.taxAmount)),
                     if (cart.discount > 0)
-                      SummaryRow(label: 'Discount', value: '-${CurrencyFormatter.format(cart.discount)}', valueColor: AppTheme.warning),
+                      _summaryRow2('Discount', '-${CurrencyFormatter.format(cart.discount)}', AppTheme.warning),
                     const Divider(color: AppTheme.darkBorder),
-                    SummaryRow(
-                      label: 'Total',
-                      value: CurrencyFormatter.format(cart.total),
-                      valueStyle: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.success),
+                    _summaryRow(
+                      'Total',
+                      CurrencyFormatter.format(cart.total),
+                      valueStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.success,
+                      ),
                     ),
                   ],
                 ),
@@ -367,6 +370,29 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _summaryRow(String label, String value, {TextStyle? valueStyle}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[400])),
+        Text(value, style: valueStyle ?? TextStyle(fontSize: 14, color: Colors.grey[400])),
+      ],
+    );
+  }
+
+  Widget _summaryRow2(String label, String value, Color valueColor) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[400])),
+          Text(value, style: TextStyle(fontSize: 14, color: valueColor)),
+        ],
+      ),
     );
   }
 }

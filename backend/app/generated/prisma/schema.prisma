@@ -4,20 +4,54 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Plan {
+  id               String             @id @default(uuid())
+  name             String
+  billingCycle     String
+  price            Float
+  setupFee         Float
+  originalSetupFee Float?
+  salesPointsLimit Int
+  productsLimit    Int
+  fbrConnect       Boolean            @default(false)
+  techSupport      Boolean            @default(false)
+  onlineStore      Boolean            @default(false)
+  updates          Boolean            @default(false)
+  isActive         Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  subscriptions    ShopSubscription[]
+
+  @@unique([name, billingCycle])
+}
+
+model ShopSubscription {
+  id        String    @id @default(uuid())
+  shopId    String
+  shop      Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      Plan      @relation(fields: [planId], references: [id])
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  status    String    @default("active")
+  createdAt DateTime  @default(now())
 }
 
 model Shop {
-  id                 String        @id @default(uuid())
-  shopName           String        @unique
-  category           String        @default("General")
-  subscriptionPlan   String        @default("NONE")
-  subscriptionStatus String        @default("PENDING")
+  id                 String             @id @default(uuid())
+  shopName           String             @unique
+  slug               String             @unique
+  category           String             @default("General")
+  subscriptionPlan   String             @default("NONE")
+  subscriptionStatus String             @default("PENDING")
   subscriptionEndsAt DateTime?
-  isActive           Boolean       @default(true)
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  isActive           Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
   payments           Payment[]
   products           Product[]
   sales              Sale[]
@@ -27,6 +61,8 @@ model Shop {
   customers          Customer[]
   ledgerEntries      LedgerEntry[]
   branches           Branch[]
+  subscriptions      ShopSubscription[]
+  onlineOrders       OnlineOrder[]
 }
 
 model Branch {
@@ -87,21 +123,23 @@ model PasswordResetToken {
 }
 
 model Product {
-  id          String     @id @default(uuid())
-  shopId      String
-  name        String
-  description String     @default("")
-  price       Float
-  stock       Int        @default(0)
-  sku         String     @default("")
-  category    String     @default("General")
-  imageUrl    String     @default("")
-  barcode     String?    @unique
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  shop        Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  saleItems   SaleItem[]
+  id               String            @id @default(uuid())
+  shopId           String
+  name             String
+  description      String            @default("")
+  price            Float
+  stock            Int               @default(0)
+  sku              String            @default("")
+  category         String            @default("General")
+  imageUrl         String            @default("")
+  barcode          String?           @unique
+  isActive         Boolean           @default(true)
+  isVisibleOnline  Boolean           @default(true)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  shop             Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  saleItems        SaleItem[]
+  onlineOrderItems OnlineOrderItem[]
 }
 
 model Sale {
@@ -152,6 +190,32 @@ model SaleItem {
   product   Product @relation(fields: [productId], references: [id])
   sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
   shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
+
+model OnlineOrder {
+  id              String            @id @default(uuid())
+  shopId          String
+  customerName    String
+  customerPhone   String
+  customerAddress String
+  status          String            @default("PENDING")
+  totalAmount     Float
+  source          String            @default("online_store")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  shop            Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  items           OnlineOrderItem[]
+}
+
+model OnlineOrderItem {
+  id        String      @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  subtotal  Float
+  order     OnlineOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product     @relation(fields: [productId], references: [id])
 }
 
 model Customer {

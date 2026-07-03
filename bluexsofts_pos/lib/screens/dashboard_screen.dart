@@ -6,6 +6,7 @@ import '../providers/cart_provider.dart';
 import '../providers/sale_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/ledger_provider.dart';
+import '../providers/online_order_provider.dart';
 import '../core/theme.dart';
 import '../core/currency_formatter.dart';
 import '../views/shared/sales_chart.dart';
@@ -18,6 +19,7 @@ import 'invoices_screen.dart';
 import 'users_screen.dart';
 import 'ledger_screen.dart';
 import 'settings_screen.dart';
+import 'online_orders_screen.dart';
 import 'plans_screen.dart';
 import 'login_screen.dart';
 
@@ -41,6 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const InvoicesScreen(),
       const LedgerScreen(),
       if (isAdmin) const UsersScreen(),
+      const OnlineOrdersScreen(),
       const SettingsScreen(),
     ];
   }
@@ -107,6 +110,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isAdmin = auth.isAdmin;
     final pages = _pages(isAdmin);
 
+    final onlineOrdersIndex = isAdmin ? 7 : 6;
+    final settingsIndex = isAdmin ? 8 : 7;
+
     final sidebarItems = <_SidebarItem>[
       _SidebarItem(Icons.home, 'Home', 0),
       _SidebarItem(Icons.point_of_sale, 'POS', 1),
@@ -115,8 +121,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _SidebarItem(Icons.description, 'Invoices', 4),
       _SidebarItem(Icons.account_balance, 'Ledger', 5),
       if (isAdmin) _SidebarItem(Icons.group, 'Users', 6),
+      _SidebarItem(Icons.storefront, 'Online Orders', onlineOrdersIndex),
       _SidebarItem(Icons.subscriptions, 'Plans', -1),
-      _SidebarItem(Icons.settings, 'Settings', isAdmin ? 7 : 6),
+      _SidebarItem(Icons.settings, 'Settings', settingsIndex),
     ];
 
     final mainItems = sidebarItems.take(4).toList();
@@ -185,12 +192,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         color: isActive ? AppTheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
                                       ),
                                       const SizedBox(width: 16),
-                                      Text(item.label,
-                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                                          color: isActive ? AppTheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                                      Expanded(
+                                        child: Text(item.label,
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                                            color: isActive ? AppTheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                                          ),
                                         ),
                                       ),
+                                      if (item.label == 'Online Orders') ...[
+                                        Consumer<OnlineOrderProvider>(
+                                          builder: (_, op, __) {
+                                            if (op.pendingCount <= 0) return const SizedBox.shrink();
+                                            return Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: AppTheme.error.withValues(alpha: 0.2),
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                '${op.pendingCount}',
+                                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.error),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),
@@ -355,12 +382,33 @@ class _Sidebar extends StatelessWidget {
                             color: isActive ? AppTheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 16),
-                          Text(item.label,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                              color: isActive ? AppTheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                          Expanded(
+                            child: Text(item.label,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                                color: isActive ? AppTheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
                             ),
                           ),
+                          if (item.label == 'Online Orders') ...[
+                            const SizedBox(width: 8),
+                            Consumer<OnlineOrderProvider>(
+                              builder: (_, op, __) {
+                                if (op.pendingCount <= 0) return const SizedBox.shrink();
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.error.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    '${op.pendingCount}',
+                                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.error),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -523,7 +571,8 @@ class _TopBar extends StatelessWidget {
             icon: Icon(Icons.storefront, color: Theme.of(context).colorScheme.onSurfaceVariant),
             onPressed: () {
               final parent = context.findAncestorStateOfType<_DashboardScreenState>()!;
-              parent.goToPage(6);
+              final idx = auth.isAdmin ? 8 : 7;
+              parent.goToPage(idx);
             },
           ),
           if (isDesktop) ...[
@@ -537,7 +586,8 @@ class _TopBar extends StatelessWidget {
             onSelected: (value) {
               if (value == 'settings') {
                 final parent = context.findAncestorStateOfType<_DashboardScreenState>()!;
-                parent.goToPage(6);
+                final idx = auth.isAdmin ? 8 : 7;
+                parent.goToPage(idx);
               } else if (value == 'logout') {
                 auth.logout();
                 Navigator.of(context).pushAndRemoveUntil(

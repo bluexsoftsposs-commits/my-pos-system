@@ -122,9 +122,37 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  billingCycle: 'billingCycle',
+  price: 'price',
+  setupFee: 'setupFee',
+  originalSetupFee: 'originalSetupFee',
+  salesPointsLimit: 'salesPointsLimit',
+  productsLimit: 'productsLimit',
+  fbrConnect: 'fbrConnect',
+  techSupport: 'techSupport',
+  onlineStore: 'onlineStore',
+  updates: 'updates',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ShopSubscriptionScalarFieldEnum = {
+  id: 'id',
+  shopId: 'shopId',
+  planId: 'planId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ShopScalarFieldEnum = {
   id: 'id',
   shopName: 'shopName',
+  slug: 'slug',
   category: 'category',
   subscriptionPlan: 'subscriptionPlan',
   subscriptionStatus: 'subscriptionStatus',
@@ -192,6 +220,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   imageUrl: 'imageUrl',
   barcode: 'barcode',
   isActive: 'isActive',
+  isVisibleOnline: 'isVisibleOnline',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -229,6 +258,28 @@ exports.Prisma.SaleItemScalarFieldEnum = {
   id: 'id',
   shopId: 'shopId',
   saleId: 'saleId',
+  productId: 'productId',
+  quantity: 'quantity',
+  price: 'price',
+  subtotal: 'subtotal'
+};
+
+exports.Prisma.OnlineOrderScalarFieldEnum = {
+  id: 'id',
+  shopId: 'shopId',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  customerAddress: 'customerAddress',
+  status: 'status',
+  totalAmount: 'totalAmount',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OnlineOrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
   productId: 'productId',
   quantity: 'quantity',
   price: 'price',
@@ -275,6 +326,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
+  Plan: 'Plan',
+  ShopSubscription: 'ShopSubscription',
   Shop: 'Shop',
   Branch: 'Branch',
   Payment: 'Payment',
@@ -284,6 +337,8 @@ exports.Prisma.ModelName = {
   Sale: 'Sale',
   Invoice: 'Invoice',
   SaleItem: 'SaleItem',
+  OnlineOrder: 'OnlineOrder',
+  OnlineOrderItem: 'OnlineOrderItem',
   Customer: 'Customer',
   LedgerEntry: 'LedgerEntry'
 };

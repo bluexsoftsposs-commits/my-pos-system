@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import prisma from '../config/db';
 import { sendBackupEmail } from '../services/email';
+import { generateSlug } from '../utils/slug';
 
 const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
 
@@ -60,7 +61,7 @@ export const listShops = async (req: Request, res: Response): Promise<void> => {
     if (search) conditions.shopName = { contains: search } as any;
     if (plan) conditions.subscriptionPlan = plan;
 
-    const [shops, total] = await Promise.all([
+    const [shopRows, total] = await Promise.all([
       prisma.shop.findMany({
         where: { shopName: { not: '__super_admin__' }, ...conditions } as any,
         skip: (page - 1) * limit,
@@ -69,15 +70,36 @@ export const listShops = async (req: Request, res: Response): Promise<void> => {
         include: {
           _count: { select: { users: true, sales: true, branches: true } },
           users: {
-            where: { role: 'ADMIN' },
-            select: { id: true, name: true, email: true, createdAt: true, isActive: true },
-            take: 1,
+            select: { id: true, name: true, email: true, role: true, createdAt: true, isActive: true },
+            orderBy: { createdAt: 'asc' },
           },
           payments: { take: 1, orderBy: { createdAt: 'desc' }, select: { amount: true, paymentMethod: true, createdAt: true } },
+          subscriptions: {
+            include: { plan: { select: { id: true, name: true, billingCycle: true, price: true, productsLimit: true, salesPointsLimit: true } } },
+            take: 1,
+            orderBy: { createdAt: 'desc' },
+          },
         },
       }),
       prisma.shop.count({ where: { shopName: { not: '__super_admin__' }, ...conditions } as any }),
     ]);
+
+    // Attach total revenue per shop
+    const shopIds = shopRows.map(s => s.id);
+    const revenueRows = await prisma.sale.groupBy({
+      by: ['shopId'],
+      where: { shopId: { in: shopIds } },
+      _sum: { total: true },
+    });
+    const revenueMap: Record<string, number> = {};
+    for (const r of revenueRows) {
+      revenueMap[r.shopId] = r._sum.total ?? 0;
+    }
+
+    const shops = shopRows.map(s => ({
+      ...s,
+      totalRevenue: revenueMap[s.id] ?? 0,
+    }));
 
     res.json({ shops, total, page, totalPages: Math.ceil(total / limit) });
   } catch (error) {
@@ -227,6 +249,27 @@ export const createShopUser = async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    // Enforce sales points limit from subscription plan
+    const subscription = await prisma.shopSubscription.findFirst({
+      where: { shopId, status: 'active' },
+      include: { plan: { select: { name: true, salesPointsLimit: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (subscription) {
+      const limit = subscription.plan.salesPointsLimit;
+      const currentCount = await prisma.user.count({
+        where: { shopId, isActive: true },
+      });
+
+      if (currentCount >= limit) {
+        res.status(403).json({
+          error: `Sales point limit reached. Your ${subscription.plan.name} plan allows ${limit} sales point(s). You have ${currentCount}/${limit}.`,
+        });
+        return;
+      }
+    }
+
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await prisma.user.create({
       data: { shopId, name, email, passwordHash, role: role || 'CASHIER' },
@@ -263,9 +306,14 @@ export const createAdmin = async (req: Request, res: Response): Promise<void> =>
 
     const passwordHash = await bcrypt.hash(password, 12);
 
+    // Generate unique slug
+    let slug = generateSlug(shopName);
+    let slugExists = await prisma.shop.findUnique({ where: { slug } });
+    if (slugExists) slug = `${slug}-${Date.now().toString(36)}`;
+
     const result = await prisma.$transaction(async (tx) => {
       const shop = await tx.shop.create({
-        data: { shopName, subscriptionPlan: 'NONE', subscriptionStatus: 'NONE' },
+        data: { shopName, slug, subscriptionPlan: 'NONE', subscriptionStatus: 'NONE' },
       });
 
       const user = await tx.user.create({
@@ -376,6 +424,247 @@ export const extendSubscription = async (req: Request, res: Response): Promise<v
 
     res.json({ success: true, message: `Subscription extended by ${extraDays} days`, endsAt: newEnd });
   } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// ── Plan Management ───────────────────────────────────────────────
+
+export const createPlan = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, billingCycle, price, setupFee, originalSetupFee, salesPointsLimit, productsLimit, fbrConnect, techSupport, onlineStore, updates } = req.body;
+
+    if (!name || !billingCycle || price === undefined || setupFee === undefined || salesPointsLimit === undefined || productsLimit === undefined) {
+      res.status(400).json({ error: 'Missing required fields: name, billingCycle, price, setupFee, salesPointsLimit, productsLimit' });
+      return;
+    }
+
+    const existing = await prisma.plan.findUnique({
+      where: { name_billingCycle: { name, billingCycle } },
+    });
+    if (existing) {
+      res.status(409).json({ error: `Plan "${name}" with billing cycle "${billingCycle}" already exists` });
+      return;
+    }
+
+    const plan = await prisma.plan.create({
+      data: { name, billingCycle, price, setupFee, originalSetupFee, salesPointsLimit, productsLimit, fbrConnect: fbrConnect ?? false, techSupport: techSupport ?? false, onlineStore: onlineStore ?? false, updates: updates ?? false },
+    });
+
+    res.status(201).json({ success: true, plan });
+  } catch (error) {
+    console.error('createPlan error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updatePlan = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = toString(req.params.id);
+    const updates = req.body;
+
+    const existing = await prisma.plan.findUnique({ where: { id } });
+    if (!existing) {
+      res.status(404).json({ error: 'Plan not found' });
+      return;
+    }
+
+    const allowedFields = ['name', 'billingCycle', 'price', 'setupFee', 'originalSetupFee', 'salesPointsLimit', 'productsLimit', 'fbrConnect', 'techSupport', 'onlineStore', 'updates', 'isActive'];
+    const data: Record<string, unknown> = {};
+    for (const field of allowedFields) {
+      if (updates[field] !== undefined) data[field] = updates[field];
+    }
+
+    if (Object.keys(data).length === 0) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
+    }
+
+    const plan = await prisma.plan.update({ where: { id }, data: data as any });
+
+    res.json({ success: true, plan });
+  } catch (error) {
+    console.error('updatePlan error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deactivatePlan = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = toString(req.params.id);
+    const existing = await prisma.plan.findUnique({ where: { id } });
+    if (!existing) {
+      res.status(404).json({ error: 'Plan not found' });
+      return;
+    }
+
+    const plan = await prisma.plan.update({ where: { id }, data: { isActive: !existing.isActive } });
+
+    res.json({ success: true, plan, message: `Plan "${plan.name}" ${plan.isActive ? 'activated' : 'deactivated'}` });
+  } catch (error) {
+    console.error('deactivatePlan error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const listShopsSubscriptions = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const page = parseInt(toString(req.query.page)) || 1;
+    const limit = parseInt(toString(req.query.limit)) || 20;
+    const search = toString(req.query.search) || '';
+
+    const where: Record<string, unknown> = { shopName: { not: '__super_admin__' } };
+    if (search) where.shopName = { contains: search } as any;
+
+    const [shops, total] = await Promise.all([
+      prisma.shop.findMany({
+        where: where as any,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          shopName: true,
+          subscriptionPlan: true,
+          subscriptionStatus: true,
+          subscriptionEndsAt: true,
+          isActive: true,
+          _count: { select: { products: true, users: true } },
+          subscriptions: {
+            where: { status: 'active' },
+            include: { plan: { select: { id: true, name: true, billingCycle: true, price: true, productsLimit: true, salesPointsLimit: true } } },
+            take: 1,
+            orderBy: { createdAt: 'desc' },
+          },
+        },
+      }),
+      prisma.shop.count({ where: where as any }),
+    ]);
+
+    res.json({ shops, total, page, totalPages: Math.ceil(total / limit) });
+  } catch (error) {
+    console.error('listShopsSubscriptions error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const changeShopSubscription = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const shopId = toString(req.params.shopId);
+    const { planId } = req.body;
+
+    if (!planId) {
+      res.status(400).json({ error: 'planId is required' });
+      return;
+    }
+
+    const shop = await prisma.shop.findUnique({ where: { id: shopId } });
+    if (!shop || shop.shopName === '__super_admin__') {
+      res.status(404).json({ error: 'Shop not found' });
+      return;
+    }
+
+    const plan = await prisma.plan.findUnique({ where: { id: planId } });
+    if (!plan) {
+      res.status(404).json({ error: 'Plan not found' });
+      return;
+    }
+
+    // Deactivate any existing active subscriptions for this shop
+    await prisma.shopSubscription.updateMany({
+      where: { shopId, status: 'active' },
+      data: { status: 'expired' },
+    });
+
+    // Create new subscription
+    const sub = await prisma.shopSubscription.create({
+      data: { shopId, planId, status: 'active' },
+    });
+
+    // Update legacy Shop fields
+    const endDate = plan.billingCycle === 'MONTHLY'
+      ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      : plan.billingCycle === 'ANNUAL'
+      ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+      : null;
+
+    await prisma.shop.update({
+      where: { id: shopId },
+      data: {
+        subscriptionPlan: plan.name,
+        subscriptionStatus: 'ACTIVE',
+        subscriptionEndsAt: endDate,
+      },
+    });
+
+    res.json({ success: true, subscription: sub, plan, endsAt: endDate });
+  } catch (error) {
+    console.error('changeShopSubscription error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteAdmin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = toString(req.params.userId);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { shop: { select: { id: true, shopName: true } } },
+    });
+
+    if (!user || user.shop?.shopName === '__super_admin__') {
+      res.status(404).json({ error: 'Admin not found' });
+      return;
+    }
+
+    if (user.role !== 'ADMIN') {
+      res.status(400).json({ error: 'User is not an admin' });
+      return;
+    }
+
+    const adminEmail = user.email;
+    if (adminEmail === 'superadmin@pos.com') {
+      res.status(403).json({ error: 'Cannot delete the super admin' });
+      return;
+    }
+
+    // Unassign the admin's shops by deactivating the user and shop
+    await prisma.$transaction(async (tx) => {
+      await tx.shop.update({
+        where: { id: user.shopId },
+        data: { isActive: false },
+      });
+      await tx.user.update({
+        where: { id: userId },
+        data: { isActive: false },
+      });
+    });
+
+    console.log(`Admin ${user.name} (${user.email}) soft-deleted by superadmin`);
+    res.json({ success: true, message: 'Admin deactivated' });
+  } catch (error) {
+    console.error('deleteAdmin error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteShop = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const shopId = toString(req.params.shopId);
+    const shop = await prisma.shop.findUnique({ where: { id: shopId } });
+
+    if (!shop || shop.shopName === '__super_admin__') {
+      res.status(404).json({ error: 'Shop not found' });
+      return;
+    }
+
+    // Cascade delete — schema has onDelete: Cascade for all child relations
+    await prisma.shop.delete({ where: { id: shopId } });
+
+    console.log(`Shop "${shop.shopName}" (${shopId}) permanently deleted by superadmin`);
+    res.json({ success: true, message: 'Shop and all associated data permanently deleted' });
+  } catch (error) {
+    console.error('deleteShop error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import prisma from '../config/db';
 import { sendVerificationEmail, sendPasswordResetEmail } from '../services/email';
+import { generateSlug } from '../utils/slug';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 const JWT_EXPIRES_IN = '7d';
@@ -42,10 +43,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const passwordHash = await bcrypt.hash(password, 12);
     const verificationToken = crypto.randomBytes(32).toString('hex');
 
+    // Generate unique slug
+    let slug = generateSlug(shopName);
+    let slugExists = await prisma.shop.findUnique({ where: { slug } });
+    if (slugExists) slug = `${slug}-${Date.now().toString(36)}`;
+
     // Create shop and admin user in a transaction
     const result = await prisma.$transaction(async (tx) => {
       const shop = await tx.shop.create({
-        data: { shopName, subscriptionPlan: 'NONE', subscriptionStatus: 'NONE' },
+        data: { shopName, slug, subscriptionPlan: 'NONE', subscriptionStatus: 'NONE' },
       });
 
       const user = await tx.user.create({

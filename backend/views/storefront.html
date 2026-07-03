@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BluexSofts Store</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,sans-serif;background:#0f0f0f;color:#e0e0e0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:24px 16px;text-align:center;border-bottom:1px solid #333}
+.header h1{font-size:24px;font-weight:700;background:linear-gradient(90deg,#e94560,#0f3460);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:13px;color:#888;margin-top:4px}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.product-card{background:#1a1a1a;border-radius:12px;overflow:hidden;border:1px solid #2a2a2a;transition:transform .15s,border-color .15s}
+.product-card:hover{transform:translateY(-2px);border-color:#e94560}
+.product-image{width:100%;height:180px;object-fit:cover;background:#2a2a2a;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px}
+.product-info{padding:12px}
+.product-name{font-size:14px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-price{font-size:18px;font-weight:700;color:#e94560;margin-bottom:8px}
+.product-stock{font-size:11px;color:#666;margin-bottom:8px}
+.product-stock.low{color:#f39c12}
+.product-stock.out{color:#e74c3c}
+.cart-controls{display:flex;align-items:center;gap:8px}
+.cart-controls button{width:32px;height:32px;border-radius:50%;border:1px solid #333;background:#222;color:#e0e0e0;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cart-controls button:hover{background:#e94560;border-color:#e94560}
+.cart-controls .qty{font-size:14px;font-weight:600;min-width:20px;text-align:center}
+.cart-controls .add-btn{width:auto;padding:0 16px;border-radius:20px;background:#e94560;border-color:#e94560;color:#fff;font-size:13px;font-weight:600;height:32px}
+.cart-controls .add-btn:hover{background:#d63851}
+.cart-bar{position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;border-top:1px solid #2a2a2a;padding:12px 16px;z-index:100;display:none}
+.cart-bar.show{display:flex;align-items:center;justify-content:space-between}
+.cart-bar .total{font-size:16px;font-weight:700}
+.cart-bar .total span{color:#e94560}
+.cart-bar .checkout-btn{background:#e94560;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.cart-bar .checkout-btn:hover{background:#d63851}
+.cart-bar .checkout-btn:disabled{background:#444;cursor:not-allowed}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.show{display:flex}
+.modal{background:#1a1a1a;border-radius:12px;padding:24px;width:100%;max-width:400px;border:1px solid #2a2a2a;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:18px;margin-bottom:16px}
+.modal .form-group{margin-bottom:12px}
+.modal label{display:block;font-size:12px;color:#888;margin-bottom:4px}
+.modal input,.modal textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#222;color:#e0e0e0;font-size:14px;outline:none;transition:border-color .15s}
+.modal input:focus,.modal textarea:focus{border-color:#e94560}
+.modal textarea{resize:vertical;min-height:60px}
+.modal .submit-btn{width:100%;padding:12px;border-radius:8px;border:none;background:#e94560;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;transition:background .15s}
+.modal .submit-btn:hover{background:#d63851}
+.modal .submit-btn:disabled{background:#444;cursor:not-allowed}
+.modal .close-btn{background:transparent;border:1px solid #333;color:#888;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:8px;width:100%;font-size:13px}
+.modal .error{color:#e74c3c;font-size:13px;margin-top:8px;display:none}
+.modal .success{color:#2ecc71;font-size:13px;margin-top:8px;display:none}
+.order-summary{background:#222;border-radius:8px;padding:12px;margin:12px 0}
+.order-summary .item{display:flex;justify-content:space-between;font-size:13px;padding:4px 0}
+.order-summary .item.total{font-weight:700;font-size:15px;border-top:1px solid #333;margin-top:4px;padding-top:8px}
+.empty-state{text-align:center;padding:60px 20px}
+.empty-state h2{font-size:20px;margin-bottom:8px}
+.empty-state p{color:#666;font-size:14px}
+.loading{text-align:center;padding:40px;color:#666}
+.unavailable{text-align:center;padding:80px 20px;max-width:500px;margin:0 auto}
+.unavailable h2{font-size:28px;margin-bottom:12px}
+.unavailable p{color:#666;font-size:15px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1 id="storeName">BluexSofts Store</h1>
+  <p id="storeSubtitle">Order online for pickup or delivery</p>
+</div>
+<div class="container">
+  <div id="loading" class="loading">Loading products...</div>
+  <div id="empty" class="empty-state" style="display:none">
+    <h2>No products available</h2>
+    <p>This store has no products listed yet. Check back later.</p>
+  </div>
+  <div id="unavailable" class="unavailable" style="display:none">
+    <h2>Store Not Available</h2>
+    <p>This store is currently not accepting online orders. Please visit the store in person or contact them directly.</p>
+    <p style="margin-top:16px;font-size:13px;color:#555">
+      <a href="tel:+923247593673" style="color:#e94560;text-decoration:none">Call Support</a> &middot;
+      <a href="https://wa.me/923247593673" style="color:#e94560;text-decoration:none" target="_blank">WhatsApp</a>
+    </p>
+  </div>
+  <div id="productsGrid" class="products-grid" style="display:none"></div>
+</div>
+
+<div id="cartBar" class="cart-bar">
+  <div class="total">Total: <span id="cartTotal">PKR 0</span></div>
+  <button class="checkout-btn" id="checkoutBtn" onclick="showCheckout()">Checkout (<span id="cartCount">0</span>)</button>
+</div>
+
+<div id="checkoutModal" class="modal-overlay">
+  <div class="modal">
+    <h2>Checkout</h2>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="custName" placeholder="Enter your full name" required>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="custPhone" placeholder="03XX-XXXXXXX" required>
+    </div>
+    <div class="form-group">
+      <label>Delivery Address</label>
+      <textarea id="custAddress" placeholder="Enter your delivery address" required></textarea>
+    </div>
+    <div class="order-summary" id="orderSummary"></div>
+    <div id="checkoutError" class="error"></div>
+    <div id="checkoutSuccess" class="success"></div>
+    <button class="submit-btn" id="submitOrderBtn" onclick="submitOrder()">Place Order</button>
+    <button class="close-btn" onclick="hideCheckout()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const API_BASE = window.location.origin;
+let products = [];
+let cart = {};
+
+function init() {
+  const slug = window.location.pathname.split('/').filter(Boolean).pop();
+  if (!slug) { document.getElementById('loading').textContent = 'Invalid store URL'; return; }
+  loadProducts(slug);
+}
+
+async function loadProducts(slug) {
+  try {
+    const res = await fetch(`${API_BASE}/api/store/${slug}/products`);
+    const data = await res.json();
+
+    document.getElementById('loading').style.display = 'none';
+
+    if (data.storeUnavailable) {
+      document.getElementById('unavailable').style.display = 'block';
+      return;
+    }
+
+    if (!res.ok || !data.products || data.products.length === 0) {
+      document.getElementById('empty').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('storeName').textContent = data.shop.name;
+    products = data.products;
+    renderProducts();
+  } catch (err) {
+    document.getElementById('loading').textContent = 'Failed to load products. Please try again.';
+  }
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  grid.style.display = 'grid';
+  grid.innerHTML = products.map(p => {
+    const inCart = cart[p.id] || 0;
+    return `<div class="product-card">
+      ${p.imageUrl
+        ? `<img class="product-image" src="${p.imageUrl}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">`
+        : `<div class="product-image">${p.name.charAt(0)}</div>`}
+      <div class="product-info">
+        <div class="product-name">${escapeHtml(p.name)}</div>
+        <div class="product-price">PKR ${Number(p.price).toLocaleString()}</div>
+        <div class="product-stock ${p.stock <= 0 ? 'out' : p.stock < 10 ? 'low' : ''}">${p.stock <= 0 ? 'Out of stock' : p.stock < 10 ? `Only ${p.stock} left` : `${p.stock} in stock`}</div>
+        <div class="cart-controls">
+          ${p.stock > 0 ? `
+            <button onclick="updateCart('${p.id}', -1)" ${inCart <= 0 ? 'disabled style="opacity:0.3"' : ''}>−</button>
+            <span class="qty">${inCart}</span>
+            <button onclick="updateCart('${p.id}', 1)" ${inCart >= p.stock ? 'disabled style="opacity:0.3"' : ''}>+</button>
+            <button class="add-btn" onclick="updateCart('${p.id}', 1)">Add</button>
+          ` : `<span style="color:#666;font-size:12px">Unavailable</span>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateCart(productId, delta) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  const current = cart[productId] || 0;
+  const next = current + delta;
+  if (next < 0) return;
+  if (next > product.stock) return;
+  cart[productId] = next;
+  if (next === 0) delete cart[productId];
+  updateCartUI();
+}
+
+function updateCartUI() {
+  renderProducts();
+  const totalItems = Object.values(cart).reduce((a,b) => a + b, 0);
+  let total = 0;
+  for (const [id, qty] of Object.entries(cart)) {
+    const p = products.find(pr => pr.id === id);
+    if (p) total += p.price * qty;
+  }
+  const bar = document.getElementById('cartBar');
+  if (totalItems > 0) {
+    bar.classList.add('show');
+    document.getElementById('cartTotal').textContent = `PKR ${total.toLocaleString()}`;
+    document.getElementById('cartCount').textContent = totalItems;
+    document.getElementById('checkoutBtn').disabled = false;
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+function showCheckout() {
+  const modal = document.getElementById('checkoutModal');
+  document.getElementById('custName').value = '';
+  document.getElementById('custPhone').value = '';
+  document.getElementById('custAddress').value = '';
+  document.getElementById('checkoutError').style.display = 'none';
+  document.getElementById('checkoutSuccess').style.display = 'none';
+  document.getElementById('submitOrderBtn').disabled = false;
+  document.getElementById('submitOrderBtn').textContent = 'Place Order';
+
+  let html = '';
+  let total = 0;
+  for (const [id, qty] of Object.entries(cart)) {
+    const p = products.find(pr => pr.id === id);
+    if (p) {
+      const sub = p.price * qty;
+      total += sub;
+      html += `<div class="item"><span>${escapeHtml(p.name)} × ${qty}</span><span>PKR ${sub.toLocaleString()}</span></div>`;
+    }
+  }
+  html += `<div class="item total"><span>Total</span><span>PKR ${total.toLocaleString()}</span></div>`;
+  document.getElementById('orderSummary').innerHTML = html;
+  modal.classList.add('show');
+}
+
+function hideCheckout() {
+  document.getElementById('checkoutModal').classList.remove('show');
+}
+
+async function submitOrder() {
+  const slug = window.location.pathname.split('/').filter(Boolean).pop();
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+
+  if (!name) { showError('Please enter your name'); return; }
+  if (!phone) { showError('Please enter your phone number'); return; }
+  if (!address) { showError('Please enter your delivery address'); return; }
+
+  const items = Object.entries(cart).map(([productId, quantity]) => ({ productId, quantity }));
+  if (items.length === 0) { showError('Your cart is empty'); return; }
+
+  document.getElementById('submitOrderBtn').disabled = true;
+  document.getElementById('submitOrderBtn').textContent = 'Placing order...';
+  document.getElementById('checkoutError').style.display = 'none';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/store/${slug}/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customerName: name, customerPhone: phone, customerAddress: address, items }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showError(data.error || 'Failed to place order');
+      document.getElementById('submitOrderBtn').disabled = false;
+      document.getElementById('submitOrderBtn').textContent = 'Place Order';
+      return;
+    }
+
+    document.getElementById('checkoutSuccess').style.display = 'block';
+    document.getElementById('checkoutSuccess').textContent = `Order placed successfully! Order ID: ${data.order.id.substring(0,8).toUpperCase()}`;
+    document.getElementById('submitOrderBtn').textContent = 'Done';
+    cart = {};
+    updateCartUI();
+    setTimeout(() => { hideCheckout(); }, 3000);
+  } catch (err) {
+    showError('Network error. Please try again.');
+    document.getElementById('submitOrderBtn').disabled = false;
+    document.getElementById('submitOrderBtn').textContent = 'Place Order';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('checkoutError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+init();
+</script>
+</body>
+</html>

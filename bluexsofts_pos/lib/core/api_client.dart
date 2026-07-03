@@ -54,6 +54,13 @@ class ApiClient {
         .timeout(const Duration(seconds: 15));
   }
 
+  static Future<http.Response> patch(String path, Map<String, dynamic> body) async {
+    final headers = await _getHeaders();
+    return http
+        .patch(Uri.parse('$baseUrl$path'), headers: headers, body: jsonEncode(body))
+        .timeout(const Duration(seconds: 15));
+  }
+
   static Future<http.Response> delete(String path) async {
     final headers = await _getHeaders();
     return http

@@ -9,6 +9,7 @@ import 'providers/sale_provider.dart';
 import 'providers/subscription_provider.dart';
 import 'providers/invoice_provider.dart';
 import 'providers/ledger_provider.dart';
+import 'providers/online_order_provider.dart';
 import 'screens/splash_screen.dart';
 
 class BluexSoftsPOSApp extends StatelessWidget {
@@ -25,6 +26,7 @@ class BluexSoftsPOSApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
         ChangeNotifierProvider(create: (_) => InvoiceProvider()),
         ChangeNotifierProvider(create: (_) => LedgerProvider()),
+        ChangeNotifierProvider(create: (_) => OnlineOrderProvider()),
       ],
       child: MaterialApp(
         navigatorKey: DioClient.navigatorKey,

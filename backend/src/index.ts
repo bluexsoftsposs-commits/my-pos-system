@@ -9,6 +9,10 @@ import userRoutes from './routes/user';
 import paymentRoutes from './routes/payment';
 import superAdminRoutes from './routes/superadmin';
 import ledgerRoutes from './routes/ledger';
+import planRoutes from './routes/plan';
+import storeRoutes from './routes/store';
+import onlineOrderRoutes from './routes/onlineOrder';
+import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,6 +46,14 @@ app.use('/api/users', userRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/ledger', ledgerRoutes);
+app.use('/api/plans', planRoutes);
+app.use('/api/store', storeRoutes);
+app.use('/api/orders/online', onlineOrderRoutes);
+
+// Serve the storefront HTML at /store/:slug
+app.get('/store/:slug', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'storefront.html'));
+});
 
 // 404 handler
 app.use((_req, res) => {

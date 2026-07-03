@@ -14,7 +14,7 @@ class CartPanel extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.darkSurface,
-        border: Border(left: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
+        border: Border(left: BorderSide(color: Colors.white.withOpacity(0.06))),
       ),
       child: Column(
         children: [
@@ -43,14 +43,14 @@ class CartPanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
+        border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.06))),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Current Sale',
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              fontSize: 28,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontSize: 24,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),
@@ -70,7 +70,7 @@ class CartPanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
+        border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.06))),
       ),
       child: Row(
         children: [
@@ -116,7 +116,7 @@ class CartPanel extends StatelessWidget {
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.12)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -137,7 +137,7 @@ class CartPanel extends StatelessWidget {
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.12)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -169,14 +169,14 @@ class CartPanel extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_cart_outlined, size: 48, color: Colors.grey.withValues(alpha: 0.4)),
+          Icon(Icons.shopping_basket_outlined, size: 48, color: Colors.grey.withOpacity(0.4)),
           const SizedBox(height: 12),
           const Text('Cart is empty',
             style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
           Text('Tap products to add',
-            style: TextStyle(fontSize: 13, color: Colors.grey.withValues(alpha: 0.6)),
+            style: TextStyle(fontSize: 13, color: Colors.grey.withOpacity(0.6)),
           ),
         ],
       ),
@@ -188,7 +188,7 @@ class CartPanel extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppTheme.darkCard,
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
+        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +221,7 @@ class CartPanel extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 8),
-          Container(height: 1, color: Colors.white.withValues(alpha: 0.08)),
+          Container(height: 1, color: AppTheme.darkBorder.withOpacity(0.3)),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,11 +243,11 @@ class CartPanel extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primary,
                 foregroundColor: Colors.white,
-                disabledBackgroundColor: AppTheme.primary.withValues(alpha: 0.3),
+                disabledBackgroundColor: AppTheme.primary.withOpacity(0.3),
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 8,
-                shadowColor: AppTheme.primary.withValues(alpha: 0.3),
+                shadowColor: AppTheme.primary.withOpacity(0.3),
               ),
             ),
           ),
@@ -292,7 +292,7 @@ class _CartItemRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(product.imageUrl!, fit: BoxFit.cover),
                 )
-              : Icon(Icons.inventory_2, size: 24, color: Colors.grey.withValues(alpha: 0.4)),
+              : Icon(Icons.inventory_2, size: 24, color: Colors.grey.withOpacity(0.4)),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -325,7 +325,7 @@ class _CartItemRow extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppTheme.darkCard,
                       borderRadius: BorderRadius.circular(999),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                      border: Border.all(color: Colors.white.withOpacity(0.12)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -351,7 +351,7 @@ class _CartItemRow extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             child: Icon(
                               Icons.add, size: 16,
-                              color: item.quantity < product.stock ? Colors.grey : Colors.grey.withValues(alpha: 0.3),
+                              color: item.quantity < product.stock ? Colors.grey : Colors.grey.withOpacity(0.3),
                             ),
                           ),
                         ),
@@ -361,7 +361,7 @@ class _CartItemRow extends StatelessWidget {
                   InkWell(
                     borderRadius: BorderRadius.circular(8),
                     onTap: () => cart.removeItem(product.id),
-                    child: Icon(Icons.delete, size: 18, color: Colors.grey.withValues(alpha: 0.6)),
+                    child: Icon(Icons.delete, size: 18, color: Colors.grey.withOpacity(0.6)),
                   ),
                 ],
               ),

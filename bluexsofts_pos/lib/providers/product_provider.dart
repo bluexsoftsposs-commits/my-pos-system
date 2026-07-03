@@ -101,7 +101,7 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
-      _error = 'Failed to create product';
+      _error = e.toString().replaceFirst('Exception: ', '');
       notifyListeners();
       return false;
     }

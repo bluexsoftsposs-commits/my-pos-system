@@ -26,18 +26,41 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
+    const shopId = req.shopId as string;
+
     const existing = await prisma.user.findUnique({
       where: {
         shopId_email: {
-          shopId: req.shopId as string,
-          email: email
-        }
+          shopId,
+          email,
+        },
       },
     });
 
     if (existing) {
       res.status(409).json({ error: 'User with this email already exists' });
       return;
+    }
+
+    // Enforce sales points limit from subscription plan
+    const subscription = await prisma.shopSubscription.findFirst({
+      where: { shopId, status: 'active' },
+      include: { plan: { select: { name: true, salesPointsLimit: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (subscription) {
+      const limit = subscription.plan.salesPointsLimit;
+      const currentCount = await prisma.user.count({
+        where: { shopId, isActive: true },
+      });
+
+      if (currentCount >= limit) {
+        res.status(403).json({
+          error: `Sales point limit reached. Your ${subscription.plan.name} plan allows ${limit} sales point(s). You have ${currentCount}/${limit}.`,
+        });
+        return;
+      }
     }
 
     const passwordHash = await bcrypt.hash(password, 12);

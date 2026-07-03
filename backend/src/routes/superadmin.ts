@@ -12,6 +12,13 @@ import {
   extendSubscription,
   updateShop,
   triggerBackup,
+  createPlan,
+  updatePlan,
+  deactivatePlan,
+  listShopsSubscriptions,
+  changeShopSubscription,
+  deleteAdmin,
+  deleteShop,
 } from '../controllers/superadmin';
 
 const router = Router();
@@ -32,5 +39,18 @@ router.delete('/users/:id', deleteUser);
 router.post('/users', createShopUser);
 router.post('/create-admin', createAdmin);
 router.put('/users/:id/toggle', toggleAdminStatus);
+
+// Plan management
+router.post('/plans', createPlan);
+router.put('/plans/:id', updatePlan);
+router.delete('/plans/:id', deactivatePlan);
+
+// Shop subscriptions
+router.get('/shops-subscriptions', listShopsSubscriptions);
+router.put('/shops/:shopId/subscription', changeShopSubscription);
+
+// Delete endpoints
+router.delete('/admins/:userId', deleteAdmin);
+router.delete('/shops/:shopId', deleteShop);
 
 export default router;
