@@ -35,36 +35,30 @@ class ApiClient {
 
   static Future<http.Response> get(String path) async {
     final headers = await _getHeaders();
-    return http.get(
-      Uri.parse('$baseUrl$path'),
-      headers: headers,
-    );
+    return http
+        .get(Uri.parse('$baseUrl$path'), headers: headers)
+        .timeout(const Duration(seconds: 15));
   }
 
   static Future<http.Response> post(String path, Map<String, dynamic> body) async {
     final headers = await _getHeaders();
-    return http.post(
-      Uri.parse('$baseUrl$path'),
-      headers: headers,
-      body: jsonEncode(body),
-    );
+    return http
+        .post(Uri.parse('$baseUrl$path'), headers: headers, body: jsonEncode(body))
+        .timeout(const Duration(seconds: 15));
   }
 
   static Future<http.Response> put(String path, Map<String, dynamic> body) async {
     final headers = await _getHeaders();
-    return http.put(
-      Uri.parse('$baseUrl$path'),
-      headers: headers,
-      body: jsonEncode(body),
-    );
+    return http
+        .put(Uri.parse('$baseUrl$path'), headers: headers, body: jsonEncode(body))
+        .timeout(const Duration(seconds: 15));
   }
 
   static Future<http.Response> delete(String path) async {
     final headers = await _getHeaders();
-    return http.delete(
-      Uri.parse('$baseUrl$path'),
-      headers: headers,
-    );
+    return http
+        .delete(Uri.parse('$baseUrl$path'), headers: headers)
+        .timeout(const Duration(seconds: 15));
   }
 
   static Map<String, dynamic> parseResponse(http.Response response) {
