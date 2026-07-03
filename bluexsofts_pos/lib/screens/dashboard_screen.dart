@@ -121,6 +121,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final mainItems = sidebarItems.take(4).toList();
     final drawerItems = sidebarItems.skip(4).toList();
+    final navSelectedIndex = _selectedIndex.clamp(0, mainItems.length - 1);
+    if (navSelectedIndex != _selectedIndex && !isDesktop) {
+      debugPrint('[NavBar] _selectedIndex=$_selectedIndex > mainItems max, clamped to $navSelectedIndex');
+    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -257,7 +261,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       bottomNavigationBar: isDesktop
           ? null
           : NavigationBar(
-              selectedIndex: _selectedIndex,
+              selectedIndex: navSelectedIndex,
               onDestinationSelected: (i) => setState(() => _selectedIndex = i),
               destinations: mainItems
                   .map((d) => NavigationDestination(icon: Icon(d.icon, size: 20), label: d.label))
