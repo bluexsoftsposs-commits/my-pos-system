@@ -198,7 +198,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     final auth = context.watch<AuthProvider>();
     final products = productProv.products;
     final totalItems = products.length;
-    final lowStock = products.where((p) => p.stock > 0 && p.stock <= 5).length;
+    final lowStock = products.where((p) => p.stock > 0 && p.stock <= p.lowStockThreshold).length;
     final outOfStock = products.where((p) => p.stock <= 0).length;
     final categories = productProv.categories;
 
@@ -849,7 +849,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _buildProductCard(Product product, AuthProvider auth) {
     final isOut = product.stock <= 0;
-    final isLow = product.stock > 0 && product.stock <= 5;
+    final isLow = product.stock > 0 && product.stock <= product.lowStockThreshold;
     final stockColor = isOut ? AppTheme.error : AppTheme.success;
     final stockLabel = isOut ? 'Out of Stock' : 'In Stock';
 
@@ -1150,7 +1150,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       children: [
                         _buildCategoryBadge(product.category),
                         const SizedBox(width: 8),
-                        _buildStockBadge(product.stock),
+                        _buildStockBadge(product.stock, product.lowStockThreshold),
                       ],
                     ),
                   ],
@@ -1217,10 +1217,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _buildStockBadge(int stock) {
+  Widget _buildStockBadge(int stock, int threshold) {
     final color = stock <= 0
         ? AppTheme.error
-        : stock <= 5
+        : stock <= threshold
             ? AppTheme.warning
             : AppTheme.success;
     final label = stock <= 0 ? 'Out' : 'Stock: $stock';

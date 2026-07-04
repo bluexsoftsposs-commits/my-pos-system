@@ -9,6 +9,9 @@ import '../core/currency_formatter.dart';
 import '../core/env_config.dart';
 import 'login_screen.dart';
 import 'plans_screen.dart';
+import '../services/printer_service.dart';
+import '../services/printer_settings_service.dart';
+import '../views/settings/printer_settings_sheet.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -207,6 +210,88 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _infoRow('Name', auth.user?.name ?? 'N/A'),
             _infoRow('Email', auth.user?.email ?? 'N/A'),
             _infoRow('Role', auth.user?.role ?? 'N/A'),
+          ],
+        ),
+        const SizedBox(height: 12),
+
+        // ── Printer Settings ────────────────────────────────
+        _buildSection(
+          icon: Icons.print,
+          title: 'Printer Settings',
+          children: [
+            FutureBuilder<PrinterConfig>(
+              future: PrinterSettingsService.loadConfig(),
+              builder: (context, snapshot) {
+                final config = snapshot.data ?? const PrinterConfig();
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          config.enabled
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          size: 18,
+                          color: config.enabled
+                              ? AppTheme.success
+                              : AppTheme.error,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          config.enabled
+                              ? 'Printer connected'
+                              : 'No printer configured',
+                          style: TextStyle(
+                            color: config.enabled
+                                ? AppTheme.success
+                                : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (config.enabled)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          config.type == PrinterType.wifi
+                              ? 'WiFi: ${config.wifiIp ?? "N/A"}:${config.wifiPort}'
+                              : 'Bluetooth: ${config.bluetoothMac ?? "N/A"}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final result = await showModalBottomSheet<bool>(
+                            context: context,
+                            backgroundColor: const Color(0xFF201F1F),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(24),
+                              ),
+                            ),
+                            builder: (_) => PrinterSettingsSheet(
+                              initialConfig: config,
+                            ),
+                          );
+                          if (result == true && mounted) {
+                            setState(() {});
+                          }
+                        },
+                        icon: const Icon(Icons.settings, size: 18),
+                        label: const Text('Configure Printer'),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
         const SizedBox(height: 12),

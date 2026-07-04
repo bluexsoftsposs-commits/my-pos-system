@@ -133,6 +133,7 @@ model Product {
   category         String     @default("General")
   imageUrl         String     @default("")
   barcode          String?    @unique
+  lowStockThreshold Int      @default(5)
   isActive         Boolean    @default(true)
   isVisibleOnline  Boolean    @default(true)
   createdAt        DateTime   @default(now())

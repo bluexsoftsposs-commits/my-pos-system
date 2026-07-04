@@ -9,6 +9,7 @@ class Product {
   final String category;
   final String imageUrl;
   final String? barcode;
+  int lowStockThreshold;
   final bool isActive;
   final DateTime createdAt;
 
@@ -23,6 +24,7 @@ class Product {
     this.category = 'General',
     this.imageUrl = '',
     this.barcode,
+    this.lowStockThreshold = 5,
     this.isActive = true,
     required this.createdAt,
   });
@@ -39,6 +41,7 @@ class Product {
       category: json['category'] as String? ?? 'General',
       imageUrl: json['imageUrl'] as String? ?? '',
       barcode: json['barcode'] as String?,
+      lowStockThreshold: json['lowStockThreshold'] as int? ?? 5,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
@@ -55,6 +58,7 @@ class Product {
     'category': category,
     'imageUrl': imageUrl,
     'barcode': barcode,
+    'lowStockThreshold': lowStockThreshold,
     'isActive': isActive,
     'createdAt': createdAt.toIso8601String(),
   };
@@ -68,6 +72,7 @@ class Product {
     String? category,
     String? imageUrl,
     String? barcode,
+    int? lowStockThreshold,
     bool? isActive,
   }) {
     return Product(
@@ -81,6 +86,7 @@ class Product {
       category: category ?? this.category,
       imageUrl: imageUrl ?? this.imageUrl,
       barcode: barcode ?? this.barcode,
+      lowStockThreshold: lowStockThreshold ?? this.lowStockThreshold,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt,
     );

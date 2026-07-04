@@ -98,3 +98,6 @@ build/Release
 !.yarn/sdks
 !.yarn/versions
 .vite/
+
+# Stitch design reference (not app code)
+stitch_design_export/

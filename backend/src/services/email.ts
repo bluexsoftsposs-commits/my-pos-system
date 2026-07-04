@@ -87,6 +87,76 @@ export async function sendPasswordResetEmail(email: string, token: string): Prom
   }
 }
 
+export async function sendInvoiceEmail(
+  toEmail: string,
+  saleDetails: {
+    shopName: string;
+    invoiceNumber: string;
+    items: { name: string; qty: number; price: number }[];
+    subtotal: number;
+    tax: number;
+    discount: number;
+    total: number;
+    paymentMethod: string;
+    date: string;
+  }
+): Promise<void> {
+  const itemRows = saleDetails.items
+    .map(
+      (i) =>
+        `<tr style="border-bottom:1px solid #eee;">
+          <td style="padding:8px 4px">${i.name}</td>
+          <td style="padding:8px 4px;text-align:center">${i.qty}</td>
+          <td style="padding:8px 4px;text-align:right">PKR ${i.price.toFixed(2)}</td>
+          <td style="padding:8px 4px;text-align:right">PKR ${(i.price * i.qty).toFixed(2)}</td>
+        </tr>`
+    )
+    .join('');
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background:#6C5CE7;padding:20px;text-align:center;border-radius:12px 12px 0 0;">
+        <h1 style="color:#fff;margin:0;font-size:22px;">${saleDetails.shopName}</h1>
+        <p style="color:#C6BFFF;margin:4px 0 0;">Invoice #${saleDetails.invoiceNumber}</p>
+      </div>
+      <div style="background:#f8f9fd;padding:24px;border-radius:0 0 12px 12px;">
+        <p style="color:#666;font-size:14px;">Date: ${saleDetails.date}</p>
+        <p style="color:#666;font-size:14px;">Payment: ${saleDetails.paymentMethod}</p>
+        <table style="width:100%;border-collapse:collapse;margin-top:16px;">
+          <thead>
+            <tr style="background:#6C5CE7;color:#fff;">
+              <th style="padding:8px 4px;text-align:left;">Item</th>
+              <th style="padding:8px 4px;">Qty</th>
+              <th style="padding:8px 4px;text-align:right;">Price</th>
+              <th style="padding:8px 4px;text-align:right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>${itemRows}</tbody>
+        </table>
+        <hr style="border:none;border-top:2px solid #6C5CE7;margin:16px 0;" />
+        <div style="text-align:right;">
+          ${saleDetails.tax > 0 ? `<p style="margin:4px 0;">Subtotal: PKR ${saleDetails.subtotal.toFixed(2)}</p>` : ''}
+          ${saleDetails.tax > 0 ? `<p style="margin:4px 0;">Tax: PKR ${saleDetails.tax.toFixed(2)}</p>` : ''}
+          ${saleDetails.discount > 0 ? `<p style="margin:4px 0;color:#e74c3c;">Discount: -PKR ${saleDetails.discount.toFixed(2)}</p>` : ''}
+          <h2 style="margin:8px 0;color:#6C5CE7;">Total: PKR ${saleDetails.total.toFixed(2)}</h2>
+        </div>
+        <p style="color:#999;font-size:12px;text-align:center;margin-top:24px;">Thank you for your business!</p>
+      </div>
+    </div>`;
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"BluexSofts POS" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: toEmail,
+      subject: `Invoice #${saleDetails.invoiceNumber} — ${saleDetails.shopName}`,
+      html,
+    });
+    console.log('[Email] Invoice sent successfully:', info.messageId);
+  } catch (error: any) {
+    console.error('[Email] Failed to send invoice:', error.message);
+  }
+}
+
 export async function sendBackupEmail(filepath: string, filename: string): Promise<void> {
   const recipient = process.env.BACKUP_EMAIL_TO || process.env.SMTP_USER || '';
   if (!recipient) {

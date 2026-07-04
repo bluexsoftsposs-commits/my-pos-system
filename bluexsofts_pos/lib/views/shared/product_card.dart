@@ -12,7 +12,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final outOfStock = product.stock <= 0;
-    final lowStock = product.stock <= 5;
+    final lowStock = product.stock <= product.lowStockThreshold;
     final stockColor = outOfStock ? AppTheme.error : lowStock ? AppTheme.warning : AppTheme.success;
 
     return Container(

@@ -11,6 +11,7 @@ import 'providers/invoice_provider.dart';
 import 'providers/ledger_provider.dart';
 import 'providers/online_order_provider.dart';
 import 'screens/splash_screen.dart';
+import 'widgets/barcode_keyboard_listener.dart';
 
 class BluexSoftsPOSApp extends StatelessWidget {
   const BluexSoftsPOSApp({super.key});
@@ -28,12 +29,14 @@ class BluexSoftsPOSApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LedgerProvider()),
         ChangeNotifierProvider(create: (_) => OnlineOrderProvider()),
       ],
-      child: MaterialApp(
-        navigatorKey: DioClient.navigatorKey,
-        title: 'BluexSofts POS',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
-        home: const SplashScreen(),
+      child: BarcodeKeyboardListener(
+        child: MaterialApp(
+          navigatorKey: DioClient.navigatorKey,
+          title: 'BluexSofts POS',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.darkTheme,
+          home: const SplashScreen(),
+        ),
       ),
     );
   }

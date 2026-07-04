@@ -9729,11 +9729,13 @@ export namespace Prisma {
   export type ProductAvgAggregateOutputType = {
     price: number | null
     stock: number | null
+    lowStockThreshold: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     price: number | null
     stock: number | null
+    lowStockThreshold: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -9747,6 +9749,7 @@ export namespace Prisma {
     category: string | null
     imageUrl: string | null
     barcode: string | null
+    lowStockThreshold: number | null
     isActive: boolean | null
     isVisibleOnline: boolean | null
     createdAt: Date | null
@@ -9764,6 +9767,7 @@ export namespace Prisma {
     category: string | null
     imageUrl: string | null
     barcode: string | null
+    lowStockThreshold: number | null
     isActive: boolean | null
     isVisibleOnline: boolean | null
     createdAt: Date | null
@@ -9781,6 +9785,7 @@ export namespace Prisma {
     category: number
     imageUrl: number
     barcode: number
+    lowStockThreshold: number
     isActive: number
     isVisibleOnline: number
     createdAt: number
@@ -9792,11 +9797,13 @@ export namespace Prisma {
   export type ProductAvgAggregateInputType = {
     price?: true
     stock?: true
+    lowStockThreshold?: true
   }
 
   export type ProductSumAggregateInputType = {
     price?: true
     stock?: true
+    lowStockThreshold?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -9810,6 +9817,7 @@ export namespace Prisma {
     category?: true
     imageUrl?: true
     barcode?: true
+    lowStockThreshold?: true
     isActive?: true
     isVisibleOnline?: true
     createdAt?: true
@@ -9827,6 +9835,7 @@ export namespace Prisma {
     category?: true
     imageUrl?: true
     barcode?: true
+    lowStockThreshold?: true
     isActive?: true
     isVisibleOnline?: true
     createdAt?: true
@@ -9844,6 +9853,7 @@ export namespace Prisma {
     category?: true
     imageUrl?: true
     barcode?: true
+    lowStockThreshold?: true
     isActive?: true
     isVisibleOnline?: true
     createdAt?: true
@@ -9948,6 +9958,7 @@ export namespace Prisma {
     category: string
     imageUrl: string
     barcode: string | null
+    lowStockThreshold: number
     isActive: boolean
     isVisibleOnline: boolean
     createdAt: Date
@@ -9984,6 +9995,7 @@ export namespace Prisma {
     category?: boolean
     imageUrl?: boolean
     barcode?: boolean
+    lowStockThreshold?: boolean
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: boolean
@@ -10005,6 +10017,7 @@ export namespace Prisma {
     category?: boolean
     imageUrl?: boolean
     barcode?: boolean
+    lowStockThreshold?: boolean
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: boolean
@@ -10023,6 +10036,7 @@ export namespace Prisma {
     category?: boolean
     imageUrl?: boolean
     barcode?: boolean
+    lowStockThreshold?: boolean
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: boolean
@@ -10057,6 +10071,7 @@ export namespace Prisma {
       category: string
       imageUrl: string
       barcode: string | null
+      lowStockThreshold: number
       isActive: boolean
       isVisibleOnline: boolean
       createdAt: Date
@@ -10467,6 +10482,7 @@ export namespace Prisma {
     readonly category: FieldRef<"Product", 'String'>
     readonly imageUrl: FieldRef<"Product", 'String'>
     readonly barcode: FieldRef<"Product", 'String'>
+    readonly lowStockThreshold: FieldRef<"Product", 'Int'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
     readonly isVisibleOnline: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
@@ -18308,6 +18324,7 @@ export namespace Prisma {
     category: 'category',
     imageUrl: 'imageUrl',
     barcode: 'barcode',
+    lowStockThreshold: 'lowStockThreshold',
     isActive: 'isActive',
     isVisibleOnline: 'isVisibleOnline',
     createdAt: 'createdAt',
@@ -19115,6 +19132,7 @@ export namespace Prisma {
     category?: StringFilter<"Product"> | string
     imageUrl?: StringFilter<"Product"> | string
     barcode?: StringNullableFilter<"Product"> | string | null
+    lowStockThreshold?: IntFilter<"Product"> | number
     isActive?: BoolFilter<"Product"> | boolean
     isVisibleOnline?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -19135,6 +19153,7 @@ export namespace Prisma {
     category?: SortOrder
     imageUrl?: SortOrder
     barcode?: SortOrderInput | SortOrder
+    lowStockThreshold?: SortOrder
     isActive?: SortOrder
     isVisibleOnline?: SortOrder
     createdAt?: SortOrder
@@ -19158,6 +19177,7 @@ export namespace Prisma {
     sku?: StringFilter<"Product"> | string
     category?: StringFilter<"Product"> | string
     imageUrl?: StringFilter<"Product"> | string
+    lowStockThreshold?: IntFilter<"Product"> | number
     isActive?: BoolFilter<"Product"> | boolean
     isVisibleOnline?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -19178,6 +19198,7 @@ export namespace Prisma {
     category?: SortOrder
     imageUrl?: SortOrder
     barcode?: SortOrderInput | SortOrder
+    lowStockThreshold?: SortOrder
     isActive?: SortOrder
     isVisibleOnline?: SortOrder
     createdAt?: SortOrder
@@ -19203,6 +19224,7 @@ export namespace Prisma {
     category?: StringWithAggregatesFilter<"Product"> | string
     imageUrl?: StringWithAggregatesFilter<"Product"> | string
     barcode?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    lowStockThreshold?: IntWithAggregatesFilter<"Product"> | number
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     isVisibleOnline?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -20454,6 +20476,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -20474,6 +20497,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -20492,6 +20516,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20512,6 +20537,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20531,6 +20557,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -20547,6 +20574,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20564,6 +20592,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21831,6 +21860,7 @@ export namespace Prisma {
     category?: SortOrder
     imageUrl?: SortOrder
     barcode?: SortOrder
+    lowStockThreshold?: SortOrder
     isActive?: SortOrder
     isVisibleOnline?: SortOrder
     createdAt?: SortOrder
@@ -21840,6 +21870,7 @@ export namespace Prisma {
   export type ProductAvgOrderByAggregateInput = {
     price?: SortOrder
     stock?: SortOrder
+    lowStockThreshold?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -21853,6 +21884,7 @@ export namespace Prisma {
     category?: SortOrder
     imageUrl?: SortOrder
     barcode?: SortOrder
+    lowStockThreshold?: SortOrder
     isActive?: SortOrder
     isVisibleOnline?: SortOrder
     createdAt?: SortOrder
@@ -21870,6 +21902,7 @@ export namespace Prisma {
     category?: SortOrder
     imageUrl?: SortOrder
     barcode?: SortOrder
+    lowStockThreshold?: SortOrder
     isActive?: SortOrder
     isVisibleOnline?: SortOrder
     createdAt?: SortOrder
@@ -21879,6 +21912,7 @@ export namespace Prisma {
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
     stock?: SortOrder
+    lowStockThreshold?: SortOrder
   }
 
   export type CustomerNullableRelationFilter = {
@@ -24023,6 +24057,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -24041,6 +24076,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -24428,6 +24464,7 @@ export namespace Prisma {
     category?: StringFilter<"Product"> | string
     imageUrl?: StringFilter<"Product"> | string
     barcode?: StringNullableFilter<"Product"> | string | null
+    lowStockThreshold?: IntFilter<"Product"> | number
     isActive?: BoolFilter<"Product"> | boolean
     isVisibleOnline?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -26134,6 +26171,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -26153,6 +26191,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -26274,6 +26313,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26293,6 +26333,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26591,6 +26632,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -26610,6 +26652,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -26680,6 +26723,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26699,6 +26743,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27151,6 +27196,7 @@ export namespace Prisma {
     category?: string
     imageUrl?: string
     barcode?: string | null
+    lowStockThreshold?: number
     isActive?: boolean
     isVisibleOnline?: boolean
     createdAt?: Date | string
@@ -27301,6 +27347,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27319,6 +27366,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27337,6 +27385,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    lowStockThreshold?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isVisibleOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

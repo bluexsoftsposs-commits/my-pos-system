@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
+import { sendInvoiceEmail } from '../services/email';
 
 const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
 
@@ -227,6 +228,33 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
     });
 
     res.status(201).json(sale);
+
+    // Fire-and-forget: email invoice to the shop's admin user
+    if (sale) {
+      const shop = await prisma.shop.findUnique({
+        where: { id: shopId },
+        select: { shopName: true, users: { where: { role: 'ADMIN' }, select: { email: true }, take: 1 } },
+      });
+      const adminEmail = shop?.users?.[0]?.email || (req as any).user?.email;
+      if (adminEmail) {
+        const items = sale.saleItems.map((si: any) => ({
+          name: si.product?.name || 'Product',
+          qty: si.quantity,
+          price: si.price,
+        }));
+        sendInvoiceEmail(adminEmail, {
+          shopName: shop?.shopName || 'BluexSofts POS',
+          invoiceNumber: sale.invoice?.invoiceNumber || sale.id.substring(0, 8).toUpperCase(),
+          items,
+          subtotal: sale.subtotal,
+          tax: sale.tax,
+          discount: sale.discount,
+          total: sale.total,
+          paymentMethod: sale.paymentMethod,
+          date: `${sale.createdAt.getDate()}/${sale.createdAt.getMonth() + 1}/${sale.createdAt.getFullYear()}`,
+        }).catch((err: any) => console.error('[SaleController] Email send failed (non-blocking):', err.message));
+      }
+    }
   } catch (error: any) {
     console.error('Create sale error:', error);
     if (error.message && (error.message.includes('not found') || error.message.includes('Insufficient'))) {

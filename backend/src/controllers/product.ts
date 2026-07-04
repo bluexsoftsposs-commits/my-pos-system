@@ -28,6 +28,7 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
             OR: [
               { name: { contains: toString(search) } },
               { sku: { contains: toString(search) } },
+              { barcode: { contains: toString(search) } },
             ],
           }
           : {}),
@@ -109,6 +110,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
         category: category || 'General',
         imageUrl: imageUrl || '',
         barcode: req.body.barcode || null,
+        lowStockThreshold: parseInt(req.body.lowStockThreshold) || 5,
       },
     });
 
@@ -134,7 +136,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const { name, description, price, stock, sku, category, imageUrl, isActive, barcode } = req.body;
+    const { name, description, price, stock, sku, category, imageUrl, isActive, barcode, lowStockThreshold } = req.body;
 
     const product = await prisma.product.update({
       where: { id: productId },
@@ -148,6 +150,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
         ...(imageUrl !== undefined && { imageUrl }),
         ...(isActive !== undefined && { isActive }),
         ...(barcode !== undefined && { barcode: barcode || null }),
+        ...(lowStockThreshold !== undefined && { lowStockThreshold: parseInt(lowStockThreshold) }),
       },
     });
 

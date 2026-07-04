@@ -30,6 +30,10 @@ dependencies:
   # Receipt printing
   pdf: ^3.11.1
   printing: ^5.13.2
+  # esc_pos_printer: for WiFi thermal printing — uncomment and run `flutter pub get` when hardware is available
+  # esc_pos_printer: ^3.0.0
+  # esc_pos_bluetooth: for Bluetooth thermal printing — requires resolving rxdart version conflict with cached_network_image
+  # esc_pos_bluetooth: ^0.4.0
 
   # Connectivity
   connectivity_plus: ^6.1.0

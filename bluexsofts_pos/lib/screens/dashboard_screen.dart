@@ -957,7 +957,7 @@ class _DashboardHomeState extends State<_DashboardHome> {
 
   Widget _buildStatGrid(bool isDesktop, double todayTotal, int todayCount, double allTimeTotal, double avgTicket, Map<String, dynamic>? summary) {
     final products = context.watch<ProductProvider>().products;
-    final lowStockCount = products.where((p) => p.stock <= 5).length;
+    final lowStockCount = products.where((p) => p.stock <= p.lowStockThreshold).length;
 
     final dailySales = summary?['dailySales'] as Map<String, dynamic>? ?? {};
     final dailyEntries = dailySales.entries.map((e) => MapEntry(e.key, (e.value as num).toDouble())).toList();

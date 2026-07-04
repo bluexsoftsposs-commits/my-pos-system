@@ -227,7 +227,7 @@ class _ProductPanelState extends State<ProductPanel> {
 
   Widget _buildPOSProductCard(Product product, CartProvider cart) {
     final isOut = product.stock <= 0;
-    final isLow = product.stock > 0 && product.stock <= 5;
+    final isLow = product.stock > 0 && product.stock <= product.lowStockThreshold;
     final stockColor = isOut ? AppTheme.error : (isLow ? AppTheme.warning : AppTheme.success);
     final stockLabel = isOut ? 'Out of Stock' : (isLow ? 'Low Stock' : '${product.stock} in stock');
 

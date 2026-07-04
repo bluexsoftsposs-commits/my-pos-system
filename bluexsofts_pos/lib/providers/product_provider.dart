@@ -84,7 +84,9 @@ class ProductProvider with ChangeNotifier {
       filtered = filtered.where((p) =>
           p.name.toLowerCase().contains(_searchQuery) ||
           p.sku.toLowerCase().contains(_searchQuery) ||
-          p.category.toLowerCase().contains(_searchQuery));
+          p.category.toLowerCase().contains(_searchQuery) ||
+          (p.barcode != null &&
+              p.barcode!.toLowerCase().contains(_searchQuery)));
     }
 
     _filteredProducts = filtered.toList();

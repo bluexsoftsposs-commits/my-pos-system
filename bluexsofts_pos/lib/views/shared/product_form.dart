@@ -43,6 +43,7 @@ class _ProductFormState extends State<ProductForm> {
   String _selectedCategory = 'General';
   late final TextEditingController _barcodeCtrl;
   late final TextEditingController _imageUrlCtrl;
+  late final TextEditingController _lowStockThresholdCtrl;
 
   bool _uploading = false;
   String? _previewUrl;
@@ -61,6 +62,7 @@ class _ProductFormState extends State<ProductForm> {
     _selectedCategory = p?.category ?? 'General';
     _barcodeCtrl = TextEditingController(text: p?.barcode ?? widget.initialBarcode ?? '');
     _imageUrlCtrl = TextEditingController(text: p?.imageUrl ?? widget.initialImageUrl ?? '');
+    _lowStockThresholdCtrl = TextEditingController(text: (p?.lowStockThreshold ?? 5).toString());
     _previewUrl = p?.imageUrl ?? widget.initialImageUrl;
   }
 
@@ -73,6 +75,7 @@ class _ProductFormState extends State<ProductForm> {
     _skuCtrl.dispose();
     _barcodeCtrl.dispose();
     _imageUrlCtrl.dispose();
+    _lowStockThresholdCtrl.dispose();
     super.dispose();
   }
 
@@ -172,6 +175,7 @@ class _ProductFormState extends State<ProductForm> {
       'category': _selectedCategory,
       'imageUrl': _imageUrlCtrl.text.trim(),
       'barcode': _barcodeCtrl.text.trim().isNotEmpty ? _barcodeCtrl.text.trim() : null,
+      'lowStockThreshold': int.tryParse(_lowStockThresholdCtrl.text.trim()) ?? 5,
     };
 
     final prov = context.read<ProductProvider>();
@@ -378,6 +382,16 @@ class _ProductFormState extends State<ProductForm> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _lowStockThresholdCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Low Stock Threshold',
+                  prefixIcon: Icon(Icons.warning_amber),
+                  hintText: 'Alert when stock falls below this',
+                ),
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 12),
               TextFormField(
