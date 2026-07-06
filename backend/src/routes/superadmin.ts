@@ -12,6 +12,7 @@ import {
   extendSubscription,
   updateShop,
   triggerBackup,
+  triggerBackupManual,
   createPlan,
   updatePlan,
   deactivatePlan,
@@ -28,6 +29,9 @@ router.get('/backup', triggerBackup);
 
 router.use(authenticate);
 router.use(requireSuperAdmin);
+
+// Manual backup trigger (superadmin-only, for testing without waiting 30 min)
+router.post('/backup/trigger', triggerBackupManual);
 
 router.get('/stats', getDashboardStats);
 router.get('/shops', listShops);

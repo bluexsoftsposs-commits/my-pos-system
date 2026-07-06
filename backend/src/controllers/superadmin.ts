@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import prisma from '../config/db';
 import { sendBackupEmail } from '../services/email';
+import { executeBackupCycle } from '../services/backup-scheduler';
 import { generateSlug } from '../utils/slug';
 
 const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
@@ -715,5 +716,23 @@ export const triggerBackup = async (req: Request, res: Response): Promise<void> 
   } catch (error) {
     console.error('Backup error:', error);
     res.status(500).json({ error: 'Backup failed' });
+  }
+};
+
+export const triggerBackupManual = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await executeBackupCycle();
+    res.json({
+      success: true,
+      cloudinaryUrl: result.cloudinaryUrl || null,
+      emailSent: result.emailSent,
+      pruned: result.pruned,
+      message: result.cloudinaryUrl
+        ? 'Backup completed and uploaded to Cloudinary'
+        : 'Backup completed but Cloudinary upload failed (check logs)',
+    });
+  } catch (error) {
+    console.error('[ManualBackup] Error:', error);
+    res.status(500).json({ error: 'Manual backup failed' });
   }
 };

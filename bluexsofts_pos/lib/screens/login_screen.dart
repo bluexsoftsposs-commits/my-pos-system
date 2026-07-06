@@ -145,7 +145,6 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -155,12 +154,12 @@ class _LoginScreenState extends State<LoginScreen>
             return Row(
               children: [
                 Expanded(child: _buildBrandingPanel()),
-                Expanded(child: _buildRightPanel(auth)),
+                Expanded(child: _buildRightPanel()),
               ],
             );
           }
 
-          return _buildNarrowLayout(auth);
+          return _buildNarrowLayout();
         },
       ),
     );
@@ -226,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildRightPanel(AuthProvider auth) {
+  Widget _buildRightPanel() {
     return Container(
       color: AppTheme.darkBg,
       child: Center(
@@ -241,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildLoginCard(auth),
+                    _buildLoginCard(),
                     const SizedBox(height: 24),
                     _buildFooter(),
                   ],
@@ -254,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildNarrowLayout(AuthProvider auth) {
+  Widget _buildNarrowLayout() {
     return Container(
       decoration: BoxDecoration(gradient: AppTheme.loginGradient),
       child: Center(
@@ -293,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                       ),
                       const SizedBox(height: 32),
-                      _buildLoginCard(auth),
+                      _buildLoginCard(),
                       const SizedBox(height: 24),
                       _buildFooter(),
                     ],
@@ -307,7 +306,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildLoginCard(AuthProvider auth) {
+  Widget _buildLoginCard() {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
@@ -366,7 +365,7 @@ class _LoginScreenState extends State<LoginScreen>
             const SizedBox(height: 24),
             FadeTransition(
               opacity: _field5Opacity,
-              child: _buildSignInButton(auth),
+              child: _buildSignInButton(),
             ),
             const SizedBox(height: 20),
             FadeTransition(
@@ -502,38 +501,42 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildSignInButton(AuthProvider auth) {
-    return SizedBox(
-      height: 48,
-      child: ElevatedButton(
-        onPressed: auth.isLoading ? null : _submit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.primary,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        child: auth.isLoading
-            ? const SizedBox(
-                height: 22,
-                width: 22,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Sign In',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+  Widget _buildSignInButton() {
+    return Consumer<AuthProvider>(
+      builder: (context, auth, _) {
+        return SizedBox(
+          height: 48,
+          child: ElevatedButton(
+            onPressed: auth.isLoading ? null : _submit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primary,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: auth.isLoading
+                ? const SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Sign In',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward, size: 18),
+                    ],
                   ),
-                  SizedBox(width: 8),
-                  Icon(Icons.arrow_forward, size: 18),
-                ],
-              ),
-      ),
+          ),
+        );
+      },
     );
   }
 

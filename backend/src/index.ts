@@ -67,11 +67,15 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 });
 
 import prisma from './config/db';
+import { startBackupScheduler } from './services/backup-scheduler';
 
 const server = app.listen(PORT, () => {
   console.log(`\n🚀 BluexSofts POS Server running on port ${PORT}`);
   console.log(`📡 API: http://localhost:${PORT}/api`);
   console.log(`❤️  Health: http://localhost:${PORT}/health\n`);
+
+  // Start automated backups (30-min cycle, stored in Cloudinary)
+  startBackupScheduler();
 });
 
 // Graceful shutdown: disconnect Prisma pool on server stop
