@@ -4,47 +4,47 @@ generator client {
 }
 
 datasource db {
-  provider   = "postgresql"
-  url        = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Plan {
-  id                String             @id @default(uuid())
-  name              String
-  billingCycle      String
-  price             Float
-  setupFee          Float
-  originalSetupFee  Float?
-  salesPointsLimit  Int
-  productsLimit     Int
-  fbrConnect        Boolean            @default(false)
-  techSupport       Boolean            @default(false)
-  onlineStore       Boolean            @default(false)
-  updates           Boolean            @default(false)
-  isActive          Boolean            @default(true)
-  createdAt         DateTime           @default(now())
-  subscriptions     ShopSubscription[]
+  id               String             @id @default(uuid())
+  name             String
+  billingCycle     String
+  price            Float
+  setupFee         Float
+  originalSetupFee Float?
+  salesPointsLimit Int
+  productsLimit    Int
+  fbrConnect       Boolean            @default(false)
+  techSupport      Boolean            @default(false)
+  onlineStore      Boolean            @default(false)
+  updates          Boolean            @default(false)
+  isActive         Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  subscriptions    ShopSubscription[]
 
   @@unique([name, billingCycle])
 }
 
 model ShopSubscription {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   shopId    String
-  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shop      Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
   planId    String
-  plan      Plan     @relation(fields: [planId], references: [id])
-  startDate DateTime @default(now())
+  plan      Plan      @relation(fields: [planId], references: [id])
+  startDate DateTime  @default(now())
   endDate   DateTime?
-  status    String   @default("active")
-  createdAt DateTime @default(now())
+  status    String    @default("active")
+  createdAt DateTime  @default(now())
 }
 
 model Shop {
   id                 String             @id @default(uuid())
   shopName           String             @unique
-  slug               String     @unique
+  slug               String             @unique
   category           String             @default("General")
   subscriptionPlan   String             @default("NONE")
   subscriptionStatus String             @default("PENDING")
@@ -74,6 +74,7 @@ model Branch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  sales     Sale[]
 
   @@unique([shopId, name])
 }
@@ -92,55 +93,55 @@ model Payment {
 }
 
 model User {
-  id                String              @id @default(uuid())
-  shopId            String
-  email             String              @unique
-  passwordHash      String
-  role              String              @default("CASHIER")
-  name              String
-  isActive          Boolean             @default(true)
-  emailVerified     Boolean             @default(false)
-  verificationToken String?
+  id                  String               @id @default(uuid())
+  shopId              String
+  email               String               @unique
+  passwordHash        String
+  role                String               @default("CASHIER")
+  name                String
+  isActive            Boolean              @default(true)
+  emailVerified       Boolean              @default(false)
+  verificationToken   String?
   currentSessionToken String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  sales             Sale[]
-  invoices          Invoice[]
-  shop              Shop                @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  sales               Sale[]
+  invoices            Invoice[]
+  shop                Shop                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
   passwordResetTokens PasswordResetToken[]
 
   @@unique([shopId, email])
 }
 
 model PasswordResetToken {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   userId    String
-  token     String   @unique
+  token     String    @unique
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {
-  id               String     @id @default(uuid())
-  shopId           String
-  name             String
-  description      String     @default("")
-  price            Float
-  stock            Int        @default(0)
-  sku              String     @default("")
-  category         String     @default("General")
-  imageUrl         String     @default("")
-  barcode          String?    @unique
-  lowStockThreshold Int      @default(5)
-  isActive         Boolean    @default(true)
-  isVisibleOnline  Boolean    @default(true)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  shop             Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  saleItems        SaleItem[]
-  onlineOrderItems OnlineOrderItem[]
+  id                String            @id @default(uuid())
+  shopId            String
+  name              String
+  description       String            @default("")
+  price             Float
+  stock             Int               @default(0)
+  sku               String            @default("")
+  category          String            @default("General")
+  imageUrl          String            @default("")
+  barcode           String?           @unique
+  lowStockThreshold Int               @default(5)
+  isActive          Boolean           @default(true)
+  isVisibleOnline   Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  shop              Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  saleItems         SaleItem[]
+  onlineOrderItems  OnlineOrderItem[]
 }
 
 model Sale {
@@ -148,6 +149,7 @@ model Sale {
   shopId        String
   userId        String
   customerId    String?
+  branchId      String?
   total         Float
   subtotal      Float
   tax           Float      @default(0)
@@ -159,8 +161,11 @@ model Sale {
   user          User       @relation(fields: [userId], references: [id])
   customer      Customer?  @relation(fields: [customerId], references: [id])
   shop          Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  branch        Branch?    @relation(fields: [branchId], references: [id])
   saleItems     SaleItem[]
   invoice       Invoice?
+
+  @@index([branchId])
 }
 
 model Invoice {
@@ -220,18 +225,18 @@ model OnlineOrderItem {
 }
 
 model Customer {
-  id           String        @id @default(uuid())
-  shopId       String
-  name         String
-  phone        String        @default("")
-  totalOwed    Float         @default(0)
-  totalPaid    Float         @default(0)
+  id            String        @id @default(uuid())
+  shopId        String
+  name          String
+  phone         String        @default("")
+  totalOwed     Float         @default(0)
+  totalPaid     Float         @default(0)
   lastPaymentAt DateTime?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  shop         Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  entries      LedgerEntry[]
-  sales        Sale[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  shop          Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  entries       LedgerEntry[]
+  sales         Sale[]
 
   @@unique([shopId, name, phone])
 }
@@ -240,7 +245,7 @@ model LedgerEntry {
   id         String   @id @default(uuid())
   shopId     String
   customerId String
-  type       String   // "DEBIT" for charges, "CREDIT" for payments
+  type       String // "DEBIT" for charges, "CREDIT" for payments
   amount     Float
   saleId     String?
   note       String   @default("")

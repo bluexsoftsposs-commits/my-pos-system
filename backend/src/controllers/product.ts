@@ -186,6 +186,22 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
   }
 };
 
+// GET /api/products/low-stock — products where stock <= lowStockThreshold
+export const getLowStockProducts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const shopId = req.shopId as string;
+    const products = await prisma.product.findMany({
+      where: { shopId, isActive: true },
+      select: { id: true, name: true, stock: true, lowStockThreshold: true, sku: true, price: true, imageUrl: true },
+    });
+    const lowStock = products.filter((p) => p.stock <= p.lowStockThreshold);
+    res.json({ count: lowStock.length, products: lowStock });
+  } catch (error) {
+    console.error('Get low stock error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // GET /api/products/categories
 export const getCategories = async (req: Request, res: Response): Promise<void> => {
   try {

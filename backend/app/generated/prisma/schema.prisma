@@ -74,6 +74,7 @@ model Branch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  sales     Sale[]
 
   @@unique([shopId, name])
 }
@@ -148,6 +149,7 @@ model Sale {
   shopId        String
   userId        String
   customerId    String?
+  branchId      String?
   total         Float
   subtotal      Float
   tax           Float      @default(0)
@@ -159,8 +161,11 @@ model Sale {
   user          User       @relation(fields: [userId], references: [id])
   customer      Customer?  @relation(fields: [customerId], references: [id])
   shop          Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  branch        Branch?    @relation(fields: [branchId], references: [id])
   saleItems     SaleItem[]
   invoice       Invoice?
+
+  @@index([branchId])
 }
 
 model Invoice {

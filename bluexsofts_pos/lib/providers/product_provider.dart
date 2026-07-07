@@ -12,12 +12,16 @@ class ProductProvider with ChangeNotifier {
   String _searchQuery = '';
   bool _isLoading = false;
   String? _error;
+  int _lowStockCount = 0;
+  List<Product> _lowStockProducts = [];
 
   List<Product> get products => _filteredProducts;
   List<Product> get allProducts => _products;
   String get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  int get lowStockCount => _lowStockCount;
+  List<Product> get lowStockProducts => _lowStockProducts;
 
   final _productService = ProductService();
 
@@ -160,5 +164,18 @@ class ProductProvider with ChangeNotifier {
       _applyFilters();
       notifyListeners();
     }
+  }
+
+  Future<void> loadLowStock() async {
+    try {
+      final data = await _productService.getLowStockProducts();
+      if (data != null) {
+        _lowStockCount = (data['count'] as num).toInt();
+        _lowStockProducts = (data['products'] as List)
+            .map((e) => Product.fromJson(e as Map<String, dynamic>))
+            .toList();
+        notifyListeners();
+      }
+    } catch (_) {}
   }
 }

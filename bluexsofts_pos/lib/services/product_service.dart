@@ -30,4 +30,10 @@ class ProductService {
     final result = ApiClient.parseResponse(response);
     return result['success'] ? result['data'] as Map<String, dynamic> : null;
   }
+
+  Future<Map<String, dynamic>?> getLowStockProducts() async {
+    final response = await ApiClient.get('/products/low-stock');
+    final result = ApiClient.parseResponse(response);
+    return result['success'] ? result['data'] as Map<String, dynamic> : null;
+  }
 }

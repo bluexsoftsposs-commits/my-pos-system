@@ -2195,6 +2195,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type BranchCountOutputType
+   */
+
+  export type BranchCountOutputType = {
+    sales: number
+  }
+
+  export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sales?: boolean | BranchCountOutputTypeCountSalesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchCountOutputType
+     */
+    select?: BranchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SaleWhereInput
+  }
+
+
+  /**
    * Count Type UserCountOutputType
    */
 
@@ -5887,6 +5918,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     shop?: boolean | ShopDefaultArgs<ExtArgs>
+    sales?: boolean | Branch$salesArgs<ExtArgs>
+    _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5912,6 +5945,8 @@ export namespace Prisma {
 
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     shop?: boolean | ShopDefaultArgs<ExtArgs>
+    sales?: boolean | Branch$salesArgs<ExtArgs>
+    _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     shop?: boolean | ShopDefaultArgs<ExtArgs>
@@ -5921,6 +5956,7 @@ export namespace Prisma {
     name: "Branch"
     objects: {
       shop: Prisma.$ShopPayload<ExtArgs>
+      sales: Prisma.$SalePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6295,6 +6331,7 @@ export namespace Prisma {
   export interface Prisma__BranchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    sales<T extends Branch$salesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6646,6 +6683,26 @@ export namespace Prisma {
      * Filter which Branches to delete
      */
     where?: BranchWhereInput
+  }
+
+  /**
+   * Branch.sales
+   */
+  export type Branch$salesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale
+     */
+    select?: SaleSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SaleInclude<ExtArgs> | null
+    where?: SaleWhereInput
+    orderBy?: SaleOrderByWithRelationInput | SaleOrderByWithRelationInput[]
+    cursor?: SaleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SaleScalarFieldEnum | SaleScalarFieldEnum[]
   }
 
   /**
@@ -10890,6 +10947,7 @@ export namespace Prisma {
     shopId: string | null
     userId: string | null
     customerId: string | null
+    branchId: string | null
     total: number | null
     subtotal: number | null
     tax: number | null
@@ -10905,6 +10963,7 @@ export namespace Prisma {
     shopId: string | null
     userId: string | null
     customerId: string | null
+    branchId: string | null
     total: number | null
     subtotal: number | null
     tax: number | null
@@ -10920,6 +10979,7 @@ export namespace Prisma {
     shopId: number
     userId: number
     customerId: number
+    branchId: number
     total: number
     subtotal: number
     tax: number
@@ -10951,6 +11011,7 @@ export namespace Prisma {
     shopId?: true
     userId?: true
     customerId?: true
+    branchId?: true
     total?: true
     subtotal?: true
     tax?: true
@@ -10966,6 +11027,7 @@ export namespace Prisma {
     shopId?: true
     userId?: true
     customerId?: true
+    branchId?: true
     total?: true
     subtotal?: true
     tax?: true
@@ -10981,6 +11043,7 @@ export namespace Prisma {
     shopId?: true
     userId?: true
     customerId?: true
+    branchId?: true
     total?: true
     subtotal?: true
     tax?: true
@@ -11083,6 +11146,7 @@ export namespace Prisma {
     shopId: string
     userId: string
     customerId: string | null
+    branchId: string | null
     total: number
     subtotal: number
     tax: number
@@ -11117,6 +11181,7 @@ export namespace Prisma {
     shopId?: boolean
     userId?: boolean
     customerId?: boolean
+    branchId?: boolean
     total?: boolean
     subtotal?: boolean
     tax?: boolean
@@ -11128,6 +11193,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
+    branch?: boolean | Sale$branchArgs<ExtArgs>
     saleItems?: boolean | Sale$saleItemsArgs<ExtArgs>
     invoice?: boolean | Sale$invoiceArgs<ExtArgs>
     _count?: boolean | SaleCountOutputTypeDefaultArgs<ExtArgs>
@@ -11138,6 +11204,7 @@ export namespace Prisma {
     shopId?: boolean
     userId?: boolean
     customerId?: boolean
+    branchId?: boolean
     total?: boolean
     subtotal?: boolean
     tax?: boolean
@@ -11149,6 +11216,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
+    branch?: boolean | Sale$branchArgs<ExtArgs>
   }, ExtArgs["result"]["sale"]>
 
   export type SaleSelectScalar = {
@@ -11156,6 +11224,7 @@ export namespace Prisma {
     shopId?: boolean
     userId?: boolean
     customerId?: boolean
+    branchId?: boolean
     total?: boolean
     subtotal?: boolean
     tax?: boolean
@@ -11170,6 +11239,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
+    branch?: boolean | Sale$branchArgs<ExtArgs>
     saleItems?: boolean | Sale$saleItemsArgs<ExtArgs>
     invoice?: boolean | Sale$invoiceArgs<ExtArgs>
     _count?: boolean | SaleCountOutputTypeDefaultArgs<ExtArgs>
@@ -11178,6 +11248,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     customer?: boolean | Sale$customerArgs<ExtArgs>
     shop?: boolean | ShopDefaultArgs<ExtArgs>
+    branch?: boolean | Sale$branchArgs<ExtArgs>
   }
 
   export type $SalePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11186,6 +11257,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       customer: Prisma.$CustomerPayload<ExtArgs> | null
       shop: Prisma.$ShopPayload<ExtArgs>
+      branch: Prisma.$BranchPayload<ExtArgs> | null
       saleItems: Prisma.$SaleItemPayload<ExtArgs>[]
       invoice: Prisma.$InvoicePayload<ExtArgs> | null
     }
@@ -11194,6 +11266,7 @@ export namespace Prisma {
       shopId: string
       userId: string
       customerId: string | null
+      branchId: string | null
       total: number
       subtotal: number
       tax: number
@@ -11569,6 +11642,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     customer<T extends Sale$customerArgs<ExtArgs> = {}>(args?: Subset<T, Sale$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    branch<T extends Sale$branchArgs<ExtArgs> = {}>(args?: Subset<T, Sale$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     saleItems<T extends Sale$saleItemsArgs<ExtArgs> = {}>(args?: Subset<T, Sale$saleItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SaleItemPayload<ExtArgs>, T, "findMany"> | Null>
     invoice<T extends Sale$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, Sale$invoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
@@ -11604,6 +11678,7 @@ export namespace Prisma {
     readonly shopId: FieldRef<"Sale", 'String'>
     readonly userId: FieldRef<"Sale", 'String'>
     readonly customerId: FieldRef<"Sale", 'String'>
+    readonly branchId: FieldRef<"Sale", 'String'>
     readonly total: FieldRef<"Sale", 'Float'>
     readonly subtotal: FieldRef<"Sale", 'Float'>
     readonly tax: FieldRef<"Sale", 'Float'>
@@ -11942,6 +12017,21 @@ export namespace Prisma {
      */
     include?: CustomerInclude<ExtArgs> | null
     where?: CustomerWhereInput
+  }
+
+  /**
+   * Sale.branch
+   */
+  export type Sale$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
   }
 
   /**
@@ -18339,6 +18429,7 @@ export namespace Prisma {
     shopId: 'shopId',
     userId: 'userId',
     customerId: 'customerId',
+    branchId: 'branchId',
     total: 'total',
     subtotal: 'subtotal',
     tax: 'tax',
@@ -18827,6 +18918,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     updatedAt?: DateTimeFilter<"Branch"> | Date | string
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
+    sales?: SaleListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -18838,6 +18930,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     shop?: ShopOrderByWithRelationInput
+    sales?: SaleOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -18853,6 +18946,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     updatedAt?: DateTimeFilter<"Branch"> | Date | string
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
+    sales?: SaleListRelationFilter
   }, "id" | "shopId_name">
 
   export type BranchOrderByWithAggregationInput = {
@@ -19239,6 +19333,7 @@ export namespace Prisma {
     shopId?: StringFilter<"Sale"> | string
     userId?: StringFilter<"Sale"> | string
     customerId?: StringNullableFilter<"Sale"> | string | null
+    branchId?: StringNullableFilter<"Sale"> | string | null
     total?: FloatFilter<"Sale"> | number
     subtotal?: FloatFilter<"Sale"> | number
     tax?: FloatFilter<"Sale"> | number
@@ -19250,6 +19345,7 @@ export namespace Prisma {
     user?: XOR<UserRelationFilter, UserWhereInput>
     customer?: XOR<CustomerNullableRelationFilter, CustomerWhereInput> | null
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
     saleItems?: SaleItemListRelationFilter
     invoice?: XOR<InvoiceNullableRelationFilter, InvoiceWhereInput> | null
   }
@@ -19259,6 +19355,7 @@ export namespace Prisma {
     shopId?: SortOrder
     userId?: SortOrder
     customerId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -19270,6 +19367,7 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     customer?: CustomerOrderByWithRelationInput
     shop?: ShopOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
     saleItems?: SaleItemOrderByRelationAggregateInput
     invoice?: InvoiceOrderByWithRelationInput
   }
@@ -19282,6 +19380,7 @@ export namespace Prisma {
     shopId?: StringFilter<"Sale"> | string
     userId?: StringFilter<"Sale"> | string
     customerId?: StringNullableFilter<"Sale"> | string | null
+    branchId?: StringNullableFilter<"Sale"> | string | null
     total?: FloatFilter<"Sale"> | number
     subtotal?: FloatFilter<"Sale"> | number
     tax?: FloatFilter<"Sale"> | number
@@ -19293,6 +19392,7 @@ export namespace Prisma {
     user?: XOR<UserRelationFilter, UserWhereInput>
     customer?: XOR<CustomerNullableRelationFilter, CustomerWhereInput> | null
     shop?: XOR<ShopRelationFilter, ShopWhereInput>
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
     saleItems?: SaleItemListRelationFilter
     invoice?: XOR<InvoiceNullableRelationFilter, InvoiceWhereInput> | null
   }, "id">
@@ -19302,6 +19402,7 @@ export namespace Prisma {
     shopId?: SortOrder
     userId?: SortOrder
     customerId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -19325,6 +19426,7 @@ export namespace Prisma {
     shopId?: StringWithAggregatesFilter<"Sale"> | string
     userId?: StringWithAggregatesFilter<"Sale"> | string
     customerId?: StringNullableWithAggregatesFilter<"Sale"> | string | null
+    branchId?: StringNullableWithAggregatesFilter<"Sale"> | string | null
     total?: FloatWithAggregatesFilter<"Sale"> | number
     subtotal?: FloatWithAggregatesFilter<"Sale"> | number
     tax?: FloatWithAggregatesFilter<"Sale"> | number
@@ -20144,6 +20246,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     shop: ShopCreateNestedOneWithoutBranchesInput
+    sales?: SaleCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -20154,6 +20257,7 @@ export namespace Prisma {
     phone?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    sales?: SaleUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -20164,6 +20268,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     shop?: ShopUpdateOneRequiredWithoutBranchesNestedInput
+    sales?: SaleUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -20174,6 +20279,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sales?: SaleUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -20612,6 +20718,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSalesInput
     customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
+    branch?: BranchCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
@@ -20621,6 +20728,7 @@ export namespace Prisma {
     shopId: string
     userId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -20646,6 +20754,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    branch?: BranchUpdateOneWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
@@ -20655,6 +20764,7 @@ export namespace Prisma {
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -20672,6 +20782,7 @@ export namespace Prisma {
     shopId: string
     userId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -20699,6 +20810,7 @@ export namespace Prisma {
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -21920,6 +22032,11 @@ export namespace Prisma {
     isNot?: CustomerWhereInput | null
   }
 
+  export type BranchNullableRelationFilter = {
+    is?: BranchWhereInput | null
+    isNot?: BranchWhereInput | null
+  }
+
   export type InvoiceNullableRelationFilter = {
     is?: InvoiceWhereInput | null
     isNot?: InvoiceWhereInput | null
@@ -21930,6 +22047,7 @@ export namespace Prisma {
     shopId?: SortOrder
     userId?: SortOrder
     customerId?: SortOrder
+    branchId?: SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -21952,6 +22070,7 @@ export namespace Prisma {
     shopId?: SortOrder
     userId?: SortOrder
     customerId?: SortOrder
+    branchId?: SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -21967,6 +22086,7 @@ export namespace Prisma {
     shopId?: SortOrder
     userId?: SortOrder
     customerId?: SortOrder
+    branchId?: SortOrder
     total?: SortOrder
     subtotal?: SortOrder
     tax?: SortOrder
@@ -22859,12 +22979,54 @@ export namespace Prisma {
     connect?: ShopWhereUniqueInput
   }
 
+  export type SaleCreateNestedManyWithoutBranchInput = {
+    create?: XOR<SaleCreateWithoutBranchInput, SaleUncheckedCreateWithoutBranchInput> | SaleCreateWithoutBranchInput[] | SaleUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutBranchInput | SaleCreateOrConnectWithoutBranchInput[]
+    createMany?: SaleCreateManyBranchInputEnvelope
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+  }
+
+  export type SaleUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<SaleCreateWithoutBranchInput, SaleUncheckedCreateWithoutBranchInput> | SaleCreateWithoutBranchInput[] | SaleUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutBranchInput | SaleCreateOrConnectWithoutBranchInput[]
+    createMany?: SaleCreateManyBranchInputEnvelope
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+  }
+
   export type ShopUpdateOneRequiredWithoutBranchesNestedInput = {
     create?: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
     connectOrCreate?: ShopCreateOrConnectWithoutBranchesInput
     upsert?: ShopUpsertWithoutBranchesInput
     connect?: ShopWhereUniqueInput
     update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutBranchesInput, ShopUpdateWithoutBranchesInput>, ShopUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type SaleUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<SaleCreateWithoutBranchInput, SaleUncheckedCreateWithoutBranchInput> | SaleCreateWithoutBranchInput[] | SaleUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutBranchInput | SaleCreateOrConnectWithoutBranchInput[]
+    upsert?: SaleUpsertWithWhereUniqueWithoutBranchInput | SaleUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: SaleCreateManyBranchInputEnvelope
+    set?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    disconnect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    delete?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    update?: SaleUpdateWithWhereUniqueWithoutBranchInput | SaleUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: SaleUpdateManyWithWhereWithoutBranchInput | SaleUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: SaleScalarWhereInput | SaleScalarWhereInput[]
+  }
+
+  export type SaleUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<SaleCreateWithoutBranchInput, SaleUncheckedCreateWithoutBranchInput> | SaleCreateWithoutBranchInput[] | SaleUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: SaleCreateOrConnectWithoutBranchInput | SaleCreateOrConnectWithoutBranchInput[]
+    upsert?: SaleUpsertWithWhereUniqueWithoutBranchInput | SaleUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: SaleCreateManyBranchInputEnvelope
+    set?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    disconnect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    delete?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+    update?: SaleUpdateWithWhereUniqueWithoutBranchInput | SaleUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: SaleUpdateManyWithWhereWithoutBranchInput | SaleUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: SaleScalarWhereInput | SaleScalarWhereInput[]
   }
 
   export type ShopCreateNestedOneWithoutPaymentsInput = {
@@ -23155,6 +23317,12 @@ export namespace Prisma {
     connect?: ShopWhereUniqueInput
   }
 
+  export type BranchCreateNestedOneWithoutSalesInput = {
+    create?: XOR<BranchCreateWithoutSalesInput, BranchUncheckedCreateWithoutSalesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutSalesInput
+    connect?: BranchWhereUniqueInput
+  }
+
   export type SaleItemCreateNestedManyWithoutSaleInput = {
     create?: XOR<SaleItemCreateWithoutSaleInput, SaleItemUncheckedCreateWithoutSaleInput> | SaleItemCreateWithoutSaleInput[] | SaleItemUncheckedCreateWithoutSaleInput[]
     connectOrCreate?: SaleItemCreateOrConnectWithoutSaleInput | SaleItemCreateOrConnectWithoutSaleInput[]
@@ -23205,6 +23373,16 @@ export namespace Prisma {
     upsert?: ShopUpsertWithoutSalesInput
     connect?: ShopWhereUniqueInput
     update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutSalesInput, ShopUpdateWithoutSalesInput>, ShopUncheckedUpdateWithoutSalesInput>
+  }
+
+  export type BranchUpdateOneWithoutSalesNestedInput = {
+    create?: XOR<BranchCreateWithoutSalesInput, BranchUncheckedCreateWithoutSalesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutSalesInput
+    upsert?: BranchUpsertWithoutSalesInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutSalesInput, BranchUpdateWithoutSalesInput>, BranchUncheckedUpdateWithoutSalesInput>
   }
 
   export type SaleItemUpdateManyWithoutSaleNestedInput = {
@@ -24107,6 +24285,7 @@ export namespace Prisma {
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSalesInput
     customer?: CustomerCreateNestedOneWithoutSalesInput
+    branch?: BranchCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
@@ -24115,6 +24294,7 @@ export namespace Prisma {
     id?: string
     userId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -24318,6 +24498,7 @@ export namespace Prisma {
     phone?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    sales?: SaleCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutShopInput = {
@@ -24327,6 +24508,7 @@ export namespace Prisma {
     phone?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    sales?: SaleUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutShopInput = {
@@ -24495,6 +24677,7 @@ export namespace Prisma {
     shopId?: StringFilter<"Sale"> | string
     userId?: StringFilter<"Sale"> | string
     customerId?: StringNullableFilter<"Sale"> | string | null
+    branchId?: StringNullableFilter<"Sale"> | string | null
     total?: FloatFilter<"Sale"> | number
     subtotal?: FloatFilter<"Sale"> | number
     tax?: FloatFilter<"Sale"> | number
@@ -24790,6 +24973,50 @@ export namespace Prisma {
     create: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
   }
 
+  export type SaleCreateWithoutBranchInput = {
+    id?: string
+    total: number
+    subtotal: number
+    tax?: number
+    discount?: number
+    paymentMethod?: string
+    status?: string
+    notes?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutSalesInput
+    shop: ShopCreateNestedOneWithoutSalesInput
+    saleItems?: SaleItemCreateNestedManyWithoutSaleInput
+    invoice?: InvoiceCreateNestedOneWithoutSaleInput
+  }
+
+  export type SaleUncheckedCreateWithoutBranchInput = {
+    id?: string
+    shopId: string
+    userId: string
+    customerId?: string | null
+    total: number
+    subtotal: number
+    tax?: number
+    discount?: number
+    paymentMethod?: string
+    status?: string
+    notes?: string
+    createdAt?: Date | string
+    saleItems?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
+    invoice?: InvoiceUncheckedCreateNestedOneWithoutSaleInput
+  }
+
+  export type SaleCreateOrConnectWithoutBranchInput = {
+    where: SaleWhereUniqueInput
+    create: XOR<SaleCreateWithoutBranchInput, SaleUncheckedCreateWithoutBranchInput>
+  }
+
+  export type SaleCreateManyBranchInputEnvelope = {
+    data: SaleCreateManyBranchInput | SaleCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ShopUpsertWithoutBranchesInput = {
     update: XOR<ShopUpdateWithoutBranchesInput, ShopUncheckedUpdateWithoutBranchesInput>
     create: XOR<ShopCreateWithoutBranchesInput, ShopUncheckedCreateWithoutBranchesInput>
@@ -24845,6 +25072,22 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutShopNestedInput
     subscriptions?: ShopSubscriptionUncheckedUpdateManyWithoutShopNestedInput
     onlineOrders?: OnlineOrderUncheckedUpdateManyWithoutShopNestedInput
+  }
+
+  export type SaleUpsertWithWhereUniqueWithoutBranchInput = {
+    where: SaleWhereUniqueInput
+    update: XOR<SaleUpdateWithoutBranchInput, SaleUncheckedUpdateWithoutBranchInput>
+    create: XOR<SaleCreateWithoutBranchInput, SaleUncheckedCreateWithoutBranchInput>
+  }
+
+  export type SaleUpdateWithWhereUniqueWithoutBranchInput = {
+    where: SaleWhereUniqueInput
+    data: XOR<SaleUpdateWithoutBranchInput, SaleUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type SaleUpdateManyWithWhereWithoutBranchInput = {
+    where: SaleScalarWhereInput
+    data: XOR<SaleUpdateManyMutationInput, SaleUncheckedUpdateManyWithoutBranchInput>
   }
 
   export type ShopCreateWithoutPaymentsInput = {
@@ -24967,6 +25210,7 @@ export namespace Prisma {
     createdAt?: Date | string
     customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
+    branch?: BranchCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
@@ -24975,6 +25219,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -25638,6 +25883,31 @@ export namespace Prisma {
     create: XOR<ShopCreateWithoutSalesInput, ShopUncheckedCreateWithoutSalesInput>
   }
 
+  export type BranchCreateWithoutSalesInput = {
+    id?: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shop: ShopCreateNestedOneWithoutBranchesInput
+  }
+
+  export type BranchUncheckedCreateWithoutSalesInput = {
+    id?: string
+    shopId: string
+    name: string
+    address?: string
+    phone?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchCreateOrConnectWithoutSalesInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutSalesInput, BranchUncheckedCreateWithoutSalesInput>
+  }
+
   export type SaleItemCreateWithoutSaleInput = {
     id?: string
     quantity: number
@@ -25836,6 +26106,37 @@ export namespace Prisma {
     onlineOrders?: OnlineOrderUncheckedUpdateManyWithoutShopNestedInput
   }
 
+  export type BranchUpsertWithoutSalesInput = {
+    update: XOR<BranchUpdateWithoutSalesInput, BranchUncheckedUpdateWithoutSalesInput>
+    create: XOR<BranchCreateWithoutSalesInput, BranchUncheckedCreateWithoutSalesInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutSalesInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutSalesInput, BranchUncheckedUpdateWithoutSalesInput>
+  }
+
+  export type BranchUpdateWithoutSalesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutBranchesNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutSalesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SaleItemUpsertWithWhereUniqueWithoutSaleInput = {
     where: SaleItemWhereUniqueInput
     update: XOR<SaleItemUpdateWithoutSaleInput, SaleItemUncheckedUpdateWithoutSaleInput>
@@ -25902,6 +26203,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSalesInput
     customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
+    branch?: BranchCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
   }
 
@@ -25910,6 +26212,7 @@ export namespace Prisma {
     shopId: string
     userId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -26040,6 +26343,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    branch?: BranchUpdateOneWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
   }
 
@@ -26048,6 +26352,7 @@ export namespace Prisma {
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -26217,6 +26522,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSalesInput
     customer?: CustomerCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
+    branch?: BranchCreateNestedOneWithoutSalesInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
 
@@ -26225,6 +26531,7 @@ export namespace Prisma {
     shopId: string
     userId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -26365,6 +26672,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    branch?: BranchUpdateOneWithoutSalesNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
 
@@ -26373,6 +26681,7 @@ export namespace Prisma {
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -26844,6 +27153,7 @@ export namespace Prisma {
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSalesInput
     shop: ShopCreateNestedOneWithoutSalesInput
+    branch?: BranchCreateNestedOneWithoutSalesInput
     saleItems?: SaleItemCreateNestedManyWithoutSaleInput
     invoice?: InvoiceCreateNestedOneWithoutSaleInput
   }
@@ -26852,6 +27162,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     userId: string
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -27207,6 +27518,7 @@ export namespace Prisma {
     id?: string
     userId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -27404,6 +27716,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     customer?: CustomerUpdateOneWithoutSalesNestedInput
+    branch?: BranchUpdateOneWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
@@ -27412,6 +27725,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -27428,6 +27742,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -27626,6 +27941,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sales?: SaleUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutShopInput = {
@@ -27635,6 +27951,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sales?: SaleUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateManyWithoutShopInput = {
@@ -27711,10 +28028,75 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SaleCreateManyBranchInput = {
+    id?: string
+    shopId: string
+    userId: string
+    customerId?: string | null
+    total: number
+    subtotal: number
+    tax?: number
+    discount?: number
+    paymentMethod?: string
+    status?: string
+    notes?: string
+    createdAt?: Date | string
+  }
+
+  export type SaleUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    total?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    tax?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
+    shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
+    invoice?: InvoiceUpdateOneWithoutSaleNestedInput
+  }
+
+  export type SaleUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    tax?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    saleItems?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
+    invoice?: InvoiceUncheckedUpdateOneWithoutSaleNestedInput
+  }
+
+  export type SaleUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    tax?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SaleCreateManyUserInput = {
     id?: string
     shopId: string
     customerId?: string | null
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -27758,6 +28140,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    branch?: BranchUpdateOneWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
@@ -27766,6 +28149,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -27782,6 +28166,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -28005,6 +28390,7 @@ export namespace Prisma {
     id?: string
     shopId: string
     userId: string
+    branchId?: string | null
     total: number
     subtotal: number
     tax?: number
@@ -28057,6 +28443,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     shop?: ShopUpdateOneRequiredWithoutSalesNestedInput
+    branch?: BranchUpdateOneWithoutSalesNestedInput
     saleItems?: SaleItemUpdateManyWithoutSaleNestedInput
     invoice?: InvoiceUpdateOneWithoutSaleNestedInput
   }
@@ -28065,6 +28452,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -28081,6 +28469,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     tax?: FloatFieldUpdateOperationsInput | number
@@ -28104,6 +28493,10 @@ export namespace Prisma {
      * @deprecated Use ShopCountOutputTypeDefaultArgs instead
      */
     export type ShopCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ShopCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BranchCountOutputTypeDefaultArgs instead
+     */
+    export type BranchCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BranchCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserCountOutputTypeDefaultArgs instead
      */

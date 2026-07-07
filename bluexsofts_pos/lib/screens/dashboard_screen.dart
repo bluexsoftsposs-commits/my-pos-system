@@ -18,6 +18,9 @@ import 'sales_screen.dart';
 import 'invoices_screen.dart';
 import 'users_screen.dart';
 import 'ledger_screen.dart';
+import 'low_stock_screen.dart';
+import 'branch_report_screen.dart';
+import 'reports_screen.dart';
 import 'settings_screen.dart';
 import 'online_orders_screen.dart';
 import 'plans_screen.dart';
@@ -45,6 +48,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (isAdmin) const UsersScreen(),
       const OnlineOrdersScreen(),
       const SettingsScreen(),
+      const ReportsScreen(),
+      const BranchReportScreen(),
+      const LowStockScreen(),
     ];
   }
 
@@ -112,6 +118,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final onlineOrdersIndex = isAdmin ? 7 : 6;
     final settingsIndex = isAdmin ? 8 : 7;
+    final reportsIndex = isAdmin ? 9 : 8;
+    final branchIndex = isAdmin ? 10 : 9;
+    final lowStockIndex = isAdmin ? 11 : 10;
 
     final sidebarItems = <_SidebarItem>[
       _SidebarItem(Icons.home, 'Home', 0),
@@ -122,6 +131,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _SidebarItem(Icons.account_balance, 'Ledger', 5),
       if (isAdmin) _SidebarItem(Icons.group, 'Users', 6),
       _SidebarItem(Icons.storefront, 'Online Orders', onlineOrdersIndex),
+      _SidebarItem(Icons.bar_chart, 'Reports', reportsIndex),
+      _SidebarItem(Icons.store, 'Branches', branchIndex),
+      _SidebarItem(Icons.warning_amber, 'Low Stock', lowStockIndex),
       _SidebarItem(Icons.subscriptions, 'Plans', -1),
       _SidebarItem(Icons.settings, 'Settings', settingsIndex),
     ];
@@ -213,6 +225,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               child: Text(
                                                 '${op.pendingCount}',
                                                 style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.error),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                      if (item.label == 'Low Stock') ...[
+                                        Consumer<ProductProvider>(
+                                          builder: (_, pp, __) {
+                                            if (pp.lowStockCount <= 0) return const SizedBox.shrink();
+                                            return Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: AppTheme.warning.withValues(alpha: 0.2),
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                '${pp.lowStockCount}',
+                                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.warning),
                                               ),
                                             );
                                           },
@@ -404,6 +434,25 @@ class _Sidebar extends StatelessWidget {
                                   child: Text(
                                     '${op.pendingCount}',
                                     style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.error),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                          if (item.label == 'Low Stock') ...[
+                            const SizedBox(width: 8),
+                            Consumer<ProductProvider>(
+                              builder: (_, pp, __) {
+                                if (pp.lowStockCount <= 0) return const SizedBox.shrink();
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.warning.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    '${pp.lowStockCount}',
+                                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.warning),
                                   ),
                                 );
                               },
@@ -703,6 +752,7 @@ class _DashboardHomeState extends State<_DashboardHome> {
       }
       saleProv.loadSales();
       context.read<ProductProvider>().loadProducts();
+      context.read<ProductProvider>().loadLowStock();
       context.read<LedgerProvider>().loadOutstanding();
     });
   }

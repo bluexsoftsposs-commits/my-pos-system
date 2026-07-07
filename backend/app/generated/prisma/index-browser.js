@@ -231,6 +231,7 @@ exports.Prisma.SaleScalarFieldEnum = {
   shopId: 'shopId',
   userId: 'userId',
   customerId: 'customerId',
+  branchId: 'branchId',
   total: 'total',
   subtotal: 'subtotal',
   tax: 'tax',

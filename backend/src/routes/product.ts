@@ -9,6 +9,7 @@ import {
   getCategories,
   getProductByBarcode,
   uploadImage,
+  getLowStockProducts,
 } from '../controllers/product';
 import { authenticate, requireAdmin } from '../middlewares/auth';
 
@@ -17,6 +18,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.use(authenticate);
 
+router.get('/low-stock', getLowStockProducts);
 router.get('/categories', getCategories);
 router.get('/barcode/:barcode', getProductByBarcode);
 router.get('/', getProducts);

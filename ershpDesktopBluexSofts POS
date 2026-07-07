@@ -1,0 +1,10 @@
+[33m13eb1b3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: allow normal typing in text fields by ignoring barcode listener when text input is focused
+[33m00bb039[m feat: automated 30-min db backups to Cloudinary with 7-day retention
+[33mbdff25d[m feat: barcode scanner (camera + hardware reader), ESC/POS printer service, auto-email invoices, per-product low stock threshold, splash/cart UI redesign
+[33mf37e7f8[m feat: online store end-to-end (backend + Flutter + storefront), Prisma schema update, and pre-existing UI/backend improvements
+[33m8e62491[m Redesign Login screen with responsive split-screen layout and Stitch reference animations
+[33mac742c6[m Users screen redesign: header, stat cards (Total/Active Users), DataTable/mobile cards with role/status badges, 5-item pagination, CSV export, refresh with try/finally + snackbar, Add Staff dialog preserved
+[33m066fc22[m Fix NavigationBar crash on mobile: clamp selectedIndex to destinations length
+[33m026e010[m Sales screen redesign: stat cards, table/mobile list, date range filter, functional export/refresh, pagination, overflow fixes, HTTP timeout on API client
+[33m8f26e0e[m feat: UI redesign progress, ledger system, shop categories, branches, and automated backup
+[33m528921d[m Improve barcode scanning: higher resolution + wider horizontal overlay

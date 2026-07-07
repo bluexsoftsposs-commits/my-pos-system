@@ -115,7 +115,7 @@ async function generateInvoiceNumber(): Promise<string> {
 // POST /api/sales
 export const createSale = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { items, paymentMethod, notes, tax, discount, customerId } = req.body;
+    const { items, paymentMethod, notes, tax, discount, customerId, branchId } = req.body;
     const shopId = req.shopId as string;
     const userId = (req as any).user?.userId;
 
@@ -156,6 +156,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
           shopId,
           userId,
           customerId: customerId || null,
+          branchId: branchId || null,
           subtotal,
           tax: taxAmount,
           discount: discountAmount,
