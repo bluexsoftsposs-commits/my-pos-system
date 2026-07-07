@@ -59,11 +59,20 @@ class _BarcodeKeyboardListenerState extends State<BarcodeKeyboardListener> {
     }
   }
 
+  bool get _isTextInputFocused {
+    final focus = FocusManager.instance.primaryFocus;
+    if (focus?.context == null) return false;
+    return focus!.context!.findAncestorWidgetOfExactType<EditableText>() != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Focus(
       autofocus: true,
       onKeyEvent: (node, event) {
+        // Don't consume keys when a text field is focused — let it type normally
+        if (_isTextInputFocused) return KeyEventResult.ignored;
+
         if (event is KeyDownEvent) {
           final logical = event.logicalKey;
 
