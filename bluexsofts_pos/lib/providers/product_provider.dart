@@ -176,6 +176,8 @@ class ProductProvider with ChangeNotifier {
             .toList();
         notifyListeners();
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('loadLowStock error: $e');
+    }
   }
 }

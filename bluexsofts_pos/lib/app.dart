@@ -10,6 +10,8 @@ import 'providers/subscription_provider.dart';
 import 'providers/invoice_provider.dart';
 import 'providers/ledger_provider.dart';
 import 'providers/online_order_provider.dart';
+import 'providers/report_provider.dart';
+import 'providers/branch_provider.dart';
 import 'screens/splash_screen.dart';
 import 'widgets/barcode_keyboard_listener.dart';
 
@@ -28,6 +30,8 @@ class BluexSoftsPOSApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => InvoiceProvider()),
         ChangeNotifierProvider(create: (_) => LedgerProvider()),
         ChangeNotifierProvider(create: (_) => OnlineOrderProvider()),
+        ChangeNotifierProvider(create: (_) => ReportProvider()),
+        ChangeNotifierProvider(create: (_) => BranchProvider()),
       ],
       child: BarcodeKeyboardListener(
         child: MaterialApp(

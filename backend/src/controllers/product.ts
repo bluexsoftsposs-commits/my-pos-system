@@ -192,7 +192,7 @@ export const getLowStockProducts = async (req: Request, res: Response): Promise<
     const shopId = req.shopId as string;
     const products = await prisma.product.findMany({
       where: { shopId, isActive: true },
-      select: { id: true, name: true, stock: true, lowStockThreshold: true, sku: true, price: true, imageUrl: true },
+      select: { id: true, name: true, stock: true, lowStockThreshold: true, sku: true, price: true, imageUrl: true, shopId: true, createdAt: true },
     });
     const lowStock = products.filter((p) => p.stock <= p.lowStockThreshold);
     res.json({ count: lowStock.length, products: lowStock });
