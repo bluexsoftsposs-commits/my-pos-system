@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../services/product_service.dart';
+import '../services/database_service.dart';
 import '../models/product.dart';
 import '../core/constants.dart';
+import '../local_db/database.dart';
+import '../local_db/local_database_service.dart';
+import '../services/sync_service.dart';
 
 class ProductProvider with ChangeNotifier {
   List<Product> _products = [];
@@ -23,7 +28,12 @@ class ProductProvider with ChangeNotifier {
   int get lowStockCount => _lowStockCount;
   List<Product> get lowStockProducts => _lowStockProducts;
 
-  final _productService = ProductService();
+  final ProductService _productService;
+  final LocalDatabaseService _localDb;
+
+  ProductProvider({ProductService? productService, LocalDatabaseService? localDb})
+      : _productService = productService ?? ProductService(),
+        _localDb = localDb ?? DatabaseService().local;
 
   List<String> get categories {
     final cats = _products.map((p) => p.category).toSet().toList();
@@ -40,13 +50,19 @@ class ProductProvider with ChangeNotifier {
       final data = await _productService.getProducts();
       if (data != null) {
         _products = data.map((e) => Product.fromJson(e as Map<String, dynamic>)).toList();
+        // Persist to local database as cache
+        await _cacheToLocalDb(data);
+        // Also keep Hive cache for backwards compatibility
         final box = Hive.box(AppConstants.productsBox);
         await box.put('products', jsonEncode(data));
+        // Opportunistic sync: if we had a prior network failure, try syncing now
+        await SyncFallback.instance.trySync();
       } else {
-        _loadFromCache();
+        await _loadFromLocalDb();
       }
     } catch (_) {
-      _loadFromCache();
+      SyncFallback.instance.markFailure();
+      await _loadFromLocalDb();
     }
 
     _applyFilters();
@@ -54,7 +70,58 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _loadFromCache() {
+  Future<void> _cacheToLocalDb(List<dynamic> data) async {
+    final products = data.map((e) {
+      final map = e as Map<String, dynamic>;
+      return ProductsTableCompanion(
+        id: Value(map['id'] as String),
+        shopId: Value(map['shopId'] as String),
+        name: Value(map['name'] as String),
+        description: Value(map['description'] as String? ?? ''),
+        price: Value((map['price'] as num).toDouble()),
+        stock: Value(map['stock'] as int? ?? 0),
+        sku: Value(map['sku'] as String? ?? ''),
+        category: Value(map['category'] as String? ?? 'General'),
+        imageUrl: Value(map['imageUrl'] as String? ?? ''),
+        barcode: Value(map['barcode'] as String?),
+        lowStockThreshold: Value(map['lowStockThreshold'] as int? ?? 5),
+        isActive: Value(map['isActive'] as bool? ?? true),
+        createdAt: Value(DateTime.parse(map['createdAt'] as String)),
+        updatedAt: Value(DateTime.now()),
+      );
+    }).toList();
+    await _localDb.insertProducts(products);
+  }
+
+  Future<void> _loadFromLocalDb() async {
+    try {
+      final localProducts = await _localDb.getProducts();
+      if (localProducts.isNotEmpty) {
+        _products = localProducts.map((p) => Product(
+          id: p.id,
+          shopId: p.shopId,
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          stock: p.stock,
+          sku: p.sku,
+          category: p.category,
+          imageUrl: p.imageUrl,
+          barcode: p.barcode,
+          lowStockThreshold: p.lowStockThreshold,
+          isActive: p.isActive,
+          createdAt: p.createdAt,
+        )).toList();
+        return;
+      }
+      // Fallback to Hive cache if local DB is empty
+      _loadFromHiveCache();
+    } catch (_) {
+      _loadFromHiveCache();
+    }
+  }
+
+  void _loadFromHiveCache() {
     try {
       final box = Hive.box(AppConstants.productsBox);
       final cached = box.get('products');
@@ -175,9 +242,40 @@ class ProductProvider with ChangeNotifier {
             .map((e) => Product.fromJson(e as Map<String, dynamic>))
             .toList();
         notifyListeners();
+        return;
       }
     } catch (e) {
       debugPrint('loadLowStock error: $e');
     }
+    // Fallback: compute low-stock from local cached products
+    await _loadLowStockFromLocal();
+  }
+
+  Future<void> _loadLowStockFromLocal() async {
+    try {
+      final localProducts = await _localDb.getProducts();
+      if (localProducts.isNotEmpty) {
+        final lowStock = localProducts
+            .where((p) => p.stock <= p.lowStockThreshold)
+            .toList();
+        _lowStockCount = lowStock.length;
+        _lowStockProducts = lowStock.map((p) => Product(
+          id: p.id,
+          shopId: p.shopId,
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          stock: p.stock,
+          sku: p.sku,
+          category: p.category,
+          imageUrl: p.imageUrl,
+          barcode: p.barcode,
+          lowStockThreshold: p.lowStockThreshold,
+          isActive: p.isActive,
+          createdAt: p.createdAt,
+        )).toList();
+        notifyListeners();
+      }
+    } catch (_) {}
   }
 }

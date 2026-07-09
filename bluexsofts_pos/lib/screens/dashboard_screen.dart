@@ -7,6 +7,7 @@ import '../providers/sale_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/ledger_provider.dart';
 import '../providers/online_order_provider.dart';
+import '../providers/connectivity_provider.dart';
 import '../core/theme.dart';
 import '../core/currency_formatter.dart';
 import '../views/shared/sales_chart.dart';
@@ -546,15 +547,66 @@ class _TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width >= 1024;
     final userName = auth.user?.name ?? 'Profile';
+    final connectivity = context.watch<ConnectivityProvider>();
+    final saleProv = context.watch<SaleProvider>();
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 40 : 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppTheme.darkBg.withValues(alpha: 0.8),
-        border: Border(bottom: BorderSide(color: AppTheme.darkBorder.withValues(alpha: 0.3))),
-      ),
-      child: Row(
-        children: [
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (!connectivity.isOnline)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            color: AppTheme.warning.withValues(alpha: 0.15),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.cloud_off, size: 14, color: AppTheme.warning),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    'Offline — changes will sync when back online',
+                    style: TextStyle(fontSize: 12, color: AppTheme.warning),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (saleProv.isSyncing)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            color: AppTheme.primary.withValues(alpha: 0.12),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 14, height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    'Syncing offline changes...',
+                    style: TextStyle(fontSize: 12, color: AppTheme.primary),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: isDesktop ? 40 : 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppTheme.darkBg.withValues(alpha: 0.8),
+            border: Border(bottom: BorderSide(color: AppTheme.darkBorder.withValues(alpha: 0.3))),
+          ),
+          child: Row(
+            children: [
           if (!isDesktop)
             IconButton(
               icon: const Icon(Icons.menu),
@@ -692,6 +744,8 @@ class _TopBar extends StatelessWidget {
             ),
         ],
       ),
+      ),
+      ],
     );
   }
 }

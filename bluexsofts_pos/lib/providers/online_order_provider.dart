@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/online_order_service.dart';
 
 class OnlineOrderProvider with ChangeNotifier {
@@ -33,10 +34,31 @@ class OnlineOrderProvider with ChangeNotifier {
     _pollTimer = null;
   }
 
+  static const _pendingCountCacheKey = 'pending_order_count_cache';
+
   Future<void> _fetchPendingCount() async {
     try {
-      _pendingCount = await _service.getPendingCount();
+      final count = await _service.getPendingCount();
+      _pendingCount = count;
+      // Cache to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_pendingCountCacheKey, count);
       notifyListeners();
+      return;
+    } catch (_) {}
+    // Fallback: read from cache
+    await _loadPendingCountFromCache();
+  }
+
+  Future<void> _loadPendingCountFromCache() async {
+    try {
+      if (_pendingCount > 0) return;
+      final prefs = await SharedPreferences.getInstance();
+      final cached = prefs.getInt(_pendingCountCacheKey);
+      if (cached != null) {
+        _pendingCount = cached;
+        notifyListeners();
+      }
     } catch (_) {}
   }
 

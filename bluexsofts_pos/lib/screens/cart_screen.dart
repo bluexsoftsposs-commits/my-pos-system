@@ -41,6 +41,7 @@ class _CartScreenState extends State<CartScreen> {
   Future<void> _completeSale() async {
     final cart = context.read<CartProvider>();
     final saleProv = context.read<SaleProvider>();
+    final auth = context.read<AuthProvider>();
     final payload = cart.toCheckoutPayload();
 
     if (cart.paymentMethod == 'CREDIT') {
@@ -70,16 +71,20 @@ class _CartScreenState extends State<CartScreen> {
       cart.setCustomerId(customer.id);
       payload['customerId'] = customer.id;
     }
-    final sale = await saleProv.createSale(payload);
+    final sale = await saleProv.createSale(
+      payload,
+      shopId: auth.shop?.id ?? '',
+      userId: auth.user?.id ?? '',
+    );
     if (!mounted) return;
+    cart.clearCart();
+    Navigator.of(context).pop();
     if (sale != null) {
       for (final item in cart.items) {
         context
             .read<ProductProvider>()
             .decrementStock(item.product.id, item.quantity);
       }
-      cart.clearCart();
-      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/db';
+import { retryDbCall, DatabaseUnavailableError } from '../utils/retryDbCall';
 
 export interface AuthPayload {
   userId: string;
@@ -31,10 +32,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as AuthPayload;
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: { id: true },
-    });
+    const user = await retryDbCall(
+      () => prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: { id: true },
+      }),
+      { context: 'authenticate' }
+    );
 
     if (!user) {
       res.status(401).json({ error: 'User not found' });
@@ -45,6 +49,14 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     req.shopId = decoded.shopId;
     next();
   } catch (err) {
+    if (err instanceof DatabaseUnavailableError) {
+      res.status(503).json({ error: 'Service temporarily unavailable, please retry' });
+      return;
+    }
+    if (err instanceof jwt.JsonWebTokenError || err instanceof jwt.TokenExpiredError) {
+      res.status(401).json({ error: 'Invalid or expired token' });
+      return;
+    }
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 };

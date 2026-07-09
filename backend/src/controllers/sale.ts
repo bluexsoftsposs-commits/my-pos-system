@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
 import { sendInvoiceEmail } from '../services/email';
+import { retryDbCall, DatabaseUnavailableError } from '../utils/retryDbCall';
 
 const toString = (val: any): string => (Array.isArray(val) ? val[0] : (val as string));
 
@@ -46,27 +47,30 @@ export const getSalesSummary = async (req: Request, res: Response): Promise<void
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
-    const [todaySales, totalSales, topProducts, dailySales] = await Promise.all([
-      prisma.sale.aggregate({
-        where: { shopId, createdAt: { gte: today }, status: 'COMPLETED' },
-        _sum: { total: true }, _count: { id: true },
-      }),
-      prisma.sale.aggregate({
-        where: { shopId, status: 'COMPLETED' },
-        _sum: { total: true }, _count: { id: true },
-      }),
-      prisma.saleItem.groupBy({
-        by: ['productId'],
-        where: { shopId },
-        _sum: { quantity: true },
-        orderBy: { _sum: { quantity: 'desc' } },
-        take: 5,
-      }),
-      prisma.$queryRawUnsafe<Array<{ date: string; total: number }>>(
-        `SELECT DATE("createdAt") as date, SUM(total) as total FROM "Sale" WHERE "shopId" = $1 AND "status" = 'COMPLETED' AND "createdAt" >= $2::timestamp GROUP BY DATE("createdAt") ORDER BY date ASC`,
-        shopId, sevenDaysAgo.toISOString()
-      ),
-    ]);
+    const [todaySales, totalSales, topProducts, dailySales] = await retryDbCall(
+      () => Promise.all([
+        prisma.sale.aggregate({
+          where: { shopId, createdAt: { gte: today }, status: 'COMPLETED' },
+          _sum: { total: true }, _count: { id: true },
+        }),
+        prisma.sale.aggregate({
+          where: { shopId, status: 'COMPLETED' },
+          _sum: { total: true }, _count: { id: true },
+        }),
+        prisma.saleItem.groupBy({
+          by: ['productId'],
+          where: { shopId },
+          _sum: { quantity: true },
+          orderBy: { _sum: { quantity: 'desc' } },
+          take: 5,
+        }),
+        prisma.$queryRawUnsafe<Array<{ date: string; total: number }>>(
+          `SELECT DATE("createdAt") as date, SUM(total) as total FROM "Sale" WHERE "shopId" = $1 AND "status" = 'COMPLETED' AND "createdAt" >= $2::timestamp GROUP BY DATE("createdAt") ORDER BY date ASC`,
+          shopId, sevenDaysAgo.toISOString()
+        ),
+      ]),
+      { context: 'getSalesSummary' }
+    );
     const dailyMap: Record<string, number> = {};
     if (dailySales) {
       for (const row of dailySales) {
@@ -85,6 +89,10 @@ export const getSalesSummary = async (req: Request, res: Response): Promise<void
     console.error('Message:', (error as any)?.message);
     console.error('Stack:', (error as any)?.stack);
     console.error('Full error:', error);
+    if (error instanceof DatabaseUnavailableError) {
+      res.status(503).json({ error: 'Service temporarily unavailable, please retry' });
+      return;
+    }
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -115,13 +123,30 @@ async function generateInvoiceNumber(): Promise<string> {
 // POST /api/sales
 export const createSale = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { items, paymentMethod, notes, tax, discount, customerId, branchId } = req.body;
+    const { id, items, paymentMethod, notes, tax, discount, customerId, branchId } = req.body;
     const shopId = req.shopId as string;
     const userId = (req as any).user?.userId;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       res.status(400).json({ error: 'Items array is required' });
       return;
+    }
+
+    // Idempotency check — if a sale with this client-generated UUID already exists,
+    // return it instead of creating a duplicate.
+    if (id) {
+      const existing = await prisma.sale.findFirst({
+        where: { id, shopId },
+        include: {
+          saleItems: { include: { product: { select: { name: true, sku: true } } } },
+          user: { select: { name: true, email: true } },
+          invoice: true,
+        },
+      });
+      if (existing) {
+        res.status(200).json(existing);
+        return;
+      }
     }
 
     const newSale = await prisma.$transaction(async (tx: any) => {
@@ -153,6 +178,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
 
       const sale = await tx.sale.create({
         data: {
+          id: id || undefined, // use client-provided id if present
           shopId,
           userId,
           customerId: customerId || null,
@@ -274,17 +300,31 @@ export const bulkSyncSales = async (req: Request, res: Response): Promise<void> 
     const results = [];
     for (const saleData of sales) {
       try {
+        const shopId = req.shopId as string;
+        const saleId = saleData.id;
+
+        // Idempotency check — skip creation if already synced
+        if (saleId) {
+          const existing = await prisma.sale.findFirst({
+            where: { id: saleId, shopId },
+          });
+          if (existing) {
+            results.push({ synced: true, id: saleId });
+            continue;
+          }
+        }
+
         const result = await prisma.$transaction(async (tx: any) => {
           const items = saleData.items || [];
           let subtotal = 0;
           const saleItemData = [];
           for (const item of items) {
             const product = await tx.product.findUnique({ where: { id: item.productId } });
-            if (!product || product.shopId !== req.shopId) throw new Error(`Product ${item.productId} not found`);
+            if (!product || product.shopId !== shopId) throw new Error(`Product ${item.productId} not found`);
             const itemSubtotal = product.price * item.quantity;
             subtotal += itemSubtotal;
             saleItemData.push({
-              shopId: req.shopId as string,
+              shopId,
               productId: item.productId,
               quantity: item.quantity,
               price: product.price,
@@ -296,7 +336,8 @@ export const bulkSyncSales = async (req: Request, res: Response): Promise<void> 
           const total = subtotal + taxAmount - discountAmount;
           const newSale = await tx.sale.create({
             data: {
-              shopId: req.shopId,
+              id: saleId || undefined, // use client-provided id if present
+              shopId,
               userId: (req as any).user?.userId,
               subtotal,
               tax: taxAmount,

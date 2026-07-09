@@ -41,6 +41,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
   Future<void> _completeSale() async {
     final cart = widget.cart;
     final saleProv = widget.saleProv;
+    final auth = context.read<AuthProvider>();
     final payload = cart.toCheckoutPayload();
 
     if (cart.paymentMethod == 'CREDIT') {
@@ -64,15 +65,19 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
       cart.setCustomerId(customer.id);
       payload['customerId'] = customer.id;
     }
-    final sale = await saleProv.createSale(payload);
+    final sale = await saleProv.createSale(
+      payload,
+      shopId: auth.shop?.id ?? '',
+      userId: auth.user?.id ?? '',
+    );
     if (!mounted) return;
+    cart.clearCart();
+    widget.onBack();
     if (sale != null) {
       final customerName = cart.customerName;
       for (final item in cart.items) {
         context.read<ProductProvider>().decrementStock(item.product.id, item.quantity);
       }
-      cart.clearCart();
-      widget.onBack();
       final invoiceNum = sale.invoice?['invoiceNumber'] ?? '';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -96,6 +101,7 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
         ),
       );
       final auth = context.read<AuthProvider>();
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       _showPrintDialog(sale, auth.shop?.shopName, customerName: customerName);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
