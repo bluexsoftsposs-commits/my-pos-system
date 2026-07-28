@@ -152,14 +152,17 @@ exports.Prisma.ShopSubscriptionScalarFieldEnum = {
 exports.Prisma.ShopScalarFieldEnum = {
   id: 'id',
   shopName: 'shopName',
-  slug: 'slug',
-  category: 'category',
   subscriptionPlan: 'subscriptionPlan',
   subscriptionStatus: 'subscriptionStatus',
   subscriptionEndsAt: 'subscriptionEndsAt',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  category: 'category',
+  slug: 'slug',
+  subCategoryId: 'subCategoryId',
+  supplierId: 'supplierId',
+  managedBySubAdminId: 'managedBySubAdminId'
 };
 
 exports.Prisma.BranchScalarFieldEnum = {
@@ -218,20 +221,38 @@ exports.Prisma.ProductScalarFieldEnum = {
   sku: 'sku',
   category: 'category',
   imageUrl: 'imageUrl',
-  barcode: 'barcode',
-  lowStockThreshold: 'lowStockThreshold',
   isActive: 'isActive',
-  isVisibleOnline: 'isVisibleOnline',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  barcode: 'barcode',
+  isVisibleOnline: 'isVisibleOnline',
+  lowStockThreshold: 'lowStockThreshold',
+  unitType: 'unitType',
+  unitValue: 'unitValue',
+  imei: 'imei',
+  warrantyMonths: 'warrantyMonths',
+  brand: 'brand',
+  model: 'model',
+  isMenuItem: 'isMenuItem',
+  recipe: 'recipe',
+  batchNumber: 'batchNumber',
+  expiryDate: 'expiryDate',
+  manufacturer: 'manufacturer',
+  composition: 'composition',
+  dosageForm: 'dosageForm',
+  packing: 'packing',
+  isControlled: 'isControlled',
+  isPrescriptionOnly: 'isPrescriptionOnly',
+  size: 'size',
+  color: 'color',
+  season: 'season',
+  supplierId: 'supplierId'
 };
 
 exports.Prisma.SaleScalarFieldEnum = {
   id: 'id',
   shopId: 'shopId',
   userId: 'userId',
-  customerId: 'customerId',
-  branchId: 'branchId',
   total: 'total',
   subtotal: 'subtotal',
   tax: 'tax',
@@ -239,7 +260,9 @@ exports.Prisma.SaleScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   status: 'status',
   notes: 'notes',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  customerId: 'customerId',
+  branchId: 'branchId'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
@@ -311,9 +334,89 @@ exports.Prisma.LedgerEntryScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SupplierScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  supplierName: 'supplierName',
+  businessName: 'businessName',
+  gstNumber: 'gstNumber',
+  panNumber: 'panNumber',
+  bankAccountNo: 'bankAccountNo',
+  bankName: 'bankName',
+  ifscCode: 'ifscCode',
+  phone: 'phone',
+  email: 'email',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  pincode: 'pincode',
+  totalSalesValue: 'totalSalesValue',
+  totalPayments: 'totalPayments',
+  pendingBalance: 'pendingBalance',
+  isVerified: 'isVerified',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SupplierTransactionScalarFieldEnum = {
+  id: 'id',
+  supplierId: 'supplierId',
+  type: 'type',
+  amount: 'amount',
+  description: 'description',
+  referenceNo: 'referenceNo',
+  createdAt: 'createdAt',
+  createdBy: 'createdBy'
+};
+
+exports.Prisma.SubAdminScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  region: 'region',
+  permissions: 'permissions',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  changes: 'changes',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PendingApprovalScalarFieldEnum = {
+  id: 'id',
+  subAdminId: 'subAdminId',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  payload: 'payload',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewNote: 'reviewNote',
+  createdAt: 'createdAt',
+  reviewedAt: 'reviewedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -326,6 +429,20 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.ShopCategory = exports.$Enums.ShopCategory = {
+  Grocery: 'Grocery',
+  Electronics: 'Electronics',
+  Restaurant: 'Restaurant',
+  Pharmacy: 'Pharmacy',
+  Clothing: 'Clothing',
+  General: 'General',
+  Other: 'Other'
+};
 
 exports.Prisma.ModelName = {
   Plan: 'Plan',
@@ -342,7 +459,12 @@ exports.Prisma.ModelName = {
   OnlineOrder: 'OnlineOrder',
   OnlineOrderItem: 'OnlineOrderItem',
   Customer: 'Customer',
-  LedgerEntry: 'LedgerEntry'
+  LedgerEntry: 'LedgerEntry',
+  Supplier: 'Supplier',
+  SupplierTransaction: 'SupplierTransaction',
+  SubAdmin: 'SubAdmin',
+  AuditLog: 'AuditLog',
+  PendingApproval: 'PendingApproval'
 };
 
 /**

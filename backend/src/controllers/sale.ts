@@ -260,7 +260,7 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
     if (sale) {
       const shop = await prisma.shop.findUnique({
         where: { id: shopId },
-        select: { shopName: true, users: { where: { role: 'ADMIN' }, select: { email: true }, take: 1 } },
+        select: { shopName: true, users: { where: { role: 'Admin' }, select: { email: true }, take: 1 } },
       });
       const adminEmail = shop?.users?.[0]?.email || (req as any).user?.email;
       if (adminEmail) {

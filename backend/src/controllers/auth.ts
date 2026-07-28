@@ -60,7 +60,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
           email,
           passwordHash,
           name,
-          role: 'ADMIN',
+          role: 'Admin',
           verificationToken,
         },
       });

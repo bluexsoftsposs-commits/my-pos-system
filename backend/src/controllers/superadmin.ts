@@ -16,7 +16,7 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
       prisma.shop.count({ where: { shopName: { not: '__super_admin__' } } }),
       prisma.shop.count({ where: { isActive: true, shopName: { not: '__super_admin__' } } }),
       prisma.user.count({ where: { shop: { shopName: { not: '__super_admin__' } } } }),
-      prisma.user.count({ where: { role: 'ADMIN', shop: { shopName: { not: '__super_admin__' } } } }),
+      prisma.user.count({ where: { role: 'Admin', shop: { shopName: { not: '__super_admin__' } } } }),
       prisma.user.count({ where: { role: 'CASHIER', shop: { shopName: { not: '__super_admin__' } } } }),
       prisma.sale.count(),
       prisma.sale.aggregate({ _sum: { total: true } }),
@@ -323,7 +323,7 @@ export const createAdmin = async (req: Request, res: Response): Promise<void> =>
           email,
           passwordHash,
           name,
-          role: 'ADMIN',
+          role: 'Admin',
         },
       });
 
@@ -386,7 +386,7 @@ export const toggleAdminStatus = async (req: Request, res: Response): Promise<vo
     });
 
     // Also toggle the shop status
-    if (user.role === 'ADMIN') {
+    if (user.role === 'Admin') {
       await prisma.shop.update({
         where: { id: user.shopId },
         data: { isActive: !user.isActive },
@@ -618,7 +618,7 @@ export const deleteAdmin = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    if (user.role !== 'ADMIN') {
+    if (user.role !== 'Admin') {
       res.status(400).json({ error: 'User is not an admin' });
       return;
     }

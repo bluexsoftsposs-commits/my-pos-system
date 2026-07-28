@@ -157,6 +157,91 @@ export async function sendInvoiceEmail(
   }
 }
 
+export async function sendApprovalEmail({
+  to, subAdminName, action, details, approvalId,
+}: {
+  to: string;
+  subAdminName: string;
+  action: string;
+  details: string;
+  approvalId?: string;
+}): Promise<void> {
+  const actionLines = details.split('\n').map(line => `<p style="margin:2px 0;color:#333;">${line}</p>`).join('');
+  const approveUrl = approvalId
+    ? `${process.env.APP_URL || 'https://my-pos-system-2.onrender.com'}/api/audit/pending-approvals/${approvalId}`
+    : '';
+
+  try {
+    await transporter.sendMail({
+      from: `"BluexSofts POS" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to,
+      subject: `[NOTIFICATION] ${action} by ${subAdminName}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <div style="background:#6C5CE7;padding:20px;text-align:center;border-radius:12px 12px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:20px;">Action Notification</h1>
+          </div>
+          <div style="background:#f8f9fd;padding:24px;border-radius:0 0 12px 12px;">
+            <p style="color:#666;font-size:14px;"><strong>Sub-Admin:</strong> ${subAdminName}</p>
+            <p style="color:#666;font-size:14px;"><strong>Action:</strong> ${action}</p>
+            <div style="background:#fff;padding:16px;border-radius:8px;border:1px solid #eee;margin:12px 0;">
+              ${actionLines}
+            </div>
+            ${approveUrl ? `
+              <div style="text-align:center;margin-top:20px;">
+                <a href="${approveUrl}" style="display:inline-block;padding:12px 24px;background:#00B894;color:#fff;text-decoration:none;border-radius:6px;margin:4px;">Approve</a>
+                <a href="${approveUrl}" style="display:inline-block;padding:12px 24px;background:#D63031;color:#fff;text-decoration:none;border-radius:6px;margin:4px;">Reject</a>
+              </div>
+              <p style="color:#999;font-size:11px;text-align:center;margin-top:12px;">Approval ID: ${approvalId}</p>
+            ` : ''}
+          </div>
+        </div>`,
+    });
+  } catch (error: any) {
+    console.error('[Email] Failed to send approval email:', error.message);
+  }
+}
+
+export async function sendSupplierTransactionEmail({
+  to, supplierName, type, amount, referenceNo, description, newBalance,
+}: {
+  to: string;
+  supplierName: string;
+  type: string;
+  amount: number;
+  referenceNo: string;
+  description: string;
+  newBalance: number;
+}): Promise<void> {
+  const typeLabel = type === 'PURCHASE' ? 'Purchase' : type === 'PAYMENT' ? 'Payment Received' : 'Return';
+  const balanceColor = newBalance >= 0 ? '#00B894' : '#D63031';
+
+  try {
+    await transporter.sendMail({
+      from: `"BluexSofts POS" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to,
+      subject: `Transaction Recorded - ${typeLabel} - PKR ${amount.toFixed(2)}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <div style="background:#6C5CE7;padding:20px;text-align:center;border-radius:12px 12px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:20px;">Supplier Ledger Updated</h1>
+          </div>
+          <div style="background:#f8f9fd;padding:24px;border-radius:0 0 12px 12px;">
+            <p style="color:#666;font-size:14px;"><strong>Supplier:</strong> ${supplierName}</p>
+            <p style="color:#666;font-size:14px;"><strong>Transaction Type:</strong> ${typeLabel}</p>
+            <p style="color:#666;font-size:14px;"><strong>Amount:</strong> PKR ${amount.toFixed(2)}</p>
+            ${referenceNo ? `<p style="color:#666;font-size:14px;"><strong>Reference:</strong> ${referenceNo}</p>` : ''}
+            ${description ? `<p style="color:#666;font-size:14px;"><strong>Description:</strong> ${description}</p>` : ''}
+            <hr style="border:none;border-top:2px solid #6C5CE7;margin:16px 0;" />
+            <h2 style="color:${balanceColor};text-align:center;">Updated Balance: PKR ${newBalance.toFixed(2)}</h2>
+          </div>
+        </div>`,
+    });
+  } catch (error: any) {
+    console.error('[Email] Failed to send supplier transaction email:', error.message);
+  }
+}
+
 export async function sendBackupEmail(filepath: string, filename: string): Promise<void> {
   const recipient = process.env.BACKUP_EMAIL_TO || process.env.SMTP_USER || '';
   if (!recipient) {

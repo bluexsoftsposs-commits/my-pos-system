@@ -32,37 +32,42 @@ model Plan {
 model ShopSubscription {
   id        String    @id @default(uuid())
   shopId    String
-  shop      Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
   planId    String
-  plan      Plan      @relation(fields: [planId], references: [id])
   startDate DateTime  @default(now())
   endDate   DateTime?
   status    String    @default("active")
   createdAt DateTime  @default(now())
+  plan      Plan      @relation(fields: [planId], references: [id])
+  shop      Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
 }
 
 model Shop {
-  id                 String             @id @default(uuid())
-  shopName           String             @unique
-  slug               String             @unique
-  category           String             @default("General")
-  subscriptionPlan   String             @default("NONE")
-  subscriptionStatus String             @default("PENDING")
-  subscriptionEndsAt DateTime?
-  isActive           Boolean            @default(true)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  payments           Payment[]
-  products           Product[]
-  sales              Sale[]
-  saleItems          SaleItem[]
-  invoices           Invoice[]
-  users              User[]
-  customers          Customer[]
-  ledgerEntries      LedgerEntry[]
-  branches           Branch[]
-  subscriptions      ShopSubscription[]
-  onlineOrders       OnlineOrder[]
+  id                  String             @id @default(uuid())
+  shopName            String             @unique
+  subscriptionPlan    String             @default("NONE")
+  subscriptionStatus  String             @default("PENDING")
+  subscriptionEndsAt  DateTime?
+  isActive            Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  category            ShopCategory       @default(Other)
+  slug                String             @unique
+  subCategoryId       String?
+  supplierId          String?
+  managedBySubAdminId String?
+  branches            Branch[]
+  customers           Customer[]
+  invoices            Invoice[]
+  ledgerEntries       LedgerEntry[]
+  onlineOrders        OnlineOrder[]
+  payments            Payment[]
+  products            Product[]
+  sales               Sale[]
+  saleItems           SaleItem[]
+  managedBySubAdmin   User?              @relation("ShopsManagedBySubAdmin", fields: [managedBySubAdminId], references: [id])
+  Supplier            Supplier?          @relation(fields: [supplierId], references: [id])
+  subscriptions       ShopSubscription[]
+  users               User[]
 }
 
 model Branch {
@@ -105,10 +110,15 @@ model User {
   currentSessionToken String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
-  sales               Sale[]
+  auditLogs           AuditLog[]
   invoices            Invoice[]
-  shop                Shop                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
   passwordResetTokens PasswordResetToken[]
+  pendingApprovals    PendingApproval[]    @relation("SubAdminApprovals")
+  sales               Sale[]
+  managedShops        Shop[]               @relation("ShopsManagedBySubAdmin")
+  subAdmin            SubAdmin?
+  supplier            Supplier?
+  shop                Shop                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
   @@unique([shopId, email])
 }
@@ -124,32 +134,51 @@ model PasswordResetToken {
 }
 
 model Product {
-  id                String            @id @default(uuid())
-  shopId            String
-  name              String
-  description       String            @default("")
-  price             Float
-  stock             Int               @default(0)
-  sku               String            @default("")
-  category          String            @default("General")
-  imageUrl          String            @default("")
-  barcode           String?           @unique
-  lowStockThreshold Int               @default(5)
-  isActive          Boolean           @default(true)
-  isVisibleOnline   Boolean           @default(true)
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  shop              Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  saleItems         SaleItem[]
-  onlineOrderItems  OnlineOrderItem[]
+  id                 String            @id @default(uuid())
+  shopId             String
+  name               String
+  description        String            @default("")
+  price              Float
+  stock              Int               @default(0)
+  sku                String            @default("")
+  category           String            @default("General")
+  imageUrl           String            @default("")
+  isActive           Boolean           @default(true)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  barcode            String?           @unique
+  isVisibleOnline    Boolean           @default(true)
+  lowStockThreshold  Int               @default(5)
+  unitType           String?
+  unitValue          Float?
+  imei               String?
+  warrantyMonths     Int?
+  brand              String?
+  model              String?
+  isMenuItem         Boolean           @default(false)
+  recipe             String?
+  batchNumber        String?
+  expiryDate         DateTime?
+  manufacturer       String?
+  composition        String?
+  dosageForm         String?
+  packing            String?
+  isControlled       Boolean           @default(false)
+  isPrescriptionOnly Boolean           @default(false)
+  size               String?
+  color              String?
+  season             String?
+  supplierId         String?
+  onlineOrderItems   OnlineOrderItem[]
+  shop               Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  Supplier           Supplier?         @relation(fields: [supplierId], references: [id])
+  saleItems          SaleItem[]
 }
 
 model Sale {
   id            String     @id @default(uuid())
   shopId        String
   userId        String
-  customerId    String?
-  branchId      String?
   total         Float
   subtotal      Float
   tax           Float      @default(0)
@@ -158,12 +187,14 @@ model Sale {
   status        String     @default("COMPLETED")
   notes         String     @default("")
   createdAt     DateTime   @default(now())
-  user          User       @relation(fields: [userId], references: [id])
+  customerId    String?
+  branchId      String?
+  invoice       Invoice?
+  branch        Branch?    @relation(fields: [branchId], references: [id])
   customer      Customer?  @relation(fields: [customerId], references: [id])
   shop          Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  branch        Branch?    @relation(fields: [branchId], references: [id])
+  user          User       @relation(fields: [userId], references: [id])
   saleItems     SaleItem[]
-  invoice       Invoice?
 
   @@index([branchId])
 }
@@ -245,12 +276,102 @@ model LedgerEntry {
   id         String   @id @default(uuid())
   shopId     String
   customerId String
-  type       String // "DEBIT" for charges, "CREDIT" for payments
+  type       String
   amount     Float
   saleId     String?
   note       String   @default("")
   createdAt  DateTime @default(now())
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  shop       Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
 
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  shop     Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+model Supplier {
+  id              String                @id @default(uuid())
+  userId          String                @unique
+  supplierName    String
+  businessName    String
+  gstNumber       String?
+  panNumber       String?
+  bankAccountNo   String?
+  bankName        String?
+  ifscCode        String?
+  phone           String
+  email           String
+  address         String
+  city            String
+  state           String
+  pincode         String
+  totalSalesValue Float                 @default(0)
+  totalPayments   Float                 @default(0)
+  pendingBalance  Float                 @default(0)
+  isVerified      Boolean               @default(false)
+  isActive        Boolean               @default(true)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  Product         Product[]
+  Shop            Shop[]
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions    SupplierTransaction[]
+}
+
+model SupplierTransaction {
+  id          String   @id @default(uuid())
+  supplierId  String
+  type        String
+  amount      Float
+  description String?
+  referenceNo String?
+  createdAt   DateTime @default(now())
+  createdBy   String
+  supplier    Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+}
+
+model SubAdmin {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  title       String?
+  region      String?
+  permissions Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String
+  action     String
+  entityType String
+  entityId   String
+  changes    Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model PendingApproval {
+  id         String    @id @default(uuid())
+  subAdminId String
+  action     String
+  entityType String
+  entityId   String?
+  payload    Json?
+  status     String    @default("PENDING")
+  reviewedBy String?
+  reviewNote String?
+  createdAt  DateTime  @default(now())
+  reviewedAt DateTime?
+  subAdmin   User      @relation("SubAdminApprovals", fields: [subAdminId], references: [id])
+
+  @@index([status])
+}
+
+enum ShopCategory {
+  Grocery
+  Electronics
+  Restaurant
+  Pharmacy
+  Clothing
+  General
+  Other
 }

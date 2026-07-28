@@ -62,7 +62,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const requireAdmin = (req: Request, res: Response, next: NextFunction): void => {
-  if (!req.user || req.user.role !== 'ADMIN') {
+  if (!req.user || req.user.role !== 'Admin') {
     res.status(403).json({ error: 'Admin access required' });
     return;
   }
@@ -70,7 +70,7 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction): v
 };
 
 export const requireSuperAdmin = (req: Request, res: Response, next: NextFunction): void => {
-  if (!req.user || req.user.role !== 'SUPER_ADMIN') {
+  if (!req.user || req.user.role !== 'SuperAdmin') {
     res.status(403).json({ error: 'Super admin access required' });
     return;
   }

@@ -7,7 +7,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await prisma.user.findMany({
       where: { shopId: req.shopId as string },
-      select: { id: true, name: true, email: true, role: true, isActive: true, createdAt: true },
+      select: { id: true, name: true, email: true, role: true, isActive: true, canAccessSuppliers: true, createdAt: true },
       orderBy: { name: 'asc' },
     });
     res.json(users);
@@ -72,6 +72,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         email,
         passwordHash,
         role: role || 'CASHIER',
+        canAccessSuppliers: role === 'CASHIER' ? false : undefined,
       },
       select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
@@ -96,7 +97,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const { name, role, isActive, password } = req.body;
+    const { name, role, isActive, password, canAccessSuppliers } = req.body;
 
     const user = await prisma.user.update({
       where: { id: userId },
@@ -104,9 +105,10 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         ...(name !== undefined && { name }),
         ...(role !== undefined && { role }),
         ...(isActive !== undefined && { isActive }),
+        ...(canAccessSuppliers !== undefined && { canAccessSuppliers }),
         ...(password ? { passwordHash: await bcrypt.hash(password, 12) } : {}),
       },
-      select: { id: true, name: true, email: true, role: true, isActive: true },
+      select: { id: true, name: true, email: true, role: true, isActive: true, canAccessSuppliers: true },
     });
 
     res.json(user);

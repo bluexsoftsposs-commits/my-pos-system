@@ -14,6 +14,10 @@ import storeRoutes from './routes/store';
 import onlineOrderRoutes from './routes/onlineOrder';
 import branchRoutes from './routes/branch';
 import reportRoutes from './routes/report';
+import subAdminRoutes from './routes/subadmin';
+import supplierRoutes from './routes/supplier';
+import auditRoutes from './routes/audit';
+import categoryRoutes from './routes/category';
 import path from 'path';
 
 const app = express();
@@ -53,6 +57,10 @@ app.use('/api/store', storeRoutes);
 app.use('/api/orders/online', onlineOrderRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/subadmins', subAdminRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Serve the storefront HTML at /store/:slug
 app.get('/store/:slug', (_req, res) => {
