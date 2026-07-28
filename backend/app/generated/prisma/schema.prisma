@@ -106,6 +106,7 @@ model User {
   name                String
   isActive            Boolean              @default(true)
   emailVerified       Boolean              @default(false)
+  canAccessSuppliers  Boolean              @default(false)
   verificationToken   String?
   currentSessionToken String?
   createdAt           DateTime             @default(now())

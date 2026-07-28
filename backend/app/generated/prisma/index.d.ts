@@ -8365,6 +8365,7 @@ export namespace Prisma {
     name: string | null
     isActive: boolean | null
     emailVerified: boolean | null
+    canAccessSuppliers: boolean | null
     verificationToken: string | null
     currentSessionToken: string | null
     createdAt: Date | null
@@ -8380,6 +8381,7 @@ export namespace Prisma {
     name: string | null
     isActive: boolean | null
     emailVerified: boolean | null
+    canAccessSuppliers: boolean | null
     verificationToken: string | null
     currentSessionToken: string | null
     createdAt: Date | null
@@ -8395,6 +8397,7 @@ export namespace Prisma {
     name: number
     isActive: number
     emailVerified: number
+    canAccessSuppliers: number
     verificationToken: number
     currentSessionToken: number
     createdAt: number
@@ -8412,6 +8415,7 @@ export namespace Prisma {
     name?: true
     isActive?: true
     emailVerified?: true
+    canAccessSuppliers?: true
     verificationToken?: true
     currentSessionToken?: true
     createdAt?: true
@@ -8427,6 +8431,7 @@ export namespace Prisma {
     name?: true
     isActive?: true
     emailVerified?: true
+    canAccessSuppliers?: true
     verificationToken?: true
     currentSessionToken?: true
     createdAt?: true
@@ -8442,6 +8447,7 @@ export namespace Prisma {
     name?: true
     isActive?: true
     emailVerified?: true
+    canAccessSuppliers?: true
     verificationToken?: true
     currentSessionToken?: true
     createdAt?: true
@@ -8530,6 +8536,7 @@ export namespace Prisma {
     name: string
     isActive: boolean
     emailVerified: boolean
+    canAccessSuppliers: boolean
     verificationToken: string | null
     currentSessionToken: string | null
     createdAt: Date
@@ -8562,6 +8569,7 @@ export namespace Prisma {
     name?: boolean
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: boolean
     currentSessionToken?: boolean
     createdAt?: boolean
@@ -8587,6 +8595,7 @@ export namespace Prisma {
     name?: boolean
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: boolean
     currentSessionToken?: boolean
     createdAt?: boolean
@@ -8603,6 +8612,7 @@ export namespace Prisma {
     name?: boolean
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: boolean
     currentSessionToken?: boolean
     createdAt?: boolean
@@ -8647,6 +8657,7 @@ export namespace Prisma {
       name: string
       isActive: boolean
       emailVerified: boolean
+      canAccessSuppliers: boolean
       verificationToken: string | null
       currentSessionToken: string | null
       createdAt: Date
@@ -9061,6 +9072,7 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly emailVerified: FieldRef<"User", 'Boolean'>
+    readonly canAccessSuppliers: FieldRef<"User", 'Boolean'>
     readonly verificationToken: FieldRef<"User", 'String'>
     readonly currentSessionToken: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -24550,6 +24562,7 @@ export namespace Prisma {
     name: 'name',
     isActive: 'isActive',
     emailVerified: 'emailVerified',
+    canAccessSuppliers: 'canAccessSuppliers',
     verificationToken: 'verificationToken',
     currentSessionToken: 'currentSessionToken',
     createdAt: 'createdAt',
@@ -25404,6 +25417,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
     emailVerified?: BoolFilter<"User"> | boolean
+    canAccessSuppliers?: BoolFilter<"User"> | boolean
     verificationToken?: StringNullableFilter<"User"> | string | null
     currentSessionToken?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -25428,6 +25442,7 @@ export namespace Prisma {
     name?: SortOrder
     isActive?: SortOrder
     emailVerified?: SortOrder
+    canAccessSuppliers?: SortOrder
     verificationToken?: SortOrderInput | SortOrder
     currentSessionToken?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -25456,6 +25471,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
     emailVerified?: BoolFilter<"User"> | boolean
+    canAccessSuppliers?: BoolFilter<"User"> | boolean
     verificationToken?: StringNullableFilter<"User"> | string | null
     currentSessionToken?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -25480,6 +25496,7 @@ export namespace Prisma {
     name?: SortOrder
     isActive?: SortOrder
     emailVerified?: SortOrder
+    canAccessSuppliers?: SortOrder
     verificationToken?: SortOrderInput | SortOrder
     currentSessionToken?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -25501,6 +25518,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"User"> | string
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
+    canAccessSuppliers?: BoolWithAggregatesFilter<"User"> | boolean
     verificationToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     currentSessionToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -27322,6 +27340,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -27346,6 +27365,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -27368,6 +27388,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27392,6 +27413,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27415,6 +27437,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -27429,6 +27452,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27444,6 +27468,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29537,6 +29562,7 @@ export namespace Prisma {
     name?: SortOrder
     isActive?: SortOrder
     emailVerified?: SortOrder
+    canAccessSuppliers?: SortOrder
     verificationToken?: SortOrder
     currentSessionToken?: SortOrder
     createdAt?: SortOrder
@@ -29552,6 +29578,7 @@ export namespace Prisma {
     name?: SortOrder
     isActive?: SortOrder
     emailVerified?: SortOrder
+    canAccessSuppliers?: SortOrder
     verificationToken?: SortOrder
     currentSessionToken?: SortOrder
     createdAt?: SortOrder
@@ -29567,6 +29594,7 @@ export namespace Prisma {
     name?: SortOrder
     isActive?: SortOrder
     emailVerified?: SortOrder
+    canAccessSuppliers?: SortOrder
     verificationToken?: SortOrder
     currentSessionToken?: SortOrder
     createdAt?: SortOrder
@@ -33177,6 +33205,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -33200,6 +33229,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -33313,6 +33343,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -33335,6 +33366,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -33685,6 +33717,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33708,6 +33741,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33830,6 +33864,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
     emailVerified?: BoolFilter<"User"> | boolean
+    canAccessSuppliers?: BoolFilter<"User"> | boolean
     verificationToken?: StringNullableFilter<"User"> | string | null
     currentSessionToken?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -34832,6 +34867,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -34855,6 +34891,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -34892,6 +34929,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34915,6 +34953,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35422,6 +35461,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -35445,6 +35485,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -35678,6 +35719,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35701,6 +35743,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35834,6 +35877,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -35857,6 +35901,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -36002,6 +36047,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36025,6 +36071,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37388,6 +37435,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37411,6 +37459,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37510,6 +37559,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37533,6 +37583,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37708,6 +37759,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37731,6 +37783,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37768,6 +37821,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37791,6 +37845,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37812,6 +37867,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37835,6 +37891,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37872,6 +37929,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37895,6 +37953,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37916,6 +37975,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37939,6 +37999,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -37976,6 +38037,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37999,6 +38061,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38192,6 +38255,7 @@ export namespace Prisma {
     name: string
     isActive?: boolean
     emailVerified?: boolean
+    canAccessSuppliers?: boolean
     verificationToken?: string | null
     currentSessionToken?: string | null
     createdAt?: Date | string
@@ -38630,6 +38694,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38652,6 +38717,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38674,6 +38740,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    canAccessSuppliers?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

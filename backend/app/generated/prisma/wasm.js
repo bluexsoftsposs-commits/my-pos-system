@@ -196,6 +196,7 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   isActive: 'isActive',
   emailVerified: 'emailVerified',
+  canAccessSuppliers: 'canAccessSuppliers',
   verificationToken: 'verificationToken',
   currentSessionToken: 'currentSessionToken',
   createdAt: 'createdAt',
