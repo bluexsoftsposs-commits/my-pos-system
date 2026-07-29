@@ -19,6 +19,16 @@ class AppUser {
     this.createdAt,
   });
 
+  static const _roleMap = {
+    'SUPER_ADMIN': 'SuperAdmin',
+    'ADMIN': 'Admin',
+    'SUB_ADMIN': 'SubAdmin',
+    'SUPPLIER': 'Supplier',
+    'CASHIER': 'CASHIER',
+  };
+
+  static String normalizeRole(String role) => _roleMap[role] ?? role;
+
   bool get isAdmin => role == 'Admin';
   bool get isSuperAdmin => role == 'SuperAdmin';
   bool get isSubAdmin => role == 'SubAdmin';
@@ -30,7 +40,7 @@ class AppUser {
       id: json['id'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
-      role: json['role'] as String,
+      role: AppUser.normalizeRole(json['role'] as String),
       shopId: json['shopId'] as String? ?? '',
       isActive: json['isActive'] as bool? ?? true,
       emailVerified: json['emailVerified'] as bool? ?? false,

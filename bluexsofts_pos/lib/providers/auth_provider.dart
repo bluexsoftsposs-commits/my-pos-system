@@ -20,9 +20,9 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
   bool get isAdmin => _user?.isAdmin ?? false;
-  bool get isSuperAdmin => _user?.role == 'SuperAdmin';
-  bool get isSubAdmin => _user?.role == 'SubAdmin';
-  bool get isSupplier => _user?.role == 'Supplier';
+  bool get isSuperAdmin => _user?.isSuperAdmin ?? false;
+  bool get isSubAdmin => _user?.isSubAdmin ?? false;
+  bool get isSupplier => _user?.isSupplier ?? false;
   bool get hasActiveSubscription => _shop?.hasActiveSubscription ?? false;
   bool get requiresPayment => _shop?.requiresPayment ?? true;
 
