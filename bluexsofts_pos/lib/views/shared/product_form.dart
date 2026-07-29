@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
 import '../../models/product.dart';
 import '../../providers/product_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../core/theme.dart';
 import '../../core/env_config.dart';
 import '../../core/api_client.dart';
@@ -40,13 +41,42 @@ class _ProductFormState extends State<ProductForm> {
   late final TextEditingController _priceCtrl;
   late final TextEditingController _stockCtrl;
   late final TextEditingController _skuCtrl;
-  String _selectedCategory = 'General';
+  String _selectedProductCategory = 'General';
   late final TextEditingController _barcodeCtrl;
   late final TextEditingController _imageUrlCtrl;
   late final TextEditingController _lowStockThresholdCtrl;
 
   bool _uploading = false;
   String? _previewUrl;
+
+  // Grocery
+  String _unitType = 'kg';
+  late final TextEditingController _unitValueCtrl;
+
+  // Electronics
+  late final TextEditingController _imeiCtrl;
+  late final TextEditingController _warrantyCtrl;
+  late final TextEditingController _brandCtrl;
+  late final TextEditingController _modelCtrl;
+
+  // Restaurant
+  bool _isMenuItem = false;
+  late final TextEditingController _recipeCtrl;
+
+  // Pharmacy
+  late final TextEditingController _batchCtrl;
+  late final TextEditingController _expiryCtrl;
+  late final TextEditingController _manufacturerCtrl;
+  late final TextEditingController _compositionCtrl;
+  String _dosageForm = 'Tablet';
+  late final TextEditingController _packingCtrl;
+  bool _isControlled = false;
+  bool _isPrescriptionOnly = false;
+
+  // Clothing
+  late final TextEditingController _sizeCtrl;
+  late final TextEditingController _colorCtrl;
+  String _season = 'All-season';
 
   bool get isEditing => widget.product != null;
 
@@ -59,11 +89,40 @@ class _ProductFormState extends State<ProductForm> {
     _priceCtrl = TextEditingController(text: p?.price.toString() ?? '');
     _stockCtrl = TextEditingController(text: p?.stock.toString() ?? '0');
     _skuCtrl = TextEditingController(text: p?.sku ?? '');
-    _selectedCategory = p?.category ?? 'General';
+    _selectedProductCategory = p?.category ?? 'General';
     _barcodeCtrl = TextEditingController(text: p?.barcode ?? widget.initialBarcode ?? '');
     _imageUrlCtrl = TextEditingController(text: p?.imageUrl ?? widget.initialImageUrl ?? '');
     _lowStockThresholdCtrl = TextEditingController(text: (p?.lowStockThreshold ?? 5).toString());
     _previewUrl = p?.imageUrl ?? widget.initialImageUrl;
+
+    // Grocery
+    _unitType = p?.unitType ?? 'kg';
+    _unitValueCtrl = TextEditingController(text: p?.unitValue?.toString() ?? '');
+
+    // Electronics
+    _imeiCtrl = TextEditingController(text: p?.imei ?? '');
+    _warrantyCtrl = TextEditingController(text: p?.warrantyMonths?.toString() ?? '');
+    _brandCtrl = TextEditingController(text: p?.brand ?? '');
+    _modelCtrl = TextEditingController(text: p?.model ?? '');
+
+    // Restaurant
+    _isMenuItem = p?.isMenuItem ?? false;
+    _recipeCtrl = TextEditingController(text: p?.recipe ?? '');
+
+    // Pharmacy
+    _batchCtrl = TextEditingController(text: p?.batchNumber ?? '');
+    _expiryCtrl = TextEditingController(text: p?.expiryDate?.toIso8601String().split('T')[0] ?? '');
+    _manufacturerCtrl = TextEditingController(text: p?.manufacturer ?? '');
+    _compositionCtrl = TextEditingController(text: p?.composition ?? '');
+    _dosageForm = p?.dosageForm ?? 'Tablet';
+    _packingCtrl = TextEditingController(text: p?.packing ?? '');
+    _isControlled = p?.isControlled ?? false;
+    _isPrescriptionOnly = p?.isPrescriptionOnly ?? false;
+
+    // Clothing
+    _sizeCtrl = TextEditingController(text: p?.size ?? '');
+    _colorCtrl = TextEditingController(text: p?.color ?? '');
+    _season = p?.season ?? 'All-season';
   }
 
   @override
@@ -76,6 +135,19 @@ class _ProductFormState extends State<ProductForm> {
     _barcodeCtrl.dispose();
     _imageUrlCtrl.dispose();
     _lowStockThresholdCtrl.dispose();
+    _unitValueCtrl.dispose();
+    _imeiCtrl.dispose();
+    _warrantyCtrl.dispose();
+    _brandCtrl.dispose();
+    _modelCtrl.dispose();
+    _recipeCtrl.dispose();
+    _batchCtrl.dispose();
+    _expiryCtrl.dispose();
+    _manufacturerCtrl.dispose();
+    _compositionCtrl.dispose();
+    _packingCtrl.dispose();
+    _sizeCtrl.dispose();
+    _colorCtrl.dispose();
     super.dispose();
   }
 
@@ -159,9 +231,46 @@ class _ProductFormState extends State<ProductForm> {
       ),
     );
     if (result != null && result.isNotEmpty) {
-      setState(() => _selectedCategory = result);
+      setState(() => _selectedProductCategory = result);
     }
     ctrl.dispose();
+  }
+
+  Map<String, dynamic> _buildCategoryPayload() {
+    final shopCategory = context.read<AuthProvider>().shop?.category ?? 'Other';
+    final extras = <String, dynamic>{};
+    switch (shopCategory) {
+      case 'Grocery':
+        extras['unitType'] = _unitType;
+        if (_unitValueCtrl.text.trim().isNotEmpty) extras['unitValue'] = double.tryParse(_unitValueCtrl.text.trim());
+        break;
+      case 'Electronics':
+        if (_imeiCtrl.text.trim().isNotEmpty) extras['imei'] = _imeiCtrl.text.trim();
+        if (_warrantyCtrl.text.trim().isNotEmpty) extras['warrantyMonths'] = int.tryParse(_warrantyCtrl.text.trim());
+        if (_brandCtrl.text.trim().isNotEmpty) extras['brand'] = _brandCtrl.text.trim();
+        if (_modelCtrl.text.trim().isNotEmpty) extras['model'] = _modelCtrl.text.trim();
+        break;
+      case 'Restaurant':
+        extras['isMenuItem'] = _isMenuItem;
+        if (_recipeCtrl.text.trim().isNotEmpty) extras['recipe'] = _recipeCtrl.text.trim();
+        break;
+      case 'Pharmacy':
+        if (_batchCtrl.text.trim().isNotEmpty) extras['batchNumber'] = _batchCtrl.text.trim();
+        if (_expiryCtrl.text.trim().isNotEmpty) extras['expiryDate'] = _expiryCtrl.text.trim();
+        if (_manufacturerCtrl.text.trim().isNotEmpty) extras['manufacturer'] = _manufacturerCtrl.text.trim();
+        if (_compositionCtrl.text.trim().isNotEmpty) extras['composition'] = _compositionCtrl.text.trim();
+        extras['dosageForm'] = _dosageForm;
+        if (_packingCtrl.text.trim().isNotEmpty) extras['packing'] = _packingCtrl.text.trim();
+        extras['isControlled'] = _isControlled;
+        extras['isPrescriptionOnly'] = _isPrescriptionOnly;
+        break;
+      case 'Clothing':
+        if (_sizeCtrl.text.trim().isNotEmpty) extras['size'] = _sizeCtrl.text.trim();
+        if (_colorCtrl.text.trim().isNotEmpty) extras['color'] = _colorCtrl.text.trim();
+        extras['season'] = _season;
+        break;
+    }
+    return extras;
   }
 
   Future<void> _submit() async {
@@ -172,10 +281,11 @@ class _ProductFormState extends State<ProductForm> {
       'price': double.parse(_priceCtrl.text.trim()),
       'stock': int.parse(_stockCtrl.text.trim()),
       'sku': _skuCtrl.text.trim(),
-      'category': _selectedCategory,
+      'category': _selectedProductCategory,
       'imageUrl': _imageUrlCtrl.text.trim(),
       'barcode': _barcodeCtrl.text.trim().isNotEmpty ? _barcodeCtrl.text.trim() : null,
       'lowStockThreshold': int.tryParse(_lowStockThresholdCtrl.text.trim()) ?? 5,
+      ..._buildCategoryPayload(),
     };
 
     final prov = context.read<ProductProvider>();
@@ -271,7 +381,7 @@ class _ProductFormState extends State<ProductForm> {
                       Expanded(
                         child: Text(
                           _isAtLimit
-                              ? '🔒 You\'ve reached your product limit. Upgrade to add more.'
+                              ? 'You\'ve reached your product limit. Upgrade to add more.'
                               : 'Products: ${widget.productsUsed} / ${widget.productsLimit}',
                           style: TextStyle(
                             fontSize: 12,
@@ -352,7 +462,7 @@ class _ProductFormState extends State<ProductForm> {
                         final cats = prov.categories.where((c) => c != 'All').toList();
                         return DropdownButtonFormField<String>(
                           isExpanded: true,
-                          value: cats.contains(_selectedCategory) ? _selectedCategory : null,
+                          value: cats.contains(_selectedProductCategory) ? _selectedProductCategory : null,
                           decoration: const InputDecoration(
                             labelText: 'Category',
                             prefixIcon: Icon(Icons.category),
@@ -365,7 +475,7 @@ class _ProductFormState extends State<ProductForm> {
                                 children: [
                                   Icon(Icons.add, size: 16),
                                   SizedBox(width: 6),
-                                  Text('Add New…'),
+                                  Text('Add New'),
                                 ],
                               ),
                             ),
@@ -374,7 +484,7 @@ class _ProductFormState extends State<ProductForm> {
                             if (val == '__new__') {
                               _showNewCategoryDialog();
                             } else if (val != null) {
-                              setState(() => _selectedCategory = val);
+                              setState(() => _selectedProductCategory = val);
                             }
                           },
                         );
@@ -424,6 +534,7 @@ class _ProductFormState extends State<ProductForm> {
                   hintText: 'https://...',
                 ),
               ),
+              _buildCategorySpecificFields(),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _isAtLimit ? null : _submit,
@@ -433,6 +544,217 @@ class _ProductFormState extends State<ProductForm> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCategorySpecificFields() {
+    final shopCategory = context.watch<AuthProvider>().shop?.category ?? 'Other';
+
+    switch (shopCategory) {
+      case 'Grocery':
+        return _buildGroceryFields();
+      case 'Electronics':
+        return _buildElectronicsFields();
+      case 'Restaurant':
+        return _buildRestaurantFields();
+      case 'Pharmacy':
+        return _buildPharmacyFields();
+      case 'Clothing':
+        return _buildClothingFields();
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildSectionHeader(IconData icon, String label) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF6C5CE7).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 16, color: const Color(0xFF6C5CE7)),
+              const SizedBox(width: 8),
+              Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF6C5CE7))),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Widget _buildGroceryFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(Icons.shopping_basket, 'Grocery Fields'),
+        DropdownButtonFormField<String>(
+          value: _unitType,
+          decoration: const InputDecoration(labelText: 'Unit Type', prefixIcon: Icon(Icons.scale)),
+          items: ['kg', 'gram', 'dozen', 'piece', 'liter', 'ml']
+              .map((u) => DropdownMenuItem(value: u, child: Text(u)))
+              .toList(),
+          onChanged: (v) => setState(() => _unitType = v ?? 'kg'),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _unitValueCtrl,
+          decoration: const InputDecoration(
+            labelText: 'Unit Value (e.g. 5 for "5 kg")',
+            prefixIcon: Icon(Icons.tag),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildElectronicsFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(Icons.electrical_services, 'Electronics Fields'),
+        TextFormField(
+          controller: _imeiCtrl,
+          decoration: const InputDecoration(labelText: 'IMEI Number', prefixIcon: Icon(Icons.qr_code)),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _warrantyCtrl,
+          decoration: const InputDecoration(labelText: 'Warranty (months)', prefixIcon: Icon(Icons.timer)),
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _brandCtrl,
+          decoration: const InputDecoration(labelText: 'Brand', prefixIcon: Icon(Icons.business)),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _modelCtrl,
+          decoration: const InputDecoration(labelText: 'Model', prefixIcon: Icon(Icons.settings)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRestaurantFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(Icons.restaurant, 'Restaurant Fields'),
+        CheckboxListTile(
+          title: const Text('This is a Menu Item'),
+          value: _isMenuItem,
+          onChanged: (v) => setState(() => _isMenuItem = v ?? false),
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+        ),
+        if (_isMenuItem) ...[
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _recipeCtrl,
+            decoration: const InputDecoration(
+              labelText: 'Recipe / Ingredients',
+              prefixIcon: Icon(Icons.menu_book),
+            ),
+            maxLines: 3,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildPharmacyFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(Icons.medication, 'Pharmacy Fields'),
+        TextFormField(
+          controller: _batchCtrl,
+          decoration: const InputDecoration(labelText: 'Batch Number', prefixIcon: Icon(Icons.qr_code)),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _expiryCtrl,
+          decoration: const InputDecoration(
+            labelText: 'Expiry Date', prefixIcon: Icon(Icons.calendar_today),
+            hintText: 'YYYY-MM-DD',
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _manufacturerCtrl,
+          decoration: const InputDecoration(labelText: 'Manufacturer', prefixIcon: Icon(Icons.business)),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _compositionCtrl,
+          decoration: const InputDecoration(labelText: 'Composition', prefixIcon: Icon(Icons.science)),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<String>(
+          value: _dosageForm,
+          decoration: const InputDecoration(labelText: 'Dosage Form', prefixIcon: Icon(Icons.medication)),
+          items: ['Tablet', 'Capsule', 'Syrup', 'Injection', 'Cream', 'Drops', 'Inhaler', 'Other']
+              .map((f) => DropdownMenuItem(value: f, child: Text(f)))
+              .toList(),
+          onChanged: (v) => setState(() => _dosageForm = v ?? 'Tablet'),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _packingCtrl,
+          decoration: const InputDecoration(labelText: 'Packing (e.g., 10 tablets)', prefixIcon: Icon(Icons.inventory)),
+        ),
+        const SizedBox(height: 12),
+        CheckboxListTile(
+          title: const Text('Controlled Substance'),
+          value: _isControlled,
+          onChanged: (v) => setState(() => _isControlled = v ?? false),
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+        ),
+        CheckboxListTile(
+          title: const Text('Prescription Only'),
+          value: _isPrescriptionOnly,
+          onChanged: (v) => setState(() => _isPrescriptionOnly = v ?? false),
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClothingFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(Icons.checkroom, 'Clothing Fields'),
+        TextFormField(
+          controller: _sizeCtrl,
+          decoration: const InputDecoration(labelText: 'Size', prefixIcon: Icon(Icons.straighten)),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _colorCtrl,
+          decoration: const InputDecoration(labelText: 'Color', prefixIcon: Icon(Icons.palette)),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<String>(
+          value: _season,
+          decoration: const InputDecoration(labelText: 'Season', prefixIcon: Icon(Icons.wb_sunny)),
+          items: ['Summer', 'Winter', 'All-season']
+              .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+              .toList(),
+          onChanged: (v) => setState(() => _season = v ?? 'All-season'),
+        ),
+      ],
     );
   }
 

@@ -19,8 +19,11 @@ class AppUser {
     this.createdAt,
   });
 
-  bool get isAdmin => role == 'ADMIN';
-  bool get isSuperAdmin => role == 'SUPER_ADMIN';
+  bool get isAdmin => role == 'Admin';
+  bool get isSuperAdmin => role == 'SuperAdmin';
+  bool get isSubAdmin => role == 'SubAdmin';
+  bool get isSupplier => role == 'Supplier';
+  bool get isCashier => role == 'CASHIER';
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
     return AppUser(
@@ -55,6 +58,7 @@ class Shop {
   final String subscriptionStatus;
   final DateTime? subscriptionEndsAt;
   final bool isActive;
+  final String category;
 
   Shop({
     required this.id,
@@ -63,6 +67,7 @@ class Shop {
     this.subscriptionStatus = 'NONE',
     this.subscriptionEndsAt,
     this.isActive = true,
+    this.category = 'OTHER',
   });
 
   bool get hasActiveSubscription => subscriptionStatus == 'ACTIVE';
@@ -78,6 +83,7 @@ class Shop {
           ? DateTime.parse(json['subscriptionEndsAt'] as String)
           : null,
       isActive: json['isActive'] as bool? ?? true,
+      category: json['category'] as String? ?? 'OTHER',
     );
   }
 
@@ -88,6 +94,7 @@ class Shop {
     'subscriptionStatus': subscriptionStatus,
     'subscriptionEndsAt': subscriptionEndsAt?.toIso8601String(),
     'isActive': isActive,
+    'category': category,
   };
 }
 

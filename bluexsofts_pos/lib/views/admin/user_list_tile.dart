@@ -10,7 +10,7 @@ class UserListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final role = user['role'] as String? ?? '';
     final active = user['isActive'] as bool? ?? true;
-    final roleColor = role == 'ADMIN' ? AppTheme.primary : Colors.grey;
+    final roleColor = role == 'Admin' ? AppTheme.primary : Colors.grey;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -31,7 +31,7 @@ class UserListTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                role == 'ADMIN' ? Icons.admin_panel_settings : Icons.person,
+                role == 'Admin' ? Icons.admin_panel_settings : Icons.person,
                 color: roleColor,
                 size: 22,
               ),

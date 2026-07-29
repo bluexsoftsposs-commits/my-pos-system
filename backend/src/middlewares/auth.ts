@@ -45,6 +45,15 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       return;
     }
 
+    // Normalize role from DB format (e.g. SUPER_ADMIN -> SuperAdmin) to match middleware checks
+    const roleMap: Record<string, string> = {
+      'SUPER_ADMIN': 'SuperAdmin',
+      'ADMIN': 'Admin',
+      'SUB_ADMIN': 'SubAdmin',
+      'SUPPLIER': 'Supplier',
+    };
+    decoded.role = roleMap[decoded.role] || decoded.role;
+
     req.user = decoded;
     req.shopId = decoded.shopId;
     next();

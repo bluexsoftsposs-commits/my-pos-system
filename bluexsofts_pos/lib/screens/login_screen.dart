@@ -5,6 +5,8 @@ import '../providers/auth_provider.dart';
 import 'dashboard_screen.dart';
 import 'plans_screen.dart';
 import 'super_admin_screen.dart';
+import 'sub_admin_screen.dart';
+import 'supplier_screen.dart';
 import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -105,8 +107,12 @@ class _LoginScreenState extends State<LoginScreen>
       await Future.delayed(const Duration(milliseconds: 400));
       if (!mounted) return;
       Widget destination;
-      if (auth.isSuperAdmin || auth.user?.role == 'SUPERADMIN') {
+      if (auth.isSuperAdmin) {
         destination = const SuperAdminScreen();
+      } else if (auth.isSubAdmin) {
+        destination = const SubAdminScreen();
+      } else if (auth.isSupplier) {
+        destination = const SupplierScreen();
       } else if (auth.requiresPayment) {
         destination = const PlansScreen();
       } else {

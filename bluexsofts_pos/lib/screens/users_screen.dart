@@ -363,12 +363,14 @@ class _UsersScreenState extends State<UsersScreen> {
                   DataColumn(label: _buildHeaderText('Name')),
                   DataColumn(label: _buildHeaderText('Email')),
                   DataColumn(label: _buildHeaderText('Role')),
+                  DataColumn(label: _buildHeaderText('Supplier')),
                   DataColumn(label: _buildHeaderText('Status')),
                   DataColumn(label: _buildHeaderText('Actions'), numeric: true),
                 ],
                 rows: displayUsers.map((u) {
                   final isCashier = u['role'] == 'CASHIER';
                   final roleColor = isCashier ? AppTheme.accent : AppTheme.primary;
+                  final canAccess = u['canAccessSuppliers'] == true;
 
                   return DataRow(
                     cells: [
@@ -397,6 +399,18 @@ class _UsersScreenState extends State<UsersScreen> {
                         Text('${u['email']}', style: const TextStyle(fontSize: 14)),
                       ),
                       DataCell(_buildRoleBadge(u['role'] as String? ?? 'CASHIER')),
+                      DataCell(
+                        isCashier
+                            ? _buildActionIcon(
+                                canAccess ? Icons.check_circle : Icons.radio_button_unchecked,
+                                canAccess ? AppTheme.success : Colors.grey,
+                                () async {
+                                  await _userService.updateUser(u['id'], {'canAccessSuppliers': !canAccess});
+                                  _loadUsers();
+                                },
+                              )
+                            : Text('-', style: TextStyle(color: Colors.grey[600])),
+                      ),
                       DataCell(_buildActiveBadge(u['isActive'] == true)),
                       DataCell(
                         Row(
@@ -474,6 +488,7 @@ class _UsersScreenState extends State<UsersScreen> {
     final isCashier = u['role'] == 'CASHIER';
     final roleIcon = isCashier ? Icons.person : Icons.admin_panel_settings;
     final auth = context.read<AuthProvider>();
+    final canAccess = u['canAccessSuppliers'] == true;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -484,67 +499,106 @@ class _UsersScreenState extends State<UsersScreen> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF6C5CE7), Color(0xFF8B7EF6)],
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6C5CE7), Color(0xFF8B7EF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(roleIcon, color: Colors.white, size: 22),
                 ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(roleIcon, color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          '${u['name']}',
-                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      if (u['id'] != auth.user?.id)
-                        InkWell(
-                          onTap: () async {
-                            await _userService.updateUser(u['id'], {'isActive': u['isActive'] != true});
-                            _loadUsers();
-                          },
-                          child: Icon(
-                            u['isActive'] == true ? Icons.toggle_on : Icons.toggle_off_outlined,
-                            color: u['isActive'] == true ? AppTheme.success : AppTheme.error,
-                            size: 28,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${u['name']}',
+                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 8),
+                          if (u['id'] != auth.user?.id)
+                            InkWell(
+                              onTap: () async {
+                                await _userService.updateUser(u['id'], {'isActive': u['isActive'] != true});
+                                _loadUsers();
+                              },
+                              child: Icon(
+                                u['isActive'] == true ? Icons.toggle_on : Icons.toggle_off_outlined,
+                                color: u['isActive'] == true ? AppTheme.success : AppTheme.error,
+                                size: 28,
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${u['email']}',
+                        style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          _buildRoleBadge(u['role'] as String? ?? 'CASHIER'),
+                          const SizedBox(width: 6),
+                          _buildActiveBadge(u['isActive'] == true),
+                        ],
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${u['email']}',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                ),
+              ],
+            ),
+            if (isCashier) ...[
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Icon(
+                    canAccess ? Icons.check_circle : Icons.radio_button_unchecked,
+                    size: 16,
+                    color: canAccess ? AppTheme.success : Colors.grey,
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      _buildRoleBadge(u['role'] as String? ?? 'CASHIER'),
-                      const SizedBox(width: 6),
-                      _buildActiveBadge(u['isActive'] == true),
-                    ],
+                  const SizedBox(width: 6),
+                  Text('Supplier Access', style: TextStyle(fontSize: 13, color: Colors.grey[400])),
+                  const Spacer(),
+                  InkWell(
+                    onTap: () async {
+                      await _userService.updateUser(u['id'], {'canAccessSuppliers': !canAccess});
+                      _loadUsers();
+                    },
+                    child: Text(
+                      canAccess ? 'Enabled' : 'Disabled',
+                      style: TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w700,
+                        color: canAccess ? AppTheme.success : Colors.grey,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    canAccess ? Icons.toggle_on : Icons.toggle_off_outlined,
+                    color: canAccess ? AppTheme.success : Colors.grey,
+                    size: 24,
                   ),
                 ],
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -842,7 +896,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     dropdownColor: AppTheme.darkSurface,
                     items: const [
                       DropdownMenuItem(value: 'CASHIER', child: Text('Cashier')),
-                      DropdownMenuItem(value: 'ADMIN', child: Text('Admin')),
+                      DropdownMenuItem(value: 'Admin', child: Text('Admin')),
                     ],
                     onChanged: (v) => setDialogState(() => role = v ?? 'CASHIER'),
                   ),

@@ -26,6 +26,8 @@ import 'settings_screen.dart';
 import 'online_orders_screen.dart';
 import 'plans_screen.dart';
 import 'login_screen.dart';
+import 'admin/suppliers_screen.dart';
+import '../views/shared/category_dashboard_section.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -47,6 +49,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const InvoicesScreen(),
       const LedgerScreen(),
       if (isAdmin) const UsersScreen(),
+      if (isAdmin) const AdminSuppliersScreen(),
       const OnlineOrdersScreen(),
       const SettingsScreen(),
       const ReportsScreen(),
@@ -117,11 +120,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isAdmin = auth.isAdmin;
     final pages = _pages(isAdmin);
 
-    final onlineOrdersIndex = isAdmin ? 7 : 6;
-    final settingsIndex = isAdmin ? 8 : 7;
-    final reportsIndex = isAdmin ? 9 : 8;
-    final branchIndex = isAdmin ? 10 : 9;
-    final lowStockIndex = isAdmin ? 11 : 10;
+    final onlineOrdersIndex = isAdmin ? 8 : 6;
+    final settingsIndex = isAdmin ? 9 : 7;
+    final reportsIndex = isAdmin ? 10 : 8;
+    final branchIndex = isAdmin ? 11 : 9;
+    final lowStockIndex = isAdmin ? 12 : 10;
 
     final sidebarItems = <_SidebarItem>[
       _SidebarItem(Icons.home, 'Home', 0),
@@ -131,6 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _SidebarItem(Icons.description, 'Invoices', 4),
       _SidebarItem(Icons.account_balance, 'Ledger', 5),
       if (isAdmin) _SidebarItem(Icons.group, 'Users', 6),
+      if (isAdmin) _SidebarItem(Icons.person, 'Suppliers', 7),
       _SidebarItem(Icons.storefront, 'Online Orders', onlineOrdersIndex),
       _SidebarItem(Icons.bar_chart, 'Reports', reportsIndex),
       _SidebarItem(Icons.store, 'Branches', branchIndex),
@@ -992,9 +996,20 @@ class _DashboardHomeState extends State<_DashboardHome> {
 
           // Recent Transactions
           _buildRecentTransactions(recentSales, isDesktop),
+          const SizedBox(height: 32),
+
+          // Category-Specific Dashboard Section
+          _buildCategorySection(),
         ],
       ),
     );
+  }
+
+  Widget _buildCategorySection() {
+    final auth = context.watch<AuthProvider>();
+    final category = auth.shop?.category ?? 'General';
+    if (category == 'General' || category == 'Other') return const SizedBox.shrink();
+    return CategoryDashboardSection(category: category);
   }
 
   Widget _buildHeader(bool isDesktop) {

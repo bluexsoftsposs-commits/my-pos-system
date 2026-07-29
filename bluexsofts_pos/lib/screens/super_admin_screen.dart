@@ -7,6 +7,11 @@ import '../views/shared/stat_card.dart';
 import '../core/currency_formatter.dart';
 import 'login_screen.dart';
 import 'admin/plans_management_screen.dart';
+import 'admin/sub_admins_management_screen.dart';
+import 'admin/suppliers_management_screen.dart';
+import 'pending_approvals_screen.dart';
+import 'audit_logs_screen.dart';
+import '../services/audit_service.dart';
 
 IconData _categoryIcon(String cat) {
   switch (cat) {
@@ -114,6 +119,62 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
               tooltip: 'Manage Plans & Subscriptions',
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const PlansManagementScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.darkCard,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.admin_panel_settings, size: 20),
+              tooltip: 'Manage Sub-Admins',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SubAdminsManagementScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.darkCard,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.person, size: 20),
+              tooltip: 'Manage Suppliers',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SuppliersManagementScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFFDCB6E).withOpacity(0.15),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.approval, size: 20, color: Color(0xFFFDCB6E)),
+              tooltip: 'Pending Approvals',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PendingApprovalsScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.darkCard,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.history, size: 20),
+              tooltip: 'Audit Logs',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AuditLogsScreen()),
               ),
             ),
           ),
@@ -941,14 +1002,14 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> with SingleTickerPr
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: urole == 'ADMIN'
+                    color: urole == 'Admin'
                         ? const Color(0xFF6C5CE7).withOpacity(0.15)
                         : const Color(0xFF00B894).withOpacity(0.15),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     urole,
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: urole == 'ADMIN' ? const Color(0xFF6C5CE7) : const Color(0xFF00B894)),
+                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: urole == 'Admin' ? const Color(0xFF6C5CE7) : const Color(0xFF00B894)),
                   ),
                 ),
               ],
