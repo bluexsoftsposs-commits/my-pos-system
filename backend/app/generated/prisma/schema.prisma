@@ -350,6 +350,11 @@ model AuditLog {
   user       User     @relation(fields: [userId], references: [id])
 }
 
+model SystemState {
+  key   String @id
+  value String @default("")
+}
+
 model PendingApproval {
   id         String    @id @default(uuid())
   subAdminId String

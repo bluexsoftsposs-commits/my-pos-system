@@ -28,6 +28,7 @@ import 'plans_screen.dart';
 import 'login_screen.dart';
 import 'admin/suppliers_screen.dart';
 import '../views/shared/category_dashboard_section.dart';
+import '../core/shop_category_helper.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -119,6 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isDesktop = MediaQuery.of(context).size.width >= 1024;
     final isAdmin = auth.isAdmin;
     final pages = _pages(isAdmin);
+    final shopCategory = auth.shop?.category;
 
     final onlineOrdersIndex = isAdmin ? 8 : 6;
     final settingsIndex = isAdmin ? 9 : 7;
@@ -129,8 +131,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final sidebarItems = <_SidebarItem>[
       _SidebarItem(Icons.home, 'Home', 0),
       _SidebarItem(Icons.point_of_sale, 'POS', 1),
-      _SidebarItem(Icons.inventory_2, 'Products', 2),
-      _SidebarItem(Icons.payments, 'Sales', 3),
+      _SidebarItem(Icons.inventory_2, ShopCategoryHelper.productLabel(shopCategory), 2),
+      _SidebarItem(Icons.payments, ShopCategoryHelper.hasTableService(shopCategory) ? 'Orders' : 'Sales', 3),
       _SidebarItem(Icons.description, 'Invoices', 4),
       _SidebarItem(Icons.account_balance, 'Ledger', 5),
       if (isAdmin) _SidebarItem(Icons.group, 'Users', 6),
@@ -138,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _SidebarItem(Icons.storefront, 'Online Orders', onlineOrdersIndex),
       _SidebarItem(Icons.bar_chart, 'Reports', reportsIndex),
       _SidebarItem(Icons.store, 'Branches', branchIndex),
-      _SidebarItem(Icons.warning_amber, 'Low Stock', lowStockIndex),
+      _SidebarItem(Icons.warning_amber, ShopCategoryHelper.lowStockLabel(shopCategory), lowStockIndex),
       _SidebarItem(Icons.subscriptions, 'Plans', -1),
       _SidebarItem(Icons.settings, 'Settings', settingsIndex),
     ];

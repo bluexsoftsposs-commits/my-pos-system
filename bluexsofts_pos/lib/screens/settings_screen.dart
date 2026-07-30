@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import '../services/plan_service.dart';
 import '../core/theme.dart';
 import '../core/currency_formatter.dart';
 import '../core/env_config.dart';
+import '../core/shop_category_helper.dart';
 import 'login_screen.dart';
 import 'plans_screen.dart';
 import '../services/printer_service.dart';
@@ -320,6 +322,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 12),
 
+        // ── Category Settings ─────────────────────────────────
+        if (ShopCategoryHelper.categorySettingsSectionTitle(shop?.category).isNotEmpty)
+          _buildCategorySettingsSection(shop?.category ?? ''),
+        const SizedBox(height: 12),
+
         // ── App Info ─────────────────────────────────────────
         _buildSection(
           icon: Icons.info_outline,
@@ -543,5 +550,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
         (route) => false,
       );
     }
+  }
+
+  // ── Category-specific settings ──────────────────────────────
+  Widget _buildCategorySettingsSection(String category) {
+    final toggles = ShopCategoryHelper.categorySettingsToggles(category);
+    return _buildSection(
+      icon: Icons.tune,
+      title: ShopCategoryHelper.categorySettingsSectionTitle(category),
+      children: toggles.map((t) {
+        final key = t['key'] as String;
+        final label = t['label'] as String;
+        final defaultValue = t['defaultValue'] as bool;
+        return _CategorySettingsToggle(
+          settingKey: key,
+          label: label,
+          defaultValue: defaultValue,
+        );
+      }).toList(),
+    );
+  }
+}
+
+class _CategorySettingsToggle extends StatefulWidget {
+  final String settingKey;
+  final String label;
+  final bool defaultValue;
+
+  const _CategorySettingsToggle({
+    required this.settingKey,
+    required this.label,
+    required this.defaultValue,
+  });
+
+  @override
+  State<_CategorySettingsToggle> createState() => _CategorySettingsToggleState();
+}
+
+class _CategorySettingsToggleState extends State<_CategorySettingsToggle> {
+  bool _value = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _value = prefs.getBool(widget.settingKey) ?? widget.defaultValue;
+      });
+    }
+  }
+
+  Future<void> _toggle(bool val) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(widget.settingKey, val);
+    if (mounted) setState(() => _value = val);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(widget.label, style: const TextStyle(fontSize: 13, color: Colors.white)),
+          ),
+          Switch(
+            value: _value,
+            onChanged: _toggle,
+            activeColor: AppTheme.primary,
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -8,6 +8,7 @@ import '../../providers/auth_provider.dart';
 import '../../core/theme.dart';
 import '../../core/env_config.dart';
 import '../../core/api_client.dart';
+import '../../services/supplier_service.dart';
 
 class ProductForm extends StatefulWidget {
   final Product? product;
@@ -78,6 +79,12 @@ class _ProductFormState extends State<ProductForm> {
   late final TextEditingController _colorCtrl;
   String _season = 'All-season';
 
+  // Supplier
+  List<Map<String, dynamic>> _suppliers = [];
+  String? _selectedSupplierId;
+
+  final _supplierService = SupplierService();
+
   bool get isEditing => widget.product != null;
 
   @override
@@ -123,6 +130,23 @@ class _ProductFormState extends State<ProductForm> {
     _sizeCtrl = TextEditingController(text: p?.size ?? '');
     _colorCtrl = TextEditingController(text: p?.color ?? '');
     _season = p?.season ?? 'All-season';
+
+    // Supplier
+    _selectedSupplierId = p?.supplierId;
+    _loadSuppliers();
+  }
+
+  Future<void> _loadSuppliers() async {
+    try {
+      final data = await _supplierService.getShopSuppliers();
+      if (data != null && mounted) {
+        setState(() {
+          _suppliers = (data['suppliers'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList() ?? [];
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -285,6 +309,7 @@ class _ProductFormState extends State<ProductForm> {
       'imageUrl': _imageUrlCtrl.text.trim(),
       'barcode': _barcodeCtrl.text.trim().isNotEmpty ? _barcodeCtrl.text.trim() : null,
       'lowStockThreshold': int.tryParse(_lowStockThresholdCtrl.text.trim()) ?? 5,
+      'supplierId': _selectedSupplierId,
       ..._buildCategoryPayload(),
     };
 
@@ -524,6 +549,26 @@ class _ProductFormState extends State<ProductForm> {
                     },
                   ),
                 ),
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String?>(
+                value: _selectedSupplierId,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  labelText: 'Supplier (optional)',
+                  prefixIcon: Icon(Icons.person),
+                ),
+                items: [
+                  const DropdownMenuItem<String?>(
+                    value: null,
+                    child: Text('None', style: TextStyle(color: Colors.grey)),
+                  ),
+                  ...(_suppliers.map((s) => DropdownMenuItem<String?>(
+                    value: s['id'] as String,
+                    child: Text('${s['businessName'] ?? s['supplierName'] ?? ''}'),
+                  ))),
+                ],
+                onChanged: (v) => setState(() => _selectedSupplierId = v),
               ),
               const SizedBox(height: 12),
               TextFormField(

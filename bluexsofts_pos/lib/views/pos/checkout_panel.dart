@@ -8,6 +8,7 @@ import '../../providers/ledger_provider.dart';
 import '../../models/sale.dart';
 import '../../core/theme.dart';
 import '../../core/currency_formatter.dart';
+import '../../core/shop_category_helper.dart';
 import '../../services/receipt_service.dart';
 
 class CheckoutPanel extends StatefulWidget {
@@ -23,18 +24,25 @@ class CheckoutPanel extends StatefulWidget {
 class _CheckoutPanelState extends State<CheckoutPanel> {
   late TextEditingController _discountCtrl;
   late TextEditingController _notesCtrl;
+  final _tableNumberCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _discountCtrl = TextEditingController(text: widget.cart.discount.toString());
     _notesCtrl = TextEditingController(text: widget.cart.notes);
+    final existingNotes = widget.cart.notes;
+    final tableNum = ShopCategoryHelper.extractTableNumber(existingNotes);
+    if (tableNum != null) {
+      _tableNumberCtrl.text = tableNum;
+    }
   }
 
   @override
   void dispose() {
     _discountCtrl.dispose();
     _notesCtrl.dispose();
+    _tableNumberCtrl.dispose();
     super.dispose();
   }
 
@@ -42,6 +50,12 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
     final cart = widget.cart;
     final saleProv = widget.saleProv;
     final auth = context.read<AuthProvider>();
+    final shopCategory = auth.shop?.category;
+    final combinedNotes = ShopCategoryHelper.formatTableNotes(
+      ShopCategoryHelper.hasTableService(shopCategory) ? _tableNumberCtrl.text.trim() : null,
+      _notesCtrl.text.trim(),
+    );
+    cart.setNotes(combinedNotes);
     final payload = cart.toCheckoutPayload();
 
     if (cart.paymentMethod == 'CREDIT') {
@@ -311,6 +325,18 @@ class _CheckoutPanelState extends State<CheckoutPanel> {
                   ),
                   keyboardType: TextInputType.phone,
                   onChanged: cart.setCreditCustomerPhone,
+                ),
+              ],
+              if (ShopCategoryHelper.hasTableService(context.read<AuthProvider>().shop?.category)) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _tableNumberCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Table Number',
+                    prefixIcon: Icon(Icons.table_restaurant),
+                    hintText: 'e.g. 5',
+                  ),
+                  keyboardType: TextInputType.number,
                 ),
               ],
               const SizedBox(height: 16),

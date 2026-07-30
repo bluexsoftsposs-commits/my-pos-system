@@ -13,6 +13,7 @@ import {
   verifySupplier,
   toggleSupplierStatus,
   getShopSuppliers,
+  createShopSupplier,
   createShopSupplierTransaction,
 } from '../controllers/supplier';
 
@@ -28,6 +29,7 @@ router.get('/stats', requireSupplier, getSupplierStats);
 
 // Shop-scoped supplier endpoints (Admin / Cashier with permission)
 router.get('/shop', requireRole('Admin', 'CASHIER', 'SuperAdmin'), requireCashierSupplierAccess, getShopSuppliers);
+router.post('/shop/create', requireRole('Admin', 'CASHIER', 'SuperAdmin'), requireCashierSupplierAccess, createShopSupplier);
 router.post('/:id/shop-transactions', requireRole('Admin', 'CASHIER', 'SuperAdmin'), requireCashierSupplierAccess, createShopSupplierTransaction);
 
 // Per-supplier routes (access-checked inside controller)

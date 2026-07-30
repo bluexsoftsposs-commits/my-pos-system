@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/db';
 import { retryDbCall, DatabaseUnavailableError } from '../utils/retryDbCall';
+import { getEffectiveJwtSecret } from '../services/emergencyState';
 
 export interface AuthPayload {
   userId: string;
@@ -30,7 +31,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as AuthPayload;
+    const decoded = jwt.verify(token, getEffectiveJwtSecret()) as AuthPayload;
 
     const user = await retryDbCall(
       () => prisma.user.findUnique({

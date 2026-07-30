@@ -392,6 +392,11 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SystemStateScalarFieldEnum = {
+  key: 'key',
+  value: 'value'
+};
+
 exports.Prisma.PendingApprovalScalarFieldEnum = {
   id: 'id',
   subAdminId: 'subAdminId',
@@ -465,6 +470,7 @@ exports.Prisma.ModelName = {
   SupplierTransaction: 'SupplierTransaction',
   SubAdmin: 'SubAdmin',
   AuditLog: 'AuditLog',
+  SystemState: 'SystemState',
   PendingApproval: 'PendingApproval'
 };
 

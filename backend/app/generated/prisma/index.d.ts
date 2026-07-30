@@ -109,6 +109,11 @@ export type SubAdmin = $Result.DefaultSelection<Prisma.$SubAdminPayload>
  */
 export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
 /**
+ * Model SystemState
+ * 
+ */
+export type SystemState = $Result.DefaultSelection<Prisma.$SystemStatePayload>
+/**
  * Model PendingApproval
  * 
  */
@@ -448,6 +453,16 @@ export class PrismaClient<
     * ```
     */
   get auditLog(): Prisma.AuditLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.systemState`: Exposes CRUD operations for the **SystemState** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SystemStates
+    * const systemStates = await prisma.systemState.findMany()
+    * ```
+    */
+  get systemState(): Prisma.SystemStateDelegate<ExtArgs>;
 
   /**
    * `prisma.pendingApproval`: Exposes CRUD operations for the **PendingApproval** model.
@@ -918,6 +933,7 @@ export namespace Prisma {
     SupplierTransaction: 'SupplierTransaction',
     SubAdmin: 'SubAdmin',
     AuditLog: 'AuditLog',
+    SystemState: 'SystemState',
     PendingApproval: 'PendingApproval'
   };
 
@@ -934,7 +950,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "plan" | "shopSubscription" | "shop" | "branch" | "payment" | "user" | "passwordResetToken" | "product" | "sale" | "invoice" | "saleItem" | "onlineOrder" | "onlineOrderItem" | "customer" | "ledgerEntry" | "supplier" | "supplierTransaction" | "subAdmin" | "auditLog" | "pendingApproval"
+      modelProps: "plan" | "shopSubscription" | "shop" | "branch" | "payment" | "user" | "passwordResetToken" | "product" | "sale" | "invoice" | "saleItem" | "onlineOrder" | "onlineOrderItem" | "customer" | "ledgerEntry" | "supplier" | "supplierTransaction" | "subAdmin" | "auditLog" | "systemState" | "pendingApproval"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2265,6 +2281,76 @@ export namespace Prisma {
           count: {
             args: Prisma.AuditLogCountArgs<ExtArgs>
             result: $Utils.Optional<AuditLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      SystemState: {
+        payload: Prisma.$SystemStatePayload<ExtArgs>
+        fields: Prisma.SystemStateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SystemStateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SystemStateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>
+          }
+          findFirst: {
+            args: Prisma.SystemStateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SystemStateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>
+          }
+          findMany: {
+            args: Prisma.SystemStateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>[]
+          }
+          create: {
+            args: Prisma.SystemStateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>
+          }
+          createMany: {
+            args: Prisma.SystemStateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SystemStateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>[]
+          }
+          delete: {
+            args: Prisma.SystemStateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>
+          }
+          update: {
+            args: Prisma.SystemStateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>
+          }
+          deleteMany: {
+            args: Prisma.SystemStateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SystemStateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SystemStateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemStatePayload>
+          }
+          aggregate: {
+            args: Prisma.SystemStateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSystemState>
+          }
+          groupBy: {
+            args: Prisma.SystemStateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SystemStateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SystemStateCountArgs<ExtArgs>
+            result: $Utils.Optional<SystemStateCountAggregateOutputType> | number
           }
         }
       }
@@ -23459,6 +23545,848 @@ export namespace Prisma {
 
 
   /**
+   * Model SystemState
+   */
+
+  export type AggregateSystemState = {
+    _count: SystemStateCountAggregateOutputType | null
+    _min: SystemStateMinAggregateOutputType | null
+    _max: SystemStateMaxAggregateOutputType | null
+  }
+
+  export type SystemStateMinAggregateOutputType = {
+    key: string | null
+    value: string | null
+  }
+
+  export type SystemStateMaxAggregateOutputType = {
+    key: string | null
+    value: string | null
+  }
+
+  export type SystemStateCountAggregateOutputType = {
+    key: number
+    value: number
+    _all: number
+  }
+
+
+  export type SystemStateMinAggregateInputType = {
+    key?: true
+    value?: true
+  }
+
+  export type SystemStateMaxAggregateInputType = {
+    key?: true
+    value?: true
+  }
+
+  export type SystemStateCountAggregateInputType = {
+    key?: true
+    value?: true
+    _all?: true
+  }
+
+  export type SystemStateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemState to aggregate.
+     */
+    where?: SystemStateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemStates to fetch.
+     */
+    orderBy?: SystemStateOrderByWithRelationInput | SystemStateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SystemStateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemStates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemStates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SystemStates
+    **/
+    _count?: true | SystemStateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SystemStateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SystemStateMaxAggregateInputType
+  }
+
+  export type GetSystemStateAggregateType<T extends SystemStateAggregateArgs> = {
+        [P in keyof T & keyof AggregateSystemState]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSystemState[P]>
+      : GetScalarType<T[P], AggregateSystemState[P]>
+  }
+
+
+
+
+  export type SystemStateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SystemStateWhereInput
+    orderBy?: SystemStateOrderByWithAggregationInput | SystemStateOrderByWithAggregationInput[]
+    by: SystemStateScalarFieldEnum[] | SystemStateScalarFieldEnum
+    having?: SystemStateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SystemStateCountAggregateInputType | true
+    _min?: SystemStateMinAggregateInputType
+    _max?: SystemStateMaxAggregateInputType
+  }
+
+  export type SystemStateGroupByOutputType = {
+    key: string
+    value: string
+    _count: SystemStateCountAggregateOutputType | null
+    _min: SystemStateMinAggregateOutputType | null
+    _max: SystemStateMaxAggregateOutputType | null
+  }
+
+  type GetSystemStateGroupByPayload<T extends SystemStateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SystemStateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SystemStateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SystemStateGroupByOutputType[P]>
+            : GetScalarType<T[P], SystemStateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SystemStateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    value?: boolean
+  }, ExtArgs["result"]["systemState"]>
+
+  export type SystemStateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    value?: boolean
+  }, ExtArgs["result"]["systemState"]>
+
+  export type SystemStateSelectScalar = {
+    key?: boolean
+    value?: boolean
+  }
+
+
+  export type $SystemStatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SystemState"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      key: string
+      value: string
+    }, ExtArgs["result"]["systemState"]>
+    composites: {}
+  }
+
+  type SystemStateGetPayload<S extends boolean | null | undefined | SystemStateDefaultArgs> = $Result.GetResult<Prisma.$SystemStatePayload, S>
+
+  type SystemStateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SystemStateFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SystemStateCountAggregateInputType | true
+    }
+
+  export interface SystemStateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SystemState'], meta: { name: 'SystemState' } }
+    /**
+     * Find zero or one SystemState that matches the filter.
+     * @param {SystemStateFindUniqueArgs} args - Arguments to find a SystemState
+     * @example
+     * // Get one SystemState
+     * const systemState = await prisma.systemState.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SystemStateFindUniqueArgs>(args: SelectSubset<T, SystemStateFindUniqueArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SystemState that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SystemStateFindUniqueOrThrowArgs} args - Arguments to find a SystemState
+     * @example
+     * // Get one SystemState
+     * const systemState = await prisma.systemState.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SystemStateFindUniqueOrThrowArgs>(args: SelectSubset<T, SystemStateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SystemState that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateFindFirstArgs} args - Arguments to find a SystemState
+     * @example
+     * // Get one SystemState
+     * const systemState = await prisma.systemState.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SystemStateFindFirstArgs>(args?: SelectSubset<T, SystemStateFindFirstArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SystemState that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateFindFirstOrThrowArgs} args - Arguments to find a SystemState
+     * @example
+     * // Get one SystemState
+     * const systemState = await prisma.systemState.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SystemStateFindFirstOrThrowArgs>(args?: SelectSubset<T, SystemStateFindFirstOrThrowArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SystemStates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SystemStates
+     * const systemStates = await prisma.systemState.findMany()
+     * 
+     * // Get first 10 SystemStates
+     * const systemStates = await prisma.systemState.findMany({ take: 10 })
+     * 
+     * // Only select the `key`
+     * const systemStateWithKeyOnly = await prisma.systemState.findMany({ select: { key: true } })
+     * 
+     */
+    findMany<T extends SystemStateFindManyArgs>(args?: SelectSubset<T, SystemStateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SystemState.
+     * @param {SystemStateCreateArgs} args - Arguments to create a SystemState.
+     * @example
+     * // Create one SystemState
+     * const SystemState = await prisma.systemState.create({
+     *   data: {
+     *     // ... data to create a SystemState
+     *   }
+     * })
+     * 
+     */
+    create<T extends SystemStateCreateArgs>(args: SelectSubset<T, SystemStateCreateArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SystemStates.
+     * @param {SystemStateCreateManyArgs} args - Arguments to create many SystemStates.
+     * @example
+     * // Create many SystemStates
+     * const systemState = await prisma.systemState.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SystemStateCreateManyArgs>(args?: SelectSubset<T, SystemStateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SystemStates and returns the data saved in the database.
+     * @param {SystemStateCreateManyAndReturnArgs} args - Arguments to create many SystemStates.
+     * @example
+     * // Create many SystemStates
+     * const systemState = await prisma.systemState.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SystemStates and only return the `key`
+     * const systemStateWithKeyOnly = await prisma.systemState.createManyAndReturn({ 
+     *   select: { key: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SystemStateCreateManyAndReturnArgs>(args?: SelectSubset<T, SystemStateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SystemState.
+     * @param {SystemStateDeleteArgs} args - Arguments to delete one SystemState.
+     * @example
+     * // Delete one SystemState
+     * const SystemState = await prisma.systemState.delete({
+     *   where: {
+     *     // ... filter to delete one SystemState
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SystemStateDeleteArgs>(args: SelectSubset<T, SystemStateDeleteArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SystemState.
+     * @param {SystemStateUpdateArgs} args - Arguments to update one SystemState.
+     * @example
+     * // Update one SystemState
+     * const systemState = await prisma.systemState.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SystemStateUpdateArgs>(args: SelectSubset<T, SystemStateUpdateArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SystemStates.
+     * @param {SystemStateDeleteManyArgs} args - Arguments to filter SystemStates to delete.
+     * @example
+     * // Delete a few SystemStates
+     * const { count } = await prisma.systemState.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SystemStateDeleteManyArgs>(args?: SelectSubset<T, SystemStateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SystemStates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SystemStates
+     * const systemState = await prisma.systemState.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SystemStateUpdateManyArgs>(args: SelectSubset<T, SystemStateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SystemState.
+     * @param {SystemStateUpsertArgs} args - Arguments to update or create a SystemState.
+     * @example
+     * // Update or create a SystemState
+     * const systemState = await prisma.systemState.upsert({
+     *   create: {
+     *     // ... data to create a SystemState
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SystemState we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SystemStateUpsertArgs>(args: SelectSubset<T, SystemStateUpsertArgs<ExtArgs>>): Prisma__SystemStateClient<$Result.GetResult<Prisma.$SystemStatePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SystemStates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateCountArgs} args - Arguments to filter SystemStates to count.
+     * @example
+     * // Count the number of SystemStates
+     * const count = await prisma.systemState.count({
+     *   where: {
+     *     // ... the filter for the SystemStates we want to count
+     *   }
+     * })
+    **/
+    count<T extends SystemStateCountArgs>(
+      args?: Subset<T, SystemStateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SystemStateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SystemState.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SystemStateAggregateArgs>(args: Subset<T, SystemStateAggregateArgs>): Prisma.PrismaPromise<GetSystemStateAggregateType<T>>
+
+    /**
+     * Group by SystemState.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemStateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SystemStateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SystemStateGroupByArgs['orderBy'] }
+        : { orderBy?: SystemStateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SystemStateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSystemStateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SystemState model
+   */
+  readonly fields: SystemStateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SystemState.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SystemStateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SystemState model
+   */ 
+  interface SystemStateFieldRefs {
+    readonly key: FieldRef<"SystemState", 'String'>
+    readonly value: FieldRef<"SystemState", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SystemState findUnique
+   */
+  export type SystemStateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * Filter, which SystemState to fetch.
+     */
+    where: SystemStateWhereUniqueInput
+  }
+
+  /**
+   * SystemState findUniqueOrThrow
+   */
+  export type SystemStateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * Filter, which SystemState to fetch.
+     */
+    where: SystemStateWhereUniqueInput
+  }
+
+  /**
+   * SystemState findFirst
+   */
+  export type SystemStateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * Filter, which SystemState to fetch.
+     */
+    where?: SystemStateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemStates to fetch.
+     */
+    orderBy?: SystemStateOrderByWithRelationInput | SystemStateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemStates.
+     */
+    cursor?: SystemStateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemStates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemStates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemStates.
+     */
+    distinct?: SystemStateScalarFieldEnum | SystemStateScalarFieldEnum[]
+  }
+
+  /**
+   * SystemState findFirstOrThrow
+   */
+  export type SystemStateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * Filter, which SystemState to fetch.
+     */
+    where?: SystemStateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemStates to fetch.
+     */
+    orderBy?: SystemStateOrderByWithRelationInput | SystemStateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemStates.
+     */
+    cursor?: SystemStateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemStates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemStates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemStates.
+     */
+    distinct?: SystemStateScalarFieldEnum | SystemStateScalarFieldEnum[]
+  }
+
+  /**
+   * SystemState findMany
+   */
+  export type SystemStateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * Filter, which SystemStates to fetch.
+     */
+    where?: SystemStateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemStates to fetch.
+     */
+    orderBy?: SystemStateOrderByWithRelationInput | SystemStateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SystemStates.
+     */
+    cursor?: SystemStateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemStates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemStates.
+     */
+    skip?: number
+    distinct?: SystemStateScalarFieldEnum | SystemStateScalarFieldEnum[]
+  }
+
+  /**
+   * SystemState create
+   */
+  export type SystemStateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * The data needed to create a SystemState.
+     */
+    data: XOR<SystemStateCreateInput, SystemStateUncheckedCreateInput>
+  }
+
+  /**
+   * SystemState createMany
+   */
+  export type SystemStateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SystemStates.
+     */
+    data: SystemStateCreateManyInput | SystemStateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SystemState createManyAndReturn
+   */
+  export type SystemStateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SystemStates.
+     */
+    data: SystemStateCreateManyInput | SystemStateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SystemState update
+   */
+  export type SystemStateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * The data needed to update a SystemState.
+     */
+    data: XOR<SystemStateUpdateInput, SystemStateUncheckedUpdateInput>
+    /**
+     * Choose, which SystemState to update.
+     */
+    where: SystemStateWhereUniqueInput
+  }
+
+  /**
+   * SystemState updateMany
+   */
+  export type SystemStateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SystemStates.
+     */
+    data: XOR<SystemStateUpdateManyMutationInput, SystemStateUncheckedUpdateManyInput>
+    /**
+     * Filter which SystemStates to update
+     */
+    where?: SystemStateWhereInput
+  }
+
+  /**
+   * SystemState upsert
+   */
+  export type SystemStateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * The filter to search for the SystemState to update in case it exists.
+     */
+    where: SystemStateWhereUniqueInput
+    /**
+     * In case the SystemState found by the `where` argument doesn't exist, create a new SystemState with this data.
+     */
+    create: XOR<SystemStateCreateInput, SystemStateUncheckedCreateInput>
+    /**
+     * In case the SystemState was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SystemStateUpdateInput, SystemStateUncheckedUpdateInput>
+  }
+
+  /**
+   * SystemState delete
+   */
+  export type SystemStateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+    /**
+     * Filter which SystemState to delete.
+     */
+    where: SystemStateWhereUniqueInput
+  }
+
+  /**
+   * SystemState deleteMany
+   */
+  export type SystemStateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemStates to delete
+     */
+    where?: SystemStateWhereInput
+  }
+
+  /**
+   * SystemState without action
+   */
+  export type SystemStateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemState
+     */
+    select?: SystemStateSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model PendingApproval
    */
 
@@ -24798,6 +25726,14 @@ export namespace Prisma {
   };
 
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+  export const SystemStateScalarFieldEnum: {
+    key: 'key',
+    value: 'value'
+  };
+
+  export type SystemStateScalarFieldEnum = (typeof SystemStateScalarFieldEnum)[keyof typeof SystemStateScalarFieldEnum]
 
 
   export const PendingApprovalScalarFieldEnum: {
@@ -26744,6 +27680,43 @@ export namespace Prisma {
     changes?: JsonNullableWithAggregatesFilter<"AuditLog">
     ipAddress?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
+  }
+
+  export type SystemStateWhereInput = {
+    AND?: SystemStateWhereInput | SystemStateWhereInput[]
+    OR?: SystemStateWhereInput[]
+    NOT?: SystemStateWhereInput | SystemStateWhereInput[]
+    key?: StringFilter<"SystemState"> | string
+    value?: StringFilter<"SystemState"> | string
+  }
+
+  export type SystemStateOrderByWithRelationInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
+  export type SystemStateWhereUniqueInput = Prisma.AtLeast<{
+    key?: string
+    AND?: SystemStateWhereInput | SystemStateWhereInput[]
+    OR?: SystemStateWhereInput[]
+    NOT?: SystemStateWhereInput | SystemStateWhereInput[]
+    value?: StringFilter<"SystemState"> | string
+  }, "key">
+
+  export type SystemStateOrderByWithAggregationInput = {
+    key?: SortOrder
+    value?: SortOrder
+    _count?: SystemStateCountOrderByAggregateInput
+    _max?: SystemStateMaxOrderByAggregateInput
+    _min?: SystemStateMinOrderByAggregateInput
+  }
+
+  export type SystemStateScalarWhereWithAggregatesInput = {
+    AND?: SystemStateScalarWhereWithAggregatesInput | SystemStateScalarWhereWithAggregatesInput[]
+    OR?: SystemStateScalarWhereWithAggregatesInput[]
+    NOT?: SystemStateScalarWhereWithAggregatesInput | SystemStateScalarWhereWithAggregatesInput[]
+    key?: StringWithAggregatesFilter<"SystemState"> | string
+    value?: StringWithAggregatesFilter<"SystemState"> | string
   }
 
   export type PendingApprovalWhereInput = {
@@ -28815,6 +29788,41 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SystemStateCreateInput = {
+    key: string
+    value?: string
+  }
+
+  export type SystemStateUncheckedCreateInput = {
+    key: string
+    value?: string
+  }
+
+  export type SystemStateUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SystemStateUncheckedUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SystemStateCreateManyInput = {
+    key: string
+    value?: string
+  }
+
+  export type SystemStateUpdateManyMutationInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SystemStateUncheckedUpdateManyInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
   export type PendingApprovalCreateInput = {
     id?: string
     action: string
@@ -30468,6 +31476,21 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type SystemStateCountOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
+  export type SystemStateMaxOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
+  export type SystemStateMinOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
   }
 
   export type PendingApprovalCountOrderByAggregateInput = {
@@ -39764,6 +40787,10 @@ export namespace Prisma {
      * @deprecated Use AuditLogDefaultArgs instead
      */
     export type AuditLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AuditLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SystemStateDefaultArgs instead
+     */
+    export type SystemStateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SystemStateDefaultArgs<ExtArgs>
     /**
      * @deprecated Use PendingApprovalDefaultArgs instead
      */

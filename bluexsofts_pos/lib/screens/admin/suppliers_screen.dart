@@ -3,6 +3,7 @@ import '../../core/theme.dart';
 import '../../core/api_client.dart';
 import '../../core/currency_formatter.dart';
 import '../../services/supplier_service.dart';
+import 'supplier_ledger_screen.dart';
 
 class AdminSuppliersScreen extends StatefulWidget {
   const AdminSuppliersScreen({super.key});
@@ -34,16 +35,18 @@ class _AdminSuppliersScreenState extends State<AdminSuppliersScreen> {
     setState(() => _loading = false);
   }
 
-  void _showLedger(Map<String, dynamic> supplier) {
-    showModalBottomSheet(
+  void _showAddSupplierDialog() {
+    showDialog(
       context: context,
-      backgroundColor: AppTheme.darkSurface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      builder: (ctx) => _AddSupplierDialog(onDone: _load),
+    );
+  }
+
+  void _showLedger(Map<String, dynamic> supplier) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SupplierLedgerScreen(supplier: supplier),
       ),
-      builder: (ctx) {
-        return _SupplierLedgerSheet(supplier: supplier);
-      },
     );
   }
 
@@ -68,20 +71,37 @@ class _AdminSuppliersScreenState extends State<AdminSuppliersScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                child: Text(
-                  'Suppliers',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.primary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'Suppliers linked to your shop\'s products.',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Suppliers',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Suppliers linked to your shop.',
+                            style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FilledButton.icon(
+                      onPressed: _showAddSupplierDialog,
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('Add Supplier'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -263,69 +283,169 @@ class _AdminSuppliersScreenState extends State<AdminSuppliersScreen> {
   }
 }
 
-// ── Ledger Sheet ────────────────────────────────────────────────────
+// ── Add Supplier Dialog ─────────────────────────────────────────────
 
-class _SupplierLedgerSheet extends StatelessWidget {
-  final Map<String, dynamic> supplier;
-  const _SupplierLedgerSheet({required this.supplier});
+class _AddSupplierDialog extends StatefulWidget {
+  final VoidCallback onDone;
+  const _AddSupplierDialog({required this.onDone});
+
+  @override
+  State<_AddSupplierDialog> createState() => _AddSupplierDialogState();
+}
+
+class _AddSupplierDialogState extends State<_AddSupplierDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameCtrl = TextEditingController();
+  final _businessCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _addressCtrl = TextEditingController();
+  final _cityCtrl = TextEditingController();
+  final _stateCtrl = TextEditingController();
+  final _pincodeCtrl = TextEditingController();
+  final _gstCtrl = TextEditingController();
+  final _panCtrl = TextEditingController();
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _businessCtrl.dispose();
+    _phoneCtrl.dispose();
+    _emailCtrl.dispose();
+    _addressCtrl.dispose();
+    _cityCtrl.dispose();
+    _stateCtrl.dispose();
+    _pincodeCtrl.dispose();
+    _gstCtrl.dispose();
+    _panCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _saving = true);
+    try {
+      await ApiClient.post('/suppliers/shop/create', {
+        'supplierName': _nameCtrl.text.trim(),
+        'businessName': _businessCtrl.text.trim(),
+        'phone': _phoneCtrl.text.trim(),
+        'email': _emailCtrl.text.trim(),
+        'address': _addressCtrl.text.trim(),
+        'city': _cityCtrl.text.trim(),
+        'state': _stateCtrl.text.trim(),
+        'pincode': _pincodeCtrl.text.trim(),
+        'gstNumber': _gstCtrl.text.trim(),
+        'panNumber': _panCtrl.text.trim(),
+      });
+      if (!mounted) return;
+      Navigator.pop(context);
+      widget.onDone();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Supplier added'), backgroundColor: AppTheme.success),
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to add supplier'), backgroundColor: AppTheme.error),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final sales = (supplier['totalSalesValue'] as num?)?.toDouble() ?? 0;
-    final payments = (supplier['totalPayments'] as num?)?.toDouble() ?? 0;
-    final balance = (supplier['pendingBalance'] as num?)?.toDouble() ?? 0;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 24, right: 24, top: 24,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 40, height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[600],
-                borderRadius: BorderRadius.circular(2),
-              ),
+    return AlertDialog(
+      backgroundColor: AppTheme.darkSurface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: const Text('Add Supplier'),
+      content: Form(
+        key: _formKey,
+        child: SizedBox(
+          width: 400,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _nameCtrl,
+                  decoration: const InputDecoration(labelText: 'Supplier Name *', prefixIcon: Icon(Icons.person)),
+                  validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _businessCtrl,
+                  decoration: const InputDecoration(labelText: 'Business Name', prefixIcon: Icon(Icons.business)),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _phoneCtrl,
+                  decoration: const InputDecoration(labelText: 'Phone *', prefixIcon: Icon(Icons.phone)),
+                  keyboardType: TextInputType.phone,
+                  validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _emailCtrl,
+                  decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email)),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _addressCtrl,
+                  decoration: const InputDecoration(labelText: 'Address', prefixIcon: Icon(Icons.location_on)),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(child: TextFormField(
+                      controller: _cityCtrl,
+                      decoration: const InputDecoration(labelText: 'City', prefixIcon: Icon(Icons.location_city)),
+                    )),
+                    const SizedBox(width: 8),
+                    Expanded(child: TextFormField(
+                      controller: _stateCtrl,
+                      decoration: const InputDecoration(labelText: 'State'),
+                    )),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(child: TextFormField(
+                      controller: _pincodeCtrl,
+                      decoration: const InputDecoration(labelText: 'Pincode'),
+                      keyboardType: TextInputType.number,
+                    )),
+                    const SizedBox(width: 8),
+                    Expanded(child: TextFormField(
+                      controller: _gstCtrl,
+                      decoration: const InputDecoration(labelText: 'GST No.'),
+                    )),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _panCtrl,
+                  decoration: const InputDecoration(labelText: 'PAN No.'),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 20),
-          Text('${supplier['businessName']} — Ledger',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 24),
-          _ledgerRow('Total Purchases', CurrencyFormatter.format(sales), AppTheme.primary),
-          _ledgerRow('Total Payments', CurrencyFormatter.format(payments), AppTheme.success),
-          const Divider(color: AppTheme.darkBorder),
-          _ledgerRow('Pending Balance', CurrencyFormatter.format(balance),
-            balance > 0 ? AppTheme.error : AppTheme.success),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
+        ),
       ),
-    );
-  }
-
-  Widget _ledgerRow(String label, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[400])),
-          Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: color)),
-        ],
-      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        ElevatedButton(
+          onPressed: _saving ? null : _submit,
+          child: _saving
+              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Text('Add Supplier'),
+        ),
+      ],
     );
   }
 }

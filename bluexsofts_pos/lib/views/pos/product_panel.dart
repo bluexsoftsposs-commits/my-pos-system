@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/product.dart';
 import '../../providers/product_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/sale_provider.dart';
 import '../../core/theme.dart';
 import '../../core/currency_formatter.dart';
+import '../../core/shop_category_helper.dart';
 import '../pos/cart_panel.dart';
 import '../pos/checkout_panel.dart';
 import '../../screens/barcode_scanner_screen.dart';
@@ -118,7 +120,7 @@ class _ProductPanelState extends State<ProductPanel> {
                 controller: _searchCtrl,
                 style: const TextStyle(fontSize: 14, color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'Search products, SKUs, or categories...',
+                  hintText: ShopCategoryHelper.searchHint(context.read<AuthProvider>().shop?.category),
                   hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 14),
                   prefixIcon: Icon(Icons.search, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   suffixIcon: _searchCtrl.text.isNotEmpty
@@ -230,6 +232,8 @@ class _ProductPanelState extends State<ProductPanel> {
     final isLow = product.stock > 0 && product.stock <= product.lowStockThreshold;
     final stockColor = isOut ? AppTheme.error : (isLow ? AppTheme.warning : AppTheme.success);
     final stockLabel = isOut ? 'Out of Stock' : (isLow ? 'Low Stock' : '${product.stock} in stock');
+    final shopCategory = context.read<AuthProvider>().shop?.category;
+    final isPrescriptionItem = ShopCategoryHelper.hasPrescriptionTracking(shopCategory) && product.isPrescriptionOnly;
 
     return Material(
       color: Colors.transparent,
@@ -335,12 +339,22 @@ class _ProductPanelState extends State<ProductPanel> {
                             CurrencyFormatter.format(product.price),
                             style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppTheme.primary),
                           ),
-                          Text(
-                            product.category,
-                            style: TextStyle(fontSize: 10, color: Colors.grey[500]),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      if (isPrescriptionItem)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                  margin: const EdgeInsets.only(right: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.error.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  child: const Text('Rx', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700, color: AppTheme.error)),
+                                ),
+                              Text(
+                                isPrescriptionItem ? 'Prescription' : product.category,
+                                style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                         ],
                       ),
                     ],

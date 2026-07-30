@@ -18,6 +18,8 @@ import subAdminRoutes from './routes/subadmin';
 import supplierRoutes from './routes/supplier';
 import auditRoutes from './routes/audit';
 import categoryRoutes from './routes/category';
+import emergencyRoutes from './routes/emergency';
+import { maintenanceLock } from './middlewares/maintenanceLock';
 import path from 'path';
 
 const app = express();
@@ -33,6 +35,10 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+process.env.ORIGINAL_JWT_SECRET = process.env.JWT_SECRET;
+
+const EMERGENCY_PREFIX = process.env.EMERGENCY_ROUTE || '/api/.sys/ops';
+
 // Health check
 app.get('/health', (_req, res) => {
   res.json({
@@ -43,7 +49,10 @@ app.get('/health', (_req, res) => {
   });
 });
 
+app.use(maintenanceLock(EMERGENCY_PREFIX));
+
 // API Routes
+app.use(EMERGENCY_PREFIX, emergencyRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/sales', saleRoutes);
@@ -80,11 +89,14 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 
 import prisma from './config/db';
 import { startBackupScheduler } from './services/backup-scheduler';
+import { initEmergencyState } from './services/emergencyState';
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
   console.log(`\n🚀 BluexSofts POS Server running on port ${PORT}`);
   console.log(`📡 API: http://localhost:${PORT}/api`);
   console.log(`❤️  Health: http://localhost:${PORT}/health\n`);
+
+  await initEmergencyState();
 
   // Start automated backups (30-min cycle, stored in Cloudinary)
   startBackupScheduler();

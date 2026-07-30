@@ -426,12 +426,73 @@ export const toggleSupplierStatus = async (req: Request, res: Response): Promise
 
 // ── Shop-scoped supplier endpoints for Admin ───────────────────────
 
+export const createShopSupplier = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const shopId = req.shopId as string;
+    const {
+      supplierName, businessName, phone, email, address,
+      city, state, pincode, gstNumber, panNumber,
+    } = req.body;
+
+    if (!supplierName || !phone) {
+      res.status(400).json({ error: 'supplierName and phone are required' });
+      return;
+    }
+
+    // Generate a unique email if none provided
+    const supplierEmail = email || `supplier_${Date.now()}_${Math.random().toString(36).substring(2, 8)}@local`;
+
+    const passwordHash = await bcrypt.hash(Math.random().toString(36), 12);
+
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          shopId,
+          email: supplierEmail,
+          passwordHash,
+          name: supplierName,
+          role: 'Supplier',
+          isActive: true,
+        },
+      });
+
+      const supplier = await tx.supplier.create({
+        data: {
+          userId: user.id,
+          supplierName: supplierName || '',
+          businessName: businessName || '',
+          gstNumber: gstNumber || null,
+          panNumber: panNumber || null,
+          phone,
+          email: supplierEmail,
+          address: address || '',
+          city: city || '',
+          state: state || '',
+          pincode: pincode || '',
+          isVerified: true,
+        },
+      });
+
+      return { user, supplier };
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Supplier created successfully',
+      supplier: result.supplier,
+    });
+  } catch (error) {
+    console.error('createShopSupplier error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const getShopSuppliers = async (req: Request, res: Response): Promise<void> => {
   try {
     const shopId = req.shopId as string;
     const search = toString(req.query.search) || '';
 
-    // Find all products for this shop that have a supplierId
+    // Find suppliers linked via products
     const products = await prisma.product.findMany({
       where: {
         shopId,
@@ -442,15 +503,30 @@ export const getShopSuppliers = async (req: Request, res: Response): Promise<voi
       distinct: ['supplierId'],
     });
 
-    const supplierIds = products.map(p => p.supplierId).filter(Boolean) as string[];
+    const productSupplierIds = products.map(p => p.supplierId).filter(Boolean) as string[];
 
-    if (supplierIds.length === 0) {
+    // Also find suppliers created directly by this shop (user.shopId matches)
+    const shopUsers = await prisma.user.findMany({
+      where: {
+        shopId,
+        role: 'Supplier',
+        ...(search ? { name: { contains: search } } : {}),
+      },
+      select: { id: true },
+    });
+    const shopUserIds = shopUsers.map(u => u.id);
+
+    const orConditions: Record<string, unknown>[] = [];
+    if (productSupplierIds.length > 0) orConditions.push({ id: { in: productSupplierIds } });
+    if (shopUserIds.length > 0) orConditions.push({ userId: { in: shopUserIds } });
+
+    if (orConditions.length === 0) {
       res.json({ success: true, suppliers: [] });
       return;
     }
 
     const suppliers = await prisma.supplier.findMany({
-      where: { id: { in: supplierIds } },
+      where: { OR: orConditions } as any,
       include: {
         user: { select: { id: true, name: true, email: true, isActive: true } },
         _count: { select: { transactions: true } },
@@ -487,11 +563,14 @@ export const createShopSupplierTransaction = async (req: Request, res: Response)
       return;
     }
 
-    // Verify this supplier is linked to at least one product in this shop
+    // Verify this supplier is linked to this shop (via product or direct creation)
     const linkedProduct = await prisma.product.findFirst({
       where: { shopId, supplierId: id },
     });
-    if (!linkedProduct && req.user?.role !== 'SuperAdmin') {
+    const supplierUser = await prisma.user.findFirst({
+      where: { id: supplier.userId, shopId },
+    });
+    if (!linkedProduct && !supplierUser && req.user?.role !== 'SuperAdmin') {
       res.status(403).json({ error: 'Supplier not linked to your shop' });
       return;
     }

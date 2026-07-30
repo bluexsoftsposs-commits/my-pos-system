@@ -7,6 +7,7 @@ import '../providers/sale_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/sale.dart';
 import '../core/theme.dart';
+import '../core/shop_category_helper.dart';
 import '../views/shared/detail_row.dart';
 import '../services/receipt_service.dart';
 import '../core/currency_formatter.dart';
@@ -129,7 +130,7 @@ class _SalesScreenState extends State<SalesScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Sales History',
+            ShopCategoryHelper.salesTitle(context.read<AuthProvider>().shop?.category),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w700,
               color: AppTheme.primary,
@@ -137,7 +138,7 @@ class _SalesScreenState extends State<SalesScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Track and manage your retail transactions efficiently.',
+            ShopCategoryHelper.salesSubtitle(context.read<AuthProvider>().shop?.category),
             style: TextStyle(fontSize: 14, color: Colors.grey[400]),
           ),
           const SizedBox(height: AppTheme.spaceMd),
@@ -343,6 +344,7 @@ class _SalesScreenState extends State<SalesScreen> {
         .skip((_currentPage - 1) * _pageSize)
         .take(_pageSize)
         .toList();
+    final showTableColumn = ShopCategoryHelper.hasTableService(context.read<AuthProvider>().shop?.category);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppTheme.spaceMd),
       decoration: BoxDecoration(
@@ -375,6 +377,10 @@ class _SalesScreenState extends State<SalesScreen> {
                   DataColumn(
                     label: _buildHeaderText('Order ID'),
                   ),
+                  if (showTableColumn)
+                    DataColumn(
+                      label: _buildHeaderText(ShopCategoryHelper.categoryColumnLabel(context.read<AuthProvider>().shop?.category)),
+                    ),
                   DataColumn(
                     label: _buildHeaderText('Items'),
                   ),
@@ -400,6 +406,8 @@ class _SalesScreenState extends State<SalesScreen> {
                       ? '1 Item'
                       : '${sale.saleItems.length} Items';
 
+                  final tableNumber = showTableColumn ? ShopCategoryHelper.extractTableNumber(sale.notes) : null;
+
                   return DataRow(
                     onSelectChanged: (_) => _showSaleDetails(sale),
                     cells: [
@@ -416,6 +424,19 @@ class _SalesScreenState extends State<SalesScreen> {
                       DataCell(
                         Text(orderId, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       ),
+                      if (showTableColumn)
+                        DataCell(
+                          tableNumber != null
+                              ? Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primary.withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text('T$tableNumber', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.primary)),
+                                )
+                              : Text('-', style: TextStyle(color: Colors.grey[600])),
+                        ),
                       DataCell(
                         Text(itemLabel, style: const TextStyle(fontSize: 14)),
                       ),
