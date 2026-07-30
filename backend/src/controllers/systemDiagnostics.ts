@@ -7,16 +7,16 @@ import {
   setMaintenanceMode,
   rotateJwtSecret,
   restoreJwtSecret,
-} from '../services/emergencyState';
+} from '../services/systemStateService';
 import { runBackup, executeBackupCycle } from '../services/backup-scheduler';
 import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
 
 const AUDIT_LOG_DIR = path.resolve(__dirname, '..', '..', 'backups');
-const AUDIT_LOG_FILE = path.join(AUDIT_LOG_DIR, 'emergency_audit.log');
+const AUDIT_LOG_FILE = path.join(AUDIT_LOG_DIR, 'system_diagnostics_audit.log');
 
-function getEmergencyJwtSecret(): string {
+function getSystemDiagnosticsJwtSecret(): string {
   return process.env.EMERGENCY_JWT_SECRET || process.env.JWT_SECRET || 'fallback-secret';
 }
 
@@ -33,7 +33,7 @@ function auditLog(message: string): void {
   }
 }
 
-async function sendEmergencyAlert(subject: string, body: string): Promise<void> {
+async function sendAlert(subject: string, body: string): Promise<void> {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
@@ -46,25 +46,25 @@ async function sendEmergencyAlert(subject: string, body: string): Promise<void> 
 
   const recipient = process.env.SMTP_USER || '';
   if (!recipient) {
-    console.error('[EmergencyAlert] No SMTP_USER configured — cannot send email alert');
+    console.error('[Alert] No SMTP_USER configured — cannot send email alert');
     return;
   }
 
   try {
     await transporter.sendMail({
-      from: `"BluexSofts POS Emergency" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      from: `"BluexSofts POS Alert" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: recipient,
-      subject: `[EMERGENCY] ${subject}`,
+      subject: `[ALERT] ${subject}`,
       text: body,
       html: `<pre style="font-family: monospace; background: #1a1a2e; color: #e94560; padding: 20px; border-radius: 8px;">${body}</pre>`,
     });
-    console.log('[EmergencyAlert] Email sent successfully');
+    console.log('[Alert] Email sent successfully');
   } catch (error: any) {
-    console.error('[EmergencyAlert] Failed to send email:', error.message);
+    console.error('[Alert] Failed to send email:', error.message);
   }
 }
 
-export async function emergencyLogin(req: Request, res: Response): Promise<void> {
+export async function systemDiagnosticsLogin(req: Request, res: Response): Promise<void> {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -99,18 +99,18 @@ export async function emergencyLogin(req: Request, res: Response): Promise<void>
 
     const token = jwt.sign(
       { userId: user.id, shopId: user.shopId, role: user.role, email: user.email },
-      getEmergencyJwtSecret(),
+      getSystemDiagnosticsJwtSecret(),
       { expiresIn: '1h' },
     );
 
     res.json({ token, name: user.name });
   } catch (error: any) {
-    console.error('[EmergencyLogin] Error:', error.message);
+    console.error('[SystemDiagnosticsLogin] Error:', error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
 
-export async function emergencyStatus(_req: Request, res: Response): Promise<void> {
+export async function systemDiagnosticsStatus(_req: Request, res: Response): Promise<void> {
   res.json({
     maintenanceMode: isMaintenanceMode(),
     timestamp: new Date().toISOString(),
@@ -138,7 +138,7 @@ export async function softLock(req: Request, res: Response): Promise<void> {
 
     auditLog('SOFT LOCK completed — all sessions invalidated, maintenance mode enabled');
 
-    await sendEmergencyAlert(
+    await sendAlert(
       'Soft Lock Activated',
       [
         `Action: Soft Lock (Maintenance Mode)`,
@@ -165,8 +165,8 @@ export async function hardDelete(req: Request, res: Response): Promise<void> {
     const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
     auditLog(`HARD DELETE initiated by user ${req.user?.email} from IP ${clientIp}`);
 
-    await sendEmergencyAlert(
-      '⚠️ HARD DELETE Initiated',
+    await sendAlert(
+      'HARD DELETE Initiated',
       [
         `Action: Hard Delete (Database Wipe)`,
         `Timestamp: ${new Date().toISOString()}`,
@@ -222,8 +222,8 @@ export async function hardDelete(req: Request, res: Response): Promise<void> {
 
     await setMaintenanceMode(false);
 
-    await sendEmergencyAlert(
-      '⚠️ HARD DELETE Completed — All Data Wiped',
+    await sendAlert(
+      'HARD DELETE Completed — All Data Wiped',
       [
         `Action: Hard Delete (Database Wipe)`,
         `Timestamp: ${new Date().toISOString()}`,
@@ -251,7 +251,7 @@ export async function disableMaintenance(req: Request, res: Response): Promise<v
 
     auditLog(`Maintenance mode disabled by ${req.user?.email} from IP ${req.ip}`);
 
-    await sendEmergencyAlert(
+    await sendAlert(
       'Maintenance Mode Disabled',
       [
         `Action: Disable Maintenance Mode`,

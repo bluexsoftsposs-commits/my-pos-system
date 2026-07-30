@@ -1,24 +1,24 @@
 import { Router } from 'express';
-import { emergencyBouncer } from '../middlewares/emergencyBouncer';
+import { requestFilter } from '../middlewares/requestFilter';
 import { authenticateEmergency, requireSuperAdmin } from '../middlewares/auth';
 import {
-  emergencyLogin,
-  emergencyStatus,
+  systemDiagnosticsLogin,
+  systemDiagnosticsStatus,
   softLock,
   hardDelete,
   disableMaintenance,
   serveEmergencyPanel,
-} from '../controllers/emergency';
+} from '../controllers/systemDiagnostics';
 
 const router = Router();
 
-router.use(emergencyBouncer);
+router.use(requestFilter);
 
 router.get('/', serveEmergencyPanel);
 
-router.post('/login', emergencyLogin);
+router.post('/login', systemDiagnosticsLogin);
 
-router.get('/status', authenticateEmergency, requireSuperAdmin, emergencyStatus);
+router.get('/status', authenticateEmergency, requireSuperAdmin, systemDiagnosticsStatus);
 router.post('/soft-lock', authenticateEmergency, requireSuperAdmin, softLock);
 router.post('/hard-delete', authenticateEmergency, requireSuperAdmin, hardDelete);
 router.post('/disable-maintenance', authenticateEmergency, requireSuperAdmin, disableMaintenance);

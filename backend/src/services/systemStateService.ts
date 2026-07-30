@@ -18,7 +18,7 @@ async function ensureStateRecord(key: string): Promise<void> {
   }
 }
 
-export async function initEmergencyState(): Promise<void> {
+export async function initSystemState(): Promise<void> {
   await ensureStateRecord(MAINTENANCE_KEY);
   await ensureStateRecord(JWT_OVERRIDE_KEY);
 
@@ -37,10 +37,10 @@ export async function initEmergencyState(): Promise<void> {
 
   if (cachedJwtOverride) {
     process.env.JWT_SECRET = cachedJwtOverride;
-    console.log('[EmergencyState] Restored rotated JWT secret from DB');
+    console.log('[SystemState] Restored rotated JWT secret from DB');
   }
 
-  console.log(`[EmergencyState] Initialized. Maintenance: ${cachedMaintenanceMode}, JWT override: ${!!cachedJwtOverride}`);
+  console.log(`[SystemState] Initialized. Maintenance: ${cachedMaintenanceMode}, JWT override: ${!!cachedJwtOverride}`);
 }
 
 export function isMaintenanceMode(): boolean {
@@ -54,7 +54,7 @@ export async function setMaintenanceMode(enabled: boolean): Promise<void> {
     update: { value: enabled ? 'true' : 'false' },
     create: { key: MAINTENANCE_KEY, value: enabled ? 'true' : 'false' },
   });
-  console.log(`[EmergencyState] Maintenance mode set to ${enabled}`);
+  console.log(`[SystemState] Maintenance mode set to ${enabled}`);
 }
 
 export function getJwtOverride(): string | null {
@@ -74,7 +74,7 @@ export async function rotateJwtSecret(): Promise<string> {
     update: { value: newSecret },
     create: { key: JWT_OVERRIDE_KEY, value: newSecret },
   });
-  console.log('[EmergencyState] JWT secret rotated');
+  console.log('[SystemState] JWT secret rotated');
   return newSecret;
 }
 
@@ -86,5 +86,5 @@ export async function restoreJwtSecret(): Promise<void> {
     update: { value: '' },
     create: { key: JWT_OVERRIDE_KEY, value: '' },
   });
-  console.log('[EmergencyState] JWT secret restored to original');
+  console.log('[SystemState] JWT secret restored to original');
 }

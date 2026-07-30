@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/db';
 import { retryDbCall, DatabaseUnavailableError } from '../utils/retryDbCall';
-import { getEffectiveJwtSecret } from '../services/emergencyState';
+import { getEffectiveJwtSecret } from '../services/systemStateService';
 
 export interface AuthPayload {
   userId: string;

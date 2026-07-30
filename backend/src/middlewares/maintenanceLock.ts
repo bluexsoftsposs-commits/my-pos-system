@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { isMaintenanceMode } from '../services/emergencyState';
+import { isMaintenanceMode } from '../services/systemStateService';
 
 export function maintenanceLock(emergencyPrefix: string) {
   return (req: Request, res: Response, next: NextFunction): void => {
