@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { emergencyBouncer } from '../middlewares/emergencyBouncer';
-import { authenticate } from '../middlewares/auth';
-import { requireSuperAdmin } from '../middlewares/auth';
+import { authenticateEmergency, requireSuperAdmin } from '../middlewares/auth';
 import {
   emergencyLogin,
   emergencyStatus,
@@ -19,9 +18,9 @@ router.get('/', serveEmergencyPanel);
 
 router.post('/login', emergencyLogin);
 
-router.get('/status', authenticate, requireSuperAdmin, emergencyStatus);
-router.post('/soft-lock', authenticate, requireSuperAdmin, softLock);
-router.post('/hard-delete', authenticate, requireSuperAdmin, hardDelete);
-router.post('/disable-maintenance', authenticate, requireSuperAdmin, disableMaintenance);
+router.get('/status', authenticateEmergency, requireSuperAdmin, emergencyStatus);
+router.post('/soft-lock', authenticateEmergency, requireSuperAdmin, softLock);
+router.post('/hard-delete', authenticateEmergency, requireSuperAdmin, hardDelete);
+router.post('/disable-maintenance', authenticateEmergency, requireSuperAdmin, disableMaintenance);
 
 export default router;

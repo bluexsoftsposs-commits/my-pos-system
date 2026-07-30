@@ -20,6 +20,60 @@ declare global {
   }
 }
 
+function getEmergencyJwtSecret(): string {
+  return process.env.EMERGENCY_JWT_SECRET || process.env.JWT_SECRET || 'fallback-secret';
+}
+
+export const authenticateEmergency = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Authorization token is required' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, getEmergencyJwtSecret()) as AuthPayload;
+
+    const user = await retryDbCall(
+      () => prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: { id: true },
+      }),
+      { context: 'authenticateEmergency' }
+    );
+
+    if (!user) {
+      res.status(401).json({ error: 'User not found' });
+      return;
+    }
+
+    const roleMap: Record<string, string> = {
+      'SUPER_ADMIN': 'SuperAdmin',
+      'ADMIN': 'Admin',
+      'SUB_ADMIN': 'SubAdmin',
+      'SUPPLIER': 'Supplier',
+    };
+    decoded.role = roleMap[decoded.role] || decoded.role;
+
+    req.user = decoded;
+    req.shopId = decoded.shopId;
+    next();
+  } catch (err) {
+    if (err instanceof DatabaseUnavailableError) {
+      res.status(503).json({ error: 'Service temporarily unavailable, please retry' });
+      return;
+    }
+    if (err instanceof jwt.JsonWebTokenError || err instanceof jwt.TokenExpiredError) {
+      res.status(401).json({ error: 'Invalid or expired token' });
+      return;
+    }
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
+
 export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const authHeader = req.headers.authorization;
 
